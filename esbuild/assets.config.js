@@ -1,7 +1,6 @@
 const path = require('node:path')
 const { copy } = require('esbuild-plugin-copy')
 const { sassPlugin } = require('esbuild-sass-plugin')
-const { clean } = require('esbuild-plugin-clean')
 const manifestPlugin = require('esbuild-plugin-manifest')
 const { globSync } = require('node:fs')
 const { buildNotificationPlugin, cleanPlugin } = require('./utils')
