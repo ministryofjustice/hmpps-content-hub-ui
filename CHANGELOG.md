@@ -2,7 +2,7 @@
 
 **November 21st 2025** - Fix ESBuild watch mode
 
-Changes to nunjucks templates weren't triggering a rebuild - this fixes that. 
+Changes to nunjucks templates weren't triggering a rebuild - this fixes that.
 
 See PR [#621](https://github.com/ministryofjustice/hmpps-content-hub-ui/pull/621)
 
