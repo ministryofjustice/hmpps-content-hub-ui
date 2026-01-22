@@ -3,7 +3,7 @@ import { translate, getServerTranslation, translationExists } from './helpers'
 
 describe('i18n Configuration', () => {
   beforeAll(async () => {
-    await i18n.loadNamespaces(['common', 'pages', 'features'])
+    await i18n.loadNamespaces(['common', 'pages', 'features', 'errors'])
   })
 
   describe('Translation Loading', () => {
@@ -73,6 +73,24 @@ describe('i18n Configuration', () => {
 
     it('should load features namespace', () => {
       expect(i18n.t('features:contentTile.watch', { lng: 'en' })).toBe('Watch')
+    })
+
+    it('should load errors namespace', () => {
+      expect(i18n.t('errors:error.pageNotFound', { lng: 'en' })).toBe('Page not found')
+    })
+
+    it('should load all namespaces in English', () => {
+      expect(i18n.t('common:topBar.title', { lng: 'en' })).toBe('Content Hub')
+      expect(i18n.t('pages:search.title', { lng: 'en' })).toBe('Search')
+      expect(i18n.t('features:showMore.enabled', { lng: 'en' })).toBe('Show more')
+      expect(i18n.t('errors:error.somethingWentWrong', { lng: 'en' })).toBe('Something went wrong')
+    })
+
+    it('should load all namespaces in Welsh', () => {
+      expect(i18n.t('common:topBar.title', { lng: 'cy' })).toBe('Hwb Cynnwys')
+      expect(i18n.t('pages:search.title', { lng: 'cy' })).toBe('Chwilio')
+      expect(i18n.t('features:showMore.enabled', { lng: 'cy' })).toBe('Dangos mwy')
+      expect(i18n.t('errors:error.pageNotFound', { lng: 'cy' })).toBe('Tudalen heb ei chanfod')
     })
   })
 
