@@ -1,5 +1,7 @@
 {% extends "govuk/template.njk" %}
 
+{% block htmlLang %}{{ language or 'en' }}{% endblock %}
+
 {% block head %}
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
 {% endblock %}

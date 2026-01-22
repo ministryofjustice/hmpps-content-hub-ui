@@ -40,4 +40,11 @@ export default function nunjucksSetup(app: express.Express): void {
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
+  njkEnv.addFilter('t', function t(key: string, options?: Record<string, unknown>) {
+    const context = this.ctx
+    if (context.t && typeof context.t === 'function') {
+      return context.t(key, options)
+    }
+    return key
+  })
 }

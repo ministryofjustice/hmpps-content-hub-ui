@@ -1,0 +1,9 @@
+{
+  "error": {
+    "goHome": "Ewch yn ôl i’r <a href=\"/\">dudalen gartref</a>",
+    "orTryAgain": "neu <a href=\"{{ returnUrl }}\">roi cynnig arall arni</a>",
+    "pageNotFound": "Tudalen heb ei chanfod",
+    "returnHome": "Ewch yn ôl i’r <a href=\"/\">hafan</a>",
+    "somethingWentWrong": "Aeth rhywbeth o’i le"
+  }
+}

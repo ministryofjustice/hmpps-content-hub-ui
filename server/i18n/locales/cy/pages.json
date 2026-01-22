@@ -1,0 +1,19 @@
+{
+  "home": {
+    "browseAllTopics": "Pori pob pwnc",
+    "exploreTheHub": "Archwilio’r Hwb",
+    "featured": "Dan sylw",
+    "recentlyAdded": "Ychwanegwyd yn ddiweddar",
+    "updates": "Diweddariadau"
+  },
+  "search": {
+    "noResults": "Dim canlyniadau ar gyfer \"{{ term }}\"",
+    "searchTheContentHub": "Chwilio’r Hyb Cynnwys",
+    "showingResults": "Dyma’r canlyniadau ar gyfer \"{{ term }}\"",
+    "title": "Chwilio"
+  },
+  "recentlyAdded": {
+    "summary": "Y lanlwythiadau diweddaraf ar yr Hwb.",
+    "title": "Ychwanegwyd yn ddiweddar"
+  }
+}

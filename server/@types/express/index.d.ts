@@ -1,3 +1,4 @@
+import { i18n, TFunction } from 'i18next'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 
 export declare module 'express-session' {
@@ -19,6 +20,9 @@ export declare global {
       verified?: boolean
       id: string
       logout(done: (err: unknown) => void): void
+      t?: TFunction
+      i18n?: i18n
+      language?: string
     }
 
     interface Locals {

@@ -1,12 +1,17 @@
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Home" %}
+{% set pageTitle = applicationName + " - " + ('common:pageNavigation.home' | t) %}
 {% set mainClasses = "govuk-body" %}
 
 {% block content %}
 
-  <h1>This site is under construction...</h1>
-  <p>Please check back later when there is content to view.</p>
-  <p data-qa="timestamp">The time is currently {{ currentTime }}</p>
+  <div class="govuk-!-margin-bottom-6">
+    <a href="?lng=en" class="govuk-link {% if language == 'en' %}govuk-!-font-weight-bold{% endif %}">English</a>
+    <span class="govuk-!-margin-left-2 govuk-!-margin-right-2">|</span>
+    <a href="?lng=cy" class="govuk-link {% if language == 'cy' %}govuk-!-font-weight-bold{% endif %}">Cymraeg</a>
+  </div>
+
+  <h1>{{ 'pages:home.featured' | t }}</h1>
+  <p>{{ 'pages:recentlyAdded.summary' | t }}</p>
 
 {% endblock %}
