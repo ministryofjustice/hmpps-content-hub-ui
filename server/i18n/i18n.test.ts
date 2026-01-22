@@ -3,7 +3,6 @@ import { translate, getServerTranslation, translationExists } from './helpers'
 
 describe('i18n Configuration', () => {
   beforeAll(async () => {
-    // Wait for i18n to be initialized
     await i18n.loadNamespaces(['common', 'pages', 'features'])
   })
 
@@ -42,7 +41,6 @@ describe('i18n Configuration', () => {
 
     it('should return key for completely missing translations', () => {
       const result = i18n.t('common:nonExistentKey', { lng: 'en' })
-      // i18next returns the key without namespace prefix by default
       expect(result).toBe('nonExistentKey')
     })
   })
@@ -84,7 +82,6 @@ describe('i18n Configuration', () => {
     })
 
     it('should support Welsh language', () => {
-      // Change language to trigger loading
       i18n.changeLanguage('cy')
       expect(['en', 'cy']).toContain(i18n.language)
     })
