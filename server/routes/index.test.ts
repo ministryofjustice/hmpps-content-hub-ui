@@ -42,6 +42,7 @@ describe('GET /', () => {
       .expect(200)
       .expect(res => {
         expect(res.text).toContain('This site is under construction...')
+        expect(res.text).toContain('Please check back later when there is content to view.')
         expect(res.text).toContain('The time is currently 2025-01-01T12:00:00.000')
         expect(auditService.logPageView).toHaveBeenCalledWith(Page.EXAMPLE_PAGE, {
           who: user.username,
