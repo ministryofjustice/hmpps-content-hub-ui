@@ -41,11 +41,8 @@ describe('GET /', () => {
       .expect('Content-Type', /html/)
       .expect(200)
       .expect(res => {
-        // TEMP: Check page structure and language switcher
-        expect(res.text).toContain('English')
-        expect(res.text).toContain('Cymraeg')
-        expect(res.text).toContain('govuk-!-font-weight-bold')
-
+        expect(res.text).toContain('This site is under construction...')
+        expect(res.text).toContain('The time is currently 2025-01-01T12:00:00.000')
         expect(auditService.logPageView).toHaveBeenCalledWith(Page.EXAMPLE_PAGE, {
           who: user.username,
           correlationId: expect.any(String),
