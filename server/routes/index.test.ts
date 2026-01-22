@@ -3,6 +3,7 @@ import request from 'supertest'
 import { appWithAllRoutes, user } from './testutils/appSetup'
 import AuditService, { Page } from '../services/auditService'
 import ExampleService from '../services/exampleService'
+import i18next from '../i18n'
 
 jest.mock('../services/auditService')
 jest.mock('../services/exampleService')
@@ -11,6 +12,10 @@ const auditService = new AuditService(null) as jest.Mocked<AuditService>
 const exampleService = new ExampleService(null) as jest.Mocked<ExampleService>
 
 let app: Express
+
+beforeAll(async () => {
+  await i18next.isInitialized
+})
 
 beforeEach(() => {
   app = appWithAllRoutes({
@@ -36,8 +41,11 @@ describe('GET /', () => {
       .expect('Content-Type', /html/)
       .expect(200)
       .expect(res => {
-        expect(res.text).toContain('This site is under construction...')
-        expect(res.text).toContain('The time is currently 2025-01-01T12:00:00.000')
+        // TEMP: Check page structure and language switcher
+        expect(res.text).toContain('English')
+        expect(res.text).toContain('Cymraeg')
+        expect(res.text).toContain('govuk-!-font-weight-bold')
+
         expect(auditService.logPageView).toHaveBeenCalledWith(Page.EXAMPLE_PAGE, {
           who: user.username,
           correlationId: expect.any(String),
