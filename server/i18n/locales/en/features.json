@@ -1,0 +1,102 @@
+{
+  "contentTile": {
+    "listen": "Listen",
+    "new": "NEW",
+    "read": "Read",
+    "series": "SERIES",
+    "watch": "Watch"
+  },
+  "category": {
+    "content": "Content",
+    "inThisSection": "In this section"
+  },
+  "hubContentBlock": {
+    "viewAll": "View all"
+  },
+  "showMore": {
+    "enabled": "Show more",
+    "disabled": "Loading"
+  },
+  "urgentBanner": {
+    "moreInfo": "More info",
+    "title": "URGENT"
+  },
+  "interstitial": {
+    "heading": "You're leaving the Hub",
+    "message": "You are being taken to {{url}}. You are <strong>allowed</strong> to visit this website.",
+    "detail": "Internet access is restricted in prisons so links to other websites are blocked.",
+    "continue": "Continue",
+    "doNotShowMessage": "Don't show me this message again"
+  },
+  "feedback": {
+    "headings": {
+      "alternative": "Tell us what you think about this page",
+      "default": "Give us feedback"
+    },
+    "select": "Select one:",
+    "send": "Send",
+    "thanks": "Thanks for your feedback",
+    "whatHappens": "What happens to your feedback?",
+    "like": {
+      "iLikeThis": "I like this",
+      "1": "I enjoyed this",
+      "2": "This was beneficial to me",
+      "3": "This was interesting",
+      "4": "It was easy for me to understand"
+    },
+    "dislike": {
+      "iDontLikeThis": "I don't like this",
+      "1": "I didn't enjoy this",
+      "2": "This wasn't relevant to me",
+      "3": "This wasn't interesting",
+      "4": "It was hard for me to understand"
+    },
+    "contact": {
+      "preamble": "If you want to contact someone about anything else:",
+      "1": "Send an app or a digital request",
+      "2": "Speak to your Digital PID, an officer or keyworker",
+      "3": "Call a helpline",
+      "4": "Read and watch more about mental health",
+      "5": "Contact NPR with a shout out or song request"
+    },
+    "contentTypes": {
+      "article": "article",
+      "category": "category",
+      "game": "game",
+      "podcast": "podcast",
+      "series": "series",
+      "topic": "topic",
+      "video": "video"
+    }
+  },
+  "games": {
+    "mimstris": {
+      "howToPlay": "How to play:",
+      "instructions1": "Arrow Keys = Left, Right, Down",
+      "instructions2": "Up Arrow / Space = Rotate",
+      "instructions3": "A = Left",
+      "instructions4": "D = Right",
+      "instructions5": "S = Down",
+      "instructions6": "Enter = Pause game",
+      "level": "Level",
+      "lines": "Lines",
+      "score": "Score"
+    },
+    "solitaire": {
+      "instructions1": "You've told us that the solitaire game is not working as you can't drag a card to where you want it.",
+      "instructions2": "Here's how to make a move in this version of the game:",
+      "instructions3": "To move a card select the card you want to move. The edges will turn yellow. Next select the space where you want it to go.",
+      "instructions4": "The game can be a little slow to register a move so give it time for the move to happen.",
+      "instructions5": "Select the pile in the top left of the game to reveal new cards."
+    }
+  },
+  "nextEpisodes": {
+    "heading": "Next"
+  },
+  "relatedTopics": {
+    "heading": "Related topics"
+  },
+  "suggestedContent": {
+    "youMightLike": "You might like"
+  }
+}

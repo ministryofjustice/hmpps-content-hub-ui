@@ -1,0 +1,16 @@
+{
+  "skipToMainContent": "Skip to main content",
+  "topBar": {
+    "title": "Content Hub"
+  },
+  "footer": {
+    "crownCopyright": "© Crown copyright",
+    "licence": "All content is available under the Open Government Licence v3.0, except where otherwise stated",
+    "privacy": "Privacy"
+  },
+  "pageNavigation": {
+    "back": "Back",
+    "home": "Home",
+    "forward": "Forward"
+  }
+}

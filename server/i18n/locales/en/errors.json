@@ -1,0 +1,9 @@
+{
+  "error": {
+    "goHome": "Go back to the <a class=\"govuk-link\" href=\"/\">home page</a>",
+    "orTryAgain": "or <a href=\"{{ returnUrl }}\">try again</a>",
+    "pageNotFound": "Page not found",
+    "returnHome": "Return to the <a href=\"/\">home page</a>",
+    "somethingWentWrong": "Something went wrong"
+  }
+}

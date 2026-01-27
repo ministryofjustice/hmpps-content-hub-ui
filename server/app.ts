@@ -2,17 +2,18 @@ import express from 'express'
 
 import createError from 'http-errors'
 
-import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
-import { appInsightsMiddleware } from './utils/azureAppInsights'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
+import { appInsightsMiddleware } from './utils/azureAppInsights'
+import nunjucksSetup from './utils/nunjucksSetup'
 
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
 import setUpCurrentUser from './middleware/setUpCurrentUser'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
-import setUpStaticResources from './middleware/setUpStaticResources'
+import setUpI18n from './middleware/setUpI18n'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
+import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
@@ -32,6 +33,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
+  app.use(setUpI18n())
   nunjucksSetup(app)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())

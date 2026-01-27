@@ -1,0 +1,16 @@
+{
+  "skipToMainContent": "Neidio i’r prif gynnwys",
+  "topBar": {
+    "title": "Hwb Cynnwys"
+  },
+  "footer": {
+    "crownCopyright": "© Hawlfraint y goron",
+    "licence": "Mae’r holl gynnwys ar gael o dan Drwydded Llywodraeth Agored f3.0, ac eithrio lle nodir fel arall",
+    "privacy": "Preifatrwydd"
+  },
+  "pageNavigation": {
+    "back": "Yn ôl",
+    "home": "Hafan",
+    "forward": "Ymlaen"
+  }
+}

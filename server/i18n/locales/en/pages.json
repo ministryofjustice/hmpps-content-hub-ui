@@ -1,0 +1,19 @@
+{
+  "home": {
+    "browseAllTopics": "Browse all topics",
+    "exploreTheHub": "Explore the Hub",
+    "featured": "Featured",
+    "recentlyAdded": "Recently added",
+    "updates": "Updates"
+  },
+  "search": {
+    "noResults": "No results found for \"{{term}}\"",
+    "searchTheContentHub": "Search the Content Hub",
+    "showingResults": "Showing results for \"{{term}}\"",
+    "title": "Search"
+  },
+  "recentlyAdded": {
+    "summary": "The latest uploads on the Hub.",
+    "title": "Recently added"
+  }
+}
