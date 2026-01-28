@@ -29,6 +29,8 @@ export enum Page {
   GAME_CHRISTMAS_CROSSWORD = 'GAME_CHRISTMAS_CROSSWORD',
   GAME_SOLITAIRE = 'GAME_SOLITAIRE',
   GAME_SMASHOUT = 'GAME_SMASHOUT',
+  FEEDBACK = 'FEEDBACK',
+  HELP = 'HELP',
 }
 
 export interface PageViewEventDetails {

@@ -10,6 +10,8 @@ import updatesRoutes from './updates'
 import nprRoutes from './npr'
 import linkRoutes from './link'
 import gamesRoutes from './games'
+import feedbackRoutes from './feedback'
+import helpRoutes from './help'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -23,6 +25,8 @@ export default function routes(services: Services): Router {
   router.use(nprRoutes(services))
   router.use(linkRoutes(services))
   router.use(gamesRoutes(services))
+  router.use(feedbackRoutes(services))
+  router.use(helpRoutes(services))
 
   return router
 }
