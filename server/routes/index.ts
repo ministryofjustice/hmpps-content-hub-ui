@@ -5,6 +5,8 @@ import homepageRoutes from './homepage'
 import topicsRoutes from './topics'
 import contentRoutes from './content'
 import searchRoutes from './search'
+import recentlyAddedRoutes from './recentlyAdded'
+import updatesRoutes from './updates'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -13,6 +15,8 @@ export default function routes(services: Services): Router {
   router.use(topicsRoutes(services))
   router.use(contentRoutes(services))
   router.use(searchRoutes(services))
+  router.use(recentlyAddedRoutes(services))
+  router.use(updatesRoutes(services))
 
   return router
 }
