@@ -7,6 +7,8 @@ export enum Page {
   TAG = 'TAG',
   TAG_JSON = 'TAG_JSON',
   CONTENT = 'CONTENT',
+  SEARCH = 'SEARCH',
+  SEARCH_SUGGEST = 'SEARCH_SUGGEST',
 }
 
 export interface PageViewEventDetails {
