@@ -1,7 +1,5 @@
 import express from 'express'
 
-import createError from 'http-errors'
-
 import errorHandler from './errorHandler'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
