@@ -31,6 +31,7 @@ export enum Page {
   GAME_SMASHOUT = 'GAME_SMASHOUT',
   FEEDBACK = 'FEEDBACK',
   HELP = 'HELP',
+  NOT_FOUND = 'NOT_FOUND',
 }
 
 export interface PageViewEventDetails {

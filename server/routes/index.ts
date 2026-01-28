@@ -12,6 +12,7 @@ import linkRoutes from './link'
 import gamesRoutes from './games'
 import feedbackRoutes from './feedback'
 import helpRoutes from './help'
+import notFoundRoutes from './notFound'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -27,6 +28,7 @@ export default function routes(services: Services): Router {
   router.use(gamesRoutes(services))
   router.use(feedbackRoutes(services))
   router.use(helpRoutes(services))
+  router.use(notFoundRoutes(services))
 
   return router
 }
