@@ -9,6 +9,7 @@ import recentlyAddedRoutes from './recentlyAdded'
 import updatesRoutes from './updates'
 import nprRoutes from './npr'
 import linkRoutes from './link'
+import gamesRoutes from './games'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -21,6 +22,7 @@ export default function routes(services: Services): Router {
   router.use(updatesRoutes(services))
   router.use(nprRoutes(services))
   router.use(linkRoutes(services))
+  router.use(gamesRoutes(services))
 
   return router
 }
