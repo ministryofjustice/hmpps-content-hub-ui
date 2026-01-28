@@ -7,6 +7,8 @@ import contentRoutes from './content'
 import searchRoutes from './search'
 import recentlyAddedRoutes from './recentlyAdded'
 import updatesRoutes from './updates'
+import nprRoutes from './npr'
+import linkRoutes from './link'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -17,6 +19,8 @@ export default function routes(services: Services): Router {
   router.use(searchRoutes(services))
   router.use(recentlyAddedRoutes(services))
   router.use(updatesRoutes(services))
+  router.use(nprRoutes(services))
+  router.use(linkRoutes(services))
 
   return router
 }

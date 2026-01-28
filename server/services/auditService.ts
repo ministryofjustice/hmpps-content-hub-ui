@@ -13,6 +13,8 @@ export enum Page {
   RECENTLY_ADDED_JSON = 'RECENTLY_ADDED_JSON',
   UPDATES = 'UPDATES',
   UPDATES_JSON = 'UPDATES_JSON',
+  NPR = 'NPR',
+  LINK = 'LINK',
 }
 
 export interface PageViewEventDetails {
