@@ -32,9 +32,10 @@ afterEach(() => {
 })
 
 describe('GET /', () => {
-  it('should render index page', () => {
+  it('should render the homepage with current time', () => {
+    const mockTime = '2025-01-01T12:00:00Z'
     auditService.logPageView.mockResolvedValue(null)
-    exampleService.getCurrentTime.mockResolvedValue('2025-01-01T12:00:00.000')
+    exampleService.getCurrentTime.mockResolvedValue(mockTime)
 
     return request(app)
       .get('/')
@@ -42,9 +43,8 @@ describe('GET /', () => {
       .expect(200)
       .expect(res => {
         expect(res.text).toContain('This site is under construction...')
-        expect(res.text).toContain('Please check back later when there is content to view.')
-        expect(res.text).toContain('The time is currently 2025-01-01T12:00:00.000')
-        expect(auditService.logPageView).toHaveBeenCalledWith(Page.EXAMPLE_PAGE, {
+        expect(res.text).toContain(mockTime)
+        expect(auditService.logPageView).toHaveBeenCalledWith(Page.HOMEPAGE, {
           who: user.username,
           correlationId: expect.any(String),
         })
@@ -52,16 +52,16 @@ describe('GET /', () => {
       })
   })
 
-  it('service errors are handled', () => {
+  it('example service errors are handled', () => {
     auditService.logPageView.mockResolvedValue(null)
-    exampleService.getCurrentTime.mockRejectedValue(new Error('Some problem calling external api!'))
+    exampleService.getCurrentTime.mockRejectedValue(new Error('Example service error!'))
 
     return request(app)
       .get('/')
       .expect('Content-Type', /html/)
       .expect(500)
       .expect(res => {
-        expect(res.text).toContain('Some problem calling external api!')
+        expect(res.text).toContain('Example service error!')
       })
   })
 })

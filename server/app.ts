@@ -1,7 +1,5 @@
 import express from 'express'
 
-import createError from 'http-errors'
-
 import errorHandler from './errorHandler'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
@@ -42,7 +40,6 @@ export default function createApp(services: Services): express.Application {
 
   app.use(routes(services))
 
-  app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
 
   return app
