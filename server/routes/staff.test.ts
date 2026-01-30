@@ -104,8 +104,6 @@ describe('Staff Routes', () => {
     })
 
     describe('when we are currently on the staff portal', () => {
-      const sessionSpy = jest.fn()
-
       beforeEach(() => {
         app = appWithAllRoutes({
           services: {
