@@ -1,3 +1,5 @@
+{%- from "moj/components/organisation-switcher/macro.njk" import mojOrganisationSwitcher -%}
+
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 <header class="hmpps-header" role="banner">
   <div class="hmpps-header__container">
@@ -42,3 +44,15 @@
     </nav>
   </div>
 </header>
+
+<div class="govuk-width-container">
+  {% if isStaffPortal and user %}
+    {{ mojOrganisationSwitcher({
+      text: establishment.displayName,
+      link: {
+        text: "Change prison",
+        href: "/staff/prisons"
+      }
+    }) }}
+  {% endif %}
+</div>
