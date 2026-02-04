@@ -3,7 +3,9 @@
 
 generic-service:
   ingress:
-    host: content-hub.hmpps.service.justice.gov.uk
+    hosts: 
+      - content-hub.hmpps.service.justice.gov.uk
+      - staff.content-hub.hmpps.service.justice.gov.uk
 
   env:
     INGRESS_URL: "https://content-hub.hmpps.service.justice.gov.uk"
