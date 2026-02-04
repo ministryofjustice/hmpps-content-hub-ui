@@ -14,10 +14,7 @@ generic-service:
 
   ingress:
     enabled: true
-    host: app-hostname.local # override per environment
     tlsSecretName: hmpps-content-hub-ui-cert
-    prefixes:
-      - staff
 
   livenessProbe:
     httpGet:
