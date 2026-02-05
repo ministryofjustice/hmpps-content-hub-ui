@@ -1,16 +1,21 @@
 {
   "skipToMainContent": "Skip to main content",
-  "topBar": {
-    "title": "Content Hub"
+  "header": {
+    "title": "Content Hub",
+    "logoAlt": "Content Hub logo"
   },
-  "footer": {
-    "crownCopyright": "© Crown copyright",
-    "licence": "All content is available under the Open Government Licence v3.0, except where otherwise stated",
-    "privacy": "Privacy"
+  "search": {
+    "label": "Search",
+    "placeholder": "Search the Content Hub"
   },
   "pageNavigation": {
     "back": "Back",
     "home": "Home",
     "forward": "Forward"
+  },
+  "footer": {
+    "crownCopyright": "© Crown copyright",
+    "licence": "All content is available under the Open Government Licence v3.0, except where otherwise stated",
+    "privacy": "Privacy"
   }
 }

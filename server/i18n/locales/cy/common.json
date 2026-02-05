@@ -1,16 +1,21 @@
 {
   "skipToMainContent": "Neidio i’r prif gynnwys",
-  "topBar": {
-    "title": "Hwb Cynnwys"
+  "header": {
+    "title": "Hwb Cynnwys",
+    "logoAlt": "Logo Hwb Cynnwys"
   },
-  "footer": {
-    "crownCopyright": "© Hawlfraint y goron",
-    "licence": "Mae’r holl gynnwys ar gael o dan Drwydded Llywodraeth Agored f3.0, ac eithrio lle nodir fel arall",
-    "privacy": "Preifatrwydd"
+  "search":{
+    "label": "Chwilio",
+    "placeholder": "Chwilio’r Hyb Cynnwys"
   },
   "pageNavigation": {
     "back": "Yn ôl",
     "home": "Hafan",
     "forward": "Ymlaen"
+  },
+  "footer": {
+    "crownCopyright": "© Hawlfraint y goron",
+    "licence": "Mae’r holl gynnwys ar gael o dan Drwydded Llywodraeth Agored f3.0, ac eithrio lle nodir fel arall",
+    "privacy": "Preifatrwydd"
   }
 }

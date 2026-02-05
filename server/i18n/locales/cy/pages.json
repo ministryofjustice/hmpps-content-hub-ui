@@ -8,9 +8,7 @@
   },
   "search": {
     "noResults": "Dim canlyniadau ar gyfer \"{{ term }}\"",
-    "searchTheContentHub": "Chwilio’r Hyb Cynnwys",
-    "showingResults": "Dyma’r canlyniadau ar gyfer \"{{ term }}\"",
-    "title": "Chwilio"
+    "showingResults": "Dyma’r canlyniadau ar gyfer \"{{ term }}\""
   },
   "recentlyAdded": {
     "summary": "Y lanlwythiadau diweddaraf ar yr Hwb.",

@@ -8,11 +8,11 @@ describe('i18n Configuration', () => {
 
   describe('Translation Loading', () => {
     it('should load English translations', () => {
-      expect(i18n.t('common:topBar.title', { lng: 'en' })).toBe('Content Hub')
+      expect(i18n.t('common:header.title', { lng: 'en' })).toBe('Content Hub')
     })
 
     it('should load Welsh translations', () => {
-      expect(i18n.t('common:topBar.title', { lng: 'cy' })).toBe('Hwb Cynnwys')
+      expect(i18n.t('common:header.title', { lng: 'cy' })).toBe('Hwb Cynnwys')
     })
 
     it('should handle nested translation keys', () => {
@@ -35,7 +35,7 @@ describe('i18n Configuration', () => {
 
   describe('Fallback Behavior', () => {
     it('should fallback to English for missing translations', () => {
-      const result = i18n.t('common:topBar.title', { lng: 'fr' })
+      const result = i18n.t('common:header.title', { lng: 'fr' })
       expect(result).toBe('Content Hub')
     })
 
@@ -52,12 +52,12 @@ describe('i18n Configuration', () => {
     })
 
     it('should translate using helper', () => {
-      const result = translate('pages:search.title', { lng: 'en' })
+      const result = translate('common:search.label', { lng: 'en' })
       expect(result).toBe('Search')
     })
 
     it('should check if translation exists', () => {
-      expect(translationExists('common:topBar.title')).toBe(true)
+      expect(translationExists('common:header.title')).toBe(true)
       expect(translationExists('common:nonExistent')).toBe(false)
     })
   })
@@ -80,15 +80,15 @@ describe('i18n Configuration', () => {
     })
 
     it('should load all namespaces in English', () => {
-      expect(i18n.t('common:topBar.title', { lng: 'en' })).toBe('Content Hub')
-      expect(i18n.t('pages:search.title', { lng: 'en' })).toBe('Search')
+      expect(i18n.t('common:header.title', { lng: 'en' })).toBe('Content Hub')
+      expect(i18n.t('common:search.label', { lng: 'en' })).toBe('Search')
       expect(i18n.t('features:showMore.enabled', { lng: 'en' })).toBe('Show more')
       expect(i18n.t('errors:error.somethingWentWrong', { lng: 'en' })).toBe('Something went wrong')
     })
 
     it('should load all namespaces in Welsh', () => {
-      expect(i18n.t('common:topBar.title', { lng: 'cy' })).toBe('Hwb Cynnwys')
-      expect(i18n.t('pages:search.title', { lng: 'cy' })).toBe('Chwilio')
+      expect(i18n.t('common:header.title', { lng: 'cy' })).toBe('Hwb Cynnwys')
+      expect(i18n.t('common:search.label', { lng: 'cy' })).toBe('Chwilio')
       expect(i18n.t('features:showMore.enabled', { lng: 'cy' })).toBe('Dangos mwy')
       expect(i18n.t('errors:error.pageNotFound', { lng: 'cy' })).toBe('Tudalen heb ei chanfod')
     })
