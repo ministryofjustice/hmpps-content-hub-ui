@@ -13,7 +13,7 @@ export interface AuthStrategy {
   tokenVerification: () => Promise<boolean>
 }
 
-const launchpadAuthStrategy: (req: Request) => AuthStrategy = req => {
+const launchpadAuthStrategy: (req: Request) => AuthStrategy = _req => {
   return {
     name: 'launchpad-auth',
     signOutUrl: () => '/',
