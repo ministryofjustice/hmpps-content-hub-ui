@@ -33,10 +33,13 @@ test.describe('SignIn (Prisoners login)', () => {
     await expect(page.getByRole('heading')).toHaveText('Sign in')
   })
 
-  test('Token verification failure takes user to sign in page', async ({ page }) => {
+  test('Token verification failure does not affect user login (launchpad auth tokens should not be verified)', async ({
+    page,
+  }) => {
     await loginWithLaunchpadAuth(page, { active: false })
 
-    await expect(page.getByRole('heading')).toHaveText('Sign in')
+    await HomePage.verifyOnPage(page)
+    await expect(page.getByRole('heading')).not.toHaveText('Sign in')
   })
 
   test('User with correct details is logged in successfully', async ({ page }) => {
@@ -46,16 +49,6 @@ test.describe('SignIn (Prisoners login)', () => {
 
     // TODO: this will have to change if we remove the name from the header
     await expect(homePage.usersName).toHaveText('A. Testuser')
-  })
-
-  test('Token verification failure clears user session', async ({ page }) => {
-    await loginWithLaunchpadAuth(page, { name: 'A TestUser', active: false })
-
-    await expect(page.getByRole('heading')).toHaveText('Sign in')
-
-    await loginWithLaunchpadAuth(page, { name: 'Some OtherTestUser', active: true })
-
-    await HomePage.verifyOnPage(page)
   })
 })
 
