@@ -1,8 +1,8 @@
-import { Page } from '@playwright/test'
+import { Page, test, TestType } from '@playwright/test'
 import tokenVerification from './mockApis/tokenVerification'
 import hmppsAuth, { type UserToken } from './mockApis/hmppsAuth'
 import { resetStubs } from './mockApis/wiremock'
-import launchpadAuth, { LaunchpadUserToken } from './mockApis/launchpadAuth'
+import launchpadAuth from './mockApis/launchpadAuth'
 
 export { resetStubs }
 
