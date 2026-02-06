@@ -1,17 +1,18 @@
 services:
-
-  hmpps-auth:
-    image: ghcr.io/ministryofjustice/hmpps-auth:latest
-    networks:
-      - hmpps
-    container_name: hmpps-auth
+  hmpps-launchpad-auth:
+    image: ghcr.io/ministryofjustice/hmpps-launchpad-auth:latest
+    container_name: content-hub-ui-hmpps-launchpad-auth
     ports:
-      - "9090:8080"
+      - "8080:8080"
+    network_mode: "bridge"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
+    env_file: docker-compose.launchpad-auth.env
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
+      - azure.launchpad-redirectUri=http://localhost:8080/v1/oauth2/callback
+      - launchpad.auth.iss-url=http://localhost:8080
+      - hmpps.auth.url=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+      - DB_ENDPOINT=host.docker.internal:5432
 
   hmpps-template-kotlin:
     image: ghcr.io/ministryofjustice/hmpps-template-kotlin:latest
@@ -19,11 +20,11 @@ services:
       - hmpps
     container_name: hmpps-template-kotlin
     ports:
-      - "8080:8080"
+      - "8181:8080"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
     environment:
-      - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
+      - HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
       - EXAMPLE_API_URL=http://localhost:8080
 
   app:
@@ -33,28 +34,18 @@ services:
         BUILD_NUMBER: "1.0.0"
         GIT_REF: "a1b2c3"
         GIT_BRANCH: main
+    container_name: app
     networks:
       - hmpps
     ports:
       - "3000:3000"
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:3000/health"]
+    env_file: docker-compose.app.env
     environment:
-      - PRODUCT_ID=UNASSIGNED
-      - REDIS_ENABLED=false
-      - REDIS_HOST=localhost
-      - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
-      - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
-      # These will need to match new creds in the seed auth service auth
-      - AUTH_CODE_CLIENT_ID=hmpps-typescript-template
-      - AUTH_CODE_CLIENT_SECRET=clientsecret
-      - CLIENT_CREDS_CLIENT_ID=hmpps-typescript-template-system
-      - CLIENT_CREDS_CLIENT_SECRET=clientsecret
-      - SESSION_SECRET=somesecretvalue
-      - TOKEN_VERIFICATION_API_URL=http://hmpps-auth:8080/auth
-      - TOKEN_VERIFICATION_ENABLED=false
-      - INGRESS_URL=http://localhost:3000
-      - NO_HTTPS=true
+      - LAUNCHPAD_AUTH_URL=http://host.docker.internal:8080
+      - LAUNCHPAD_AUTH_EXTERNAL_URL=http://localhost:8080
+      - EXAMPLE_API_URL=http://hmpps-template-kotlin:8080
 
 networks:
   hmpps:

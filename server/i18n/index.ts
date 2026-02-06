@@ -22,7 +22,10 @@ i18next
       loadPath: path.join(localesPath, '{{lng}}/{{ns}}.json'),
       addPath: path.join(localesPath, '{{lng}}/{{ns}}.missing.json'),
     },
-    debug: process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
+    debug:
+      process.env.NODE_ENV !== 'production' &&
+      process.env.NODE_ENV !== 'test' &&
+      process.env.INTEGRATION_TESTS !== 'true',
     ns: ['common', 'pages', 'features'],
     defaultNS: 'common',
     saveMissing: false,

@@ -2,11 +2,12 @@ import passport from 'passport'
 import flash from 'connect-flash'
 import { Router } from 'express'
 import { Strategy } from 'passport-oauth2'
-import { VerificationClient, AuthenticatedRequest } from '@ministryofjustice/hmpps-auth-clients'
+import OpenIDConnectStrategy, { Profile, VerifyCallback } from 'passport-openidconnect'
 import config from '../config'
 import { HmppsUser } from '../interfaces/hmppsUser'
 import generateOauthClientToken from '../utils/clientCredentials'
-import logger from '../../logger'
+import launchpadUserFrom from './authentication/launchpad/launchpadUser'
+import { authStrategyFor } from './authentication/authStrategy'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -19,13 +20,14 @@ passport.deserializeUser((user, done) => {
 })
 
 passport.use(
+  'hmpps-auth',
   new Strategy(
     {
       authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
       tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
       clientID: config.apis.hmppsAuth.authClientId,
       clientSecret: config.apis.hmppsAuth.authClientSecret,
-      callbackURL: `${config.ingressUrl}/sign-in/callback`,
+      callbackURL: `/sign-in/callback`,
       state: true,
       customHeaders: { Authorization: generateOauthClientToken() },
     },
@@ -35,9 +37,44 @@ passport.use(
   ),
 )
 
+passport.use(
+  'launchpad-auth',
+  new OpenIDConnectStrategy(
+    {
+      issuer: config.apis.launchpadAuth.externalUrl,
+      authorizationURL: `${config.apis.launchpadAuth.externalUrl}/v1/oauth2/authorize`,
+      tokenURL: `${config.apis.launchpadAuth.url}/v1/oauth2/token`,
+      userInfoURL: null,
+      skipUserProfile: true,
+      clientID: config.apis.launchpadAuth.apiClientId,
+      clientSecret: config.apis.launchpadAuth.apiClientSecret,
+      callbackURL: `/sign-in/callback`,
+      scope: config.apis.launchpadAuth.scopes.map(scope => scope.type),
+      nonce: process.env.INTEGRATION_TESTS === 'true' ? undefined : 'true',
+      customHeaders: {
+        Authorization: generateOauthClientToken(
+          config.apis.launchpadAuth.apiClientId,
+          config.apis.launchpadAuth.apiClientSecret,
+        ),
+      },
+    },
+    async function verify(
+      issuer: string,
+      profile: Profile,
+      context: object,
+      idToken: string,
+      accessToken: string,
+      refreshToken: string,
+      done: VerifyCallback,
+    ) {
+      const user = launchpadUserFrom(idToken, refreshToken, accessToken)
+      return done(null, user as Express.User)
+    },
+  ),
+)
+
 export default function setupAuthentication() {
   const router = Router()
-  const tokenVerificationClient = new VerificationClient(config.apis.tokenVerification, logger)
 
   router.use(passport.initialize())
   router.use(passport.session())
@@ -48,20 +85,18 @@ export default function setupAuthentication() {
     return res.render('autherror')
   })
 
-  router.get('/sign-in', passport.authenticate('oauth2'))
+  router.get('/sign-in', (req, res, next) => passport.authenticate(authStrategyFor(req).name)(req, res, next))
 
   router.get('/sign-in/callback', (req, res, next) =>
-    passport.authenticate('oauth2', {
+    passport.authenticate(authStrategyFor(req).name, {
       successReturnToOrRedirect: req.session.returnTo || '/',
       failureRedirect: '/autherror',
     })(req, res, next),
   )
 
-  const authUrl = config.apis.hmppsAuth.externalUrl
-  const authParameters = `client_id=${config.apis.hmppsAuth.authClientId}&redirect_uri=${config.ingressUrl}`
-
   router.use('/sign-out', (req, res, next) => {
-    const authSignOutUrl = `${authUrl}/sign-out?${authParameters}`
+    const authSignOutUrl = authStrategyFor(req).signOutUrl()
+
     if (req.user) {
       req.logout(err => {
         if (err) return next(err)
@@ -70,12 +105,8 @@ export default function setupAuthentication() {
     } else res.redirect(authSignOutUrl)
   })
 
-  router.use('/account-details', (req, res) => {
-    res.redirect(`${authUrl}/account-details?${authParameters}`)
-  })
-
   router.use(async (req, res, next) => {
-    if (req.isAuthenticated() && (await tokenVerificationClient.verifyToken(req as unknown as AuthenticatedRequest))) {
+    if (req.isAuthenticated() && (await authStrategyFor(req).tokenVerification())) {
       return next()
     }
     req.session.returnTo = req.originalUrl

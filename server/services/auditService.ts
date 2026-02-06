@@ -32,6 +32,8 @@ export enum Page {
   FEEDBACK = 'FEEDBACK',
   HELP = 'HELP',
   NOT_FOUND = 'NOT_FOUND',
+  STAFF_PORTAL_UNAUTHORIZED = 'STAFF_PORTAL_UNAUTHORIZED',
+  STAFF_CHANGE_PRISON = 'STAFF_CHANGE_PRISON',
 }
 
 export interface PageViewEventDetails {
