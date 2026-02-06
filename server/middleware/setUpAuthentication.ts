@@ -109,7 +109,7 @@ export default function setupAuthentication() {
   })
 
   router.use(async (req, res, next) => {
-    if (req.isAuthenticated() && (await tokenVerificationClient.verifyToken(req as unknown as AuthenticatedRequest))) {
+    if (req.isAuthenticated() && (await tokenVerificationFor(req))) {
       return next()
     }
     req.session.returnTo = req.originalUrl
@@ -135,3 +135,13 @@ const signOutUrlFor: (req: Request) => string = req => {
 
   return '/'
 }
+
+export const tokenVerificationFor: (req: Request) => Promise<boolean> = req =>
+  isRequestForStaffPortal(req) ? verifyHmppsAuthToken(req) : validateOrRefreshLaunchpadToken(req)
+
+type TokenVerificationClient = (req: Request) => Promise<boolean>
+const verifyHmppsAuthToken: TokenVerificationClient = async req =>
+  new VerificationClient(config.apis.tokenVerification, logger).verifyToken(req as unknown as AuthenticatedRequest)
+
+// TODO: when we implement refresh tokens, start here
+const validateOrRefreshLaunchpadToken: TokenVerificationClient = _req => Promise.resolve(true)
