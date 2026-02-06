@@ -95,18 +95,6 @@ export default {
           permittedImplicitly: false,
           humanReadableDescription: 'Prison booking details',
         },
-        {
-          type: 'user.clients.read',
-          accessGranted: 'Grants permission to read information about clients that a user has approved.',
-          permittedImplicitly: false,
-          humanReadableDescription: "Apps you've allowed access to",
-        },
-        {
-          type: 'user.clients.delete',
-          accessGranted: 'Grants permission to delete clients that a user has approved.',
-          permittedImplicitly: false,
-          humanReadableDescription: "Apps you've removed access to",
-        },
       ],
     },
     tokenVerification: {
