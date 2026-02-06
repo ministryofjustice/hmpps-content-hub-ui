@@ -19,6 +19,7 @@ import setupEstablishments from './middleware/setUpEstablishments'
 import routes from './routes'
 import type { Services } from './services'
 import setupPortals from './middleware/setUpPortals'
+import logger from '../logger'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -31,6 +32,15 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
+
+  app.use((req, res, next) => {
+    if (!req.originalUrl.startsWith('/assets')) {
+      logger.info(req.originalUrl)
+      // logger.info(req.session)
+    }
+    next()
+  })
+
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   app.use(setUpI18n())

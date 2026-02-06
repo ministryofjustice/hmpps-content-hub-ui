@@ -4,15 +4,21 @@ import hmppsAuth from '../mockApis/hmppsAuth'
 import tokenVerification from '../mockApis/tokenVerification'
 
 import { resetStubs } from '../testUtils'
+import launchpadAuth from '../mockApis/launchpadAuth'
 
 test.describe('Health', () => {
-  test.afterEach(async () => {
+  test.beforeEach(async () => {
     await resetStubs()
   })
 
   test.describe('All healthy', () => {
     test.beforeEach(async () => {
-      await Promise.all([hmppsAuth.stubPing(), exampleApi.stubPing(), tokenVerification.stubPing()])
+      await Promise.all([
+        hmppsAuth.stubPing(),
+        launchpadAuth.stubPing(),
+        exampleApi.stubPing(),
+        tokenVerification.stubPing(),
+      ])
     })
 
     test('Health check is accessible and status is UP', async ({ page }) => {
@@ -36,17 +42,23 @@ test.describe('Health', () => {
 
   test.describe('Some unhealthy', () => {
     test.beforeEach(async () => {
-      await Promise.all([hmppsAuth.stubPing(), exampleApi.stubPing(), tokenVerification.stubPing(500)])
+      await Promise.all([
+        hmppsAuth.stubPing(),
+        launchpadAuth.stubPing(),
+        exampleApi.stubPing(),
+        tokenVerification.stubPing(500),
+      ])
     })
 
     test('Health check status is down', async ({ page }) => {
       const response = await page.request.get('/health')
       const payload = await response.json()
-      expect(payload.status).toBe('DOWN')
       expect(payload.components.hmppsAuth.status).toBe('UP')
+      expect(payload.components.launchpadAuth.status).toBe('UP')
       expect(payload.components.tokenVerification.status).toBe('DOWN')
       expect(payload.components.tokenVerification.details.status).toBe(500)
       expect(payload.components.tokenVerification.details.attempts).toBe(3)
+      expect(payload.status).toBe('DOWN')
     })
   })
 })

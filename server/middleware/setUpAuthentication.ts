@@ -52,7 +52,7 @@ passport.use(
       clientSecret: config.apis.launchpadAuth.apiClientSecret,
       callbackURL: `/sign-in/callback`,
       scope: config.apis.launchpadAuth.scopes.map(scope => scope.type),
-      nonce: 'true',
+      nonce: process.env.INTEGRATION_TESTS === 'true' ? undefined : 'true',
       customHeaders: {
         Authorization: generateOauthClientToken(
           config.apis.launchpadAuth.apiClientId,

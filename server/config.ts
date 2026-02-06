@@ -14,6 +14,8 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
 
 const requiredInProduction = { requireInProduction: true }
 
+const requiredInProductionIf = (condition: boolean) => ({ requireInProduction: condition })
+
 const auditConfig = () => {
   const auditEnabled = get('AUDIT_ENABLED', 'false') === 'true'
   return {
@@ -21,9 +23,9 @@ const auditConfig = () => {
     queueUrl: get(
       'AUDIT_SQS_QUEUE_URL',
       'http://localhost:4566/000000000000/mainQueue',
-      auditEnabled && requiredInProduction,
+      requiredInProductionIf(auditEnabled),
     ),
-    serviceName: get('AUDIT_SERVICE_NAME', 'UNASSIGNED', auditEnabled && requiredInProduction),
+    serviceName: get('AUDIT_SERVICE_NAME', 'UNASSIGNED', requiredInProductionIf(auditEnabled)),
     region: get('AUDIT_SQS_REGION', 'eu-west-2'),
   }
 }
@@ -39,7 +41,7 @@ export default {
   redis: {
     enabled: get('REDIS_ENABLED', 'false', requiredInProduction) === 'true',
     host: get('REDIS_HOST', 'localhost', requiredInProduction),
-    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    port: Number(process.env.REDIS_PORT) || 6379,
     password: process.env.REDIS_AUTH_TOKEN,
     tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
   },
@@ -65,7 +67,7 @@ export default {
     launchpadAuth: {
       url: get('LAUNCHPAD_AUTH_URL', 'http://localhost:8080', requiredInProduction),
       healthPath: '/health/ping',
-      externalUrl: get('LAUNCHPAD_AUTH_EXTERNAL_URL', 'http://localhost:8080'),
+      externalUrl: get('LAUNCHPAD_AUTH_EXTERNAL_URL', get('LAUNCHPAD_AUTH_URL', 'http://localhost:8080')),
       timeout: {
         response: Number(get('LAUNCHPAD_AUTH_TIMEOUT_RESPONSE', 10000)),
         deadline: Number(get('LAUNCHPAD_AUTH_TIMEOUT_DEADLINE', 10000)),
