@@ -1,15 +1,13 @@
 import passport from 'passport'
 import flash from 'connect-flash'
-import { Router, Request } from 'express'
+import { Router } from 'express'
 import { Strategy } from 'passport-oauth2'
 import OpenIDConnectStrategy, { Profile, VerifyCallback } from 'passport-openidconnect'
-import { VerificationClient, AuthenticatedRequest } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import { HmppsUser } from '../interfaces/hmppsUser'
 import generateOauthClientToken from '../utils/clientCredentials'
-import logger from '../../logger'
-import { isRequestForStaffPortal } from './setUpPortals'
 import launchpadUserFrom from './authentication/launchpad/launchpadUser'
+import { authStrategyFor } from './authentication/authStrategy'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -77,7 +75,6 @@ passport.use(
 
 export default function setupAuthentication() {
   const router = Router()
-  const tokenVerificationClient = new VerificationClient(config.apis.tokenVerification, logger)
 
   router.use(passport.initialize())
   router.use(passport.session())
@@ -88,17 +85,17 @@ export default function setupAuthentication() {
     return res.render('autherror')
   })
 
-  router.get('/sign-in', (req, res, next) => passport.authenticate(authStrategyFor(req))(req, res, next))
+  router.get('/sign-in', (req, res, next) => passport.authenticate(authStrategyFor(req).name)(req, res, next))
 
   router.get('/sign-in/callback', (req, res, next) =>
-    passport.authenticate(authStrategyFor(req), {
+    passport.authenticate(authStrategyFor(req).name, {
       successReturnToOrRedirect: req.session.returnTo || '/',
       failureRedirect: '/autherror',
     })(req, res, next),
   )
 
   router.use('/sign-out', (req, res, next) => {
-    const authSignOutUrl = signOutUrlFor(req)
+    const authSignOutUrl = authStrategyFor(req).signOutUrl()
 
     if (req.user) {
       req.logout(err => {
@@ -109,7 +106,7 @@ export default function setupAuthentication() {
   })
 
   router.use(async (req, res, next) => {
-    if (req.isAuthenticated() && (await tokenVerificationFor(req))) {
+    if (req.isAuthenticated() && (await authStrategyFor(req).tokenVerification())) {
       return next()
     }
     req.session.returnTo = req.originalUrl
@@ -123,25 +120,3 @@ export default function setupAuthentication() {
 
   return router
 }
-
-export const authStrategyFor: (req: Request) => 'hmpps-auth' | 'launchpad-auth' = req =>
-  isRequestForStaffPortal(req) ? 'hmpps-auth' : 'launchpad-auth'
-
-const signOutUrlFor: (req: Request) => string = req => {
-  if (authStrategyFor(req) === 'hmpps-auth') {
-    const { externalUrl, authClientId } = config.apis.hmppsAuth
-    return `${externalUrl}/sign-out?client_id=${authClientId}&redirect_uri=${req.protocol}://${req.host}`
-  }
-
-  return '/'
-}
-
-export const tokenVerificationFor: (req: Request) => Promise<boolean> = req =>
-  isRequestForStaffPortal(req) ? verifyHmppsAuthToken(req) : validateOrRefreshLaunchpadToken(req)
-
-type TokenVerificationClient = (req: Request) => Promise<boolean>
-const verifyHmppsAuthToken: TokenVerificationClient = async req =>
-  new VerificationClient(config.apis.tokenVerification, logger).verifyToken(req as unknown as AuthenticatedRequest)
-
-// TODO: when we implement refresh tokens, start here
-const validateOrRefreshLaunchpadToken: TokenVerificationClient = _req => Promise.resolve(true)
