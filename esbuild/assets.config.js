@@ -40,6 +40,7 @@ const getAssetsConfig = buildConfig => ({
     }),
     sassPlugin({
       quietDeps: true,
+      silenceDeprecations: ['import', 'global-builtin', 'color-functions'],
       loadPaths: [process.cwd(), path.join(process.cwd(), 'node_modules')],
     }),
     buildNotificationPlugin('Assets', buildConfig.isWatchMode),
