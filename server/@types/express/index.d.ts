@@ -1,10 +1,12 @@
 import { i18n, TFunction } from 'i18next'
 import { HmppsUser } from '../../interfaces/hmppsUser'
+import { Establishment } from '../establishment'
 
 export declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
   interface SessionData {
     returnTo: string
+    establishment?: Establishment
   }
 }
 
@@ -27,6 +29,9 @@ export declare global {
 
     interface Locals {
       user: HmppsUser
+      isStaffPortal: boolean
+      isPrisonerPortal: boolean
+      establishment?: Establishment
     }
   }
 }

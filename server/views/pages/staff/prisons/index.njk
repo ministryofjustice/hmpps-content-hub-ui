@@ -1,0 +1,30 @@
+{% extends "../../../partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = applicationName + " - Change prison" %}
+{% set mainClasses = "govuk-body" %}
+
+{% block content %}
+
+<form method="post" action="/staff/prisons">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    
+  {{ govukRadios({
+    classes: "govuk-radios--small",
+    name: "establishment",
+    fieldset: {
+      legend: {
+        text: "Change prison",
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--m"
+      }
+    },
+    items: establishmentOptions
+  }) }}
+  
+  {{ govukButton({
+    text: "Choose prison"
+  }) }}
+</form>
+{% endblock %}

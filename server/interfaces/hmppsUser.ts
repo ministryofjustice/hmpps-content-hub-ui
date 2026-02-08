@@ -1,4 +1,7 @@
-export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
+import { Establishment } from '../@types/establishment'
+import { IdToken } from '../@types/launchpad'
+
+export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread' | 'launchpad'
 
 /**
  * These are the details that all user types share.
@@ -57,4 +60,12 @@ export interface AzureADUser extends BaseUser {
   authSource: 'azuread'
 }
 
-export type HmppsUser = PrisonUser | ProbationUser | ExternalUser | AzureADUser
+export interface LaunchpadUser extends BaseUser {
+  authSource: 'launchpad'
+  establishment: Establishment
+  idToken: IdToken
+  refreshToken: string
+  accessToken: string
+}
+
+export type HmppsUser = PrisonUser | ProbationUser | ExternalUser | AzureADUser | LaunchpadUser
