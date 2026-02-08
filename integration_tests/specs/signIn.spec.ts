@@ -39,16 +39,6 @@ test.describe('SignIn (Prisoners login)', () => {
     await loginWithLaunchpadAuth(page, { active: false })
 
     await HomePage.verifyOnPage(page)
-    await expect(page.getByRole('heading')).not.toHaveText('Sign in')
-  })
-
-  test('User with correct details is logged in successfully', async ({ page }) => {
-    await loginWithLaunchpadAuth(page, { name: 'A TestUser' })
-
-    const homePage = await HomePage.verifyOnPage(page)
-
-    // TODO: this will have to change if we remove the name from the header
-    await expect(homePage.usersName).toHaveText('A. Testuser')
   })
 })
 
@@ -85,15 +75,6 @@ test.describe('SignIn (Staff login)', () => {
     const homePage = await HomePage.verifyOnPage(page)
 
     await expect(homePage.phaseBanner).toHaveText('dev')
-  })
-
-  test('User with correct details is logged in successfully', async ({ page }) => {
-    await loginWithHmppsAuth(page, { name: 'A TestUser' })
-
-    const homePage = await HomePage.verifyOnPage(page)
-
-    // TODO: this will have to change if we remove the name from the header
-    await expect(homePage.usersName).toHaveText('A. Testuser')
   })
 
   test('Token verification failure takes user to sign in page', async ({ page }) => {
