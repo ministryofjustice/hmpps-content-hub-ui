@@ -116,15 +116,6 @@ export default {
       },
       agent: new AgentConfig(Number(get('EXAMPLE_API_TIMEOUT_RESPONSE', 5000))),
     },
-    componentApi: {
-      url: get('COMPONENT_API_URL', 'http://localhost:8082', requiredInProduction),
-      healthPath: '/health/ping',
-      timeout: {
-        response: Number(get('COMPONENT_API_TIMEOUT_RESPONSE', 5000)),
-        deadline: Number(get('COMPONENT_API_TIMEOUT_DEADLINE', 5000)),
-      },
-      agent: new AgentConfig(Number(get('COMPONENT_API_TIMEOUT_RESPONSE', 5000))),
-    },
   },
   serviceUrls: {
     digitalPrison: get('DPS_URL', 'http://localhost:3000', requiredInProduction),
