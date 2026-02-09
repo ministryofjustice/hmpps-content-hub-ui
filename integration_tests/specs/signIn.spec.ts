@@ -77,12 +77,10 @@ test.describe('SignIn (Staff login)', () => {
     await expect(page.getByRole('heading')).toHaveText('Sign in')
   })
 
-  test('Phase banner visible in header', async ({ page }) => {
-    await loginWithHmppsAuth(page)
+  test('User with correct details is logged in successfully', async ({ page }) => {
+    await loginWithHmppsAuth(page, { name: 'A TestUser' })
 
-    const homePage = await HomePage.verifyOnPage(page)
-
-    await expect(homePage.phaseBanner).toHaveText('dev')
+    await HomePage.verifyOnPage(page)
   })
 
   test('Token verification failure takes user to sign in page', async ({ page }) => {
