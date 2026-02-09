@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test'
 import exampleApi from '../mockApis/exampleApi'
 import hmppsAuth from '../mockApis/hmppsAuth'
 import tokenVerification from '../mockApis/tokenVerification'
-import componentApi from '../mockApis/componentApi'
 
 import { resetStubs } from '../testUtils'
 import launchpadAuth from '../mockApis/launchpadAuth'
@@ -15,7 +14,6 @@ test.describe('Health', () => {
   test.describe('All healthy', () => {
     test.beforeEach(async () => {
       await Promise.all([
-        componentApi.stubPing(),
         exampleApi.stubPing(),
         hmppsAuth.stubPing(),
         launchpadAuth.stubPing(),
@@ -45,7 +43,6 @@ test.describe('Health', () => {
   test.describe('Some unhealthy', () => {
     test.beforeEach(async () => {
       await Promise.all([
-        componentApi.stubPing(),
         exampleApi.stubPing(),
         hmppsAuth.stubPing(),
         launchpadAuth.stubPing(),
