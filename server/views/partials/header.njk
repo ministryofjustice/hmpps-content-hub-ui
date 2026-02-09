@@ -10,8 +10,8 @@
         <img class="hmpps-header__logo" src="/assets/images/content-hub-logo.png" alt="logo">
         {{ t('common:header.title') or 'Content Hub' }}
 
-        {% if establishmentName %}
-          <a class="hmpps-header__link hmpps-header__title__service-name" href="/">{{ establishmentName }}</a>
+        {% if establishment %}
+          <a class="hmpps-header__link hmpps-header__title__service-name" href="/">{{ establishment.displayName }}</a>
         {% endif %}
       </a>
 
