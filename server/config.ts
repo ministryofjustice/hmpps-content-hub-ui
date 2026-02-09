@@ -117,9 +117,6 @@ export default {
       agent: new AgentConfig(Number(get('EXAMPLE_API_TIMEOUT_RESPONSE', 5000))),
     },
   },
-  serviceUrls: {
-    digitalPrison: get('DPS_URL', 'http://localhost:3000', requiredInProduction),
-  },
   establishments: [
     { code: 'BNI', name: 'bullingdon', displayName: 'HMP Bullingdon', youth: false },
     { code: 'BWI', name: 'berwyn', displayName: 'HMP Berwyn', youth: false },
