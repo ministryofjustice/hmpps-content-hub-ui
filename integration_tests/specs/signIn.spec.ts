@@ -39,6 +39,14 @@ test.describe('SignIn (Prisoners login)', () => {
     await loginWithLaunchpadAuth(page, { active: false })
 
     await HomePage.verifyOnPage(page)
+
+    await expect(page.getByRole('heading')).not.toHaveText('Sign in')
+  })
+
+  test('User with correct details is logged in successfully', async ({ page }) => {
+    await loginWithLaunchpadAuth(page, { name: 'A TestUser' })
+
+    await HomePage.verifyOnPage(page)
   })
 })
 
