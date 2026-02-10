@@ -6,8 +6,8 @@ import OpenIDConnectStrategy, { Profile, VerifyCallback } from 'passport-openidc
 import config from '../config'
 import { HmppsUser } from '../interfaces/hmppsUser'
 import generateOauthClientToken from '../utils/clientCredentials'
-import launchpadUserFrom from './authentication/launchpad/launchpadUser'
 import { authStrategyFor } from './authentication/authStrategy'
+import { userFromTokens } from './authentication/launchpad/tokens'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -67,8 +67,8 @@ passport.use(
       refreshToken: string,
       done: VerifyCallback,
     ) {
-      const user = launchpadUserFrom(idToken, refreshToken, accessToken)
-      return done(null, user as Express.User)
+      const user = userFromTokens(idToken, refreshToken, accessToken)
+      return done(null, user)
     },
   ),
 )
@@ -106,7 +106,9 @@ export default function setupAuthentication() {
   })
 
   router.use(async (req, res, next) => {
-    if (req.isAuthenticated() && (await authStrategyFor(req).tokenVerification())) {
+    const { tokenVerification } = authStrategyFor(req)
+
+    if (req.isAuthenticated() && (await tokenVerification())) {
       return next()
     }
     req.session.returnTo = req.originalUrl

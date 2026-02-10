@@ -1,8 +1,7 @@
-import { Establishment } from '../../../@types/establishment'
-import { IdToken } from '../../../@types/launchpad'
+import { Establishment, IdToken, RefreshToken } from '../../../@types/launchpad'
 import { LaunchpadUser } from '../../../interfaces/hmppsUser'
 
-export default (idToken: string, refreshToken: string, accessToken: string): LaunchpadUser => {
+export const userFromTokens = (idToken: string, refreshToken: string, accessToken: string): LaunchpadUser => {
   const idTokenJson = JSON.parse(Buffer.from(idToken.split('.')[1], 'base64').toString()) as IdToken
 
   const establishment: Establishment = {
@@ -14,15 +13,18 @@ export default (idToken: string, refreshToken: string, accessToken: string): Lau
 
   return {
     idToken: idTokenJson,
-    username: idTokenJson.name,
-    authSource: 'launchpad',
-    userId: null,
-    userRoles: null,
-    name: idTokenJson.name,
     displayName: idTokenJson.name,
     refreshToken,
     accessToken,
-    token: idToken,
     establishment,
+    // To comply with HmppsUser
+    authSource: 'launchpad',
+    name: idTokenJson.name,
+    username: idTokenJson.name,
+    token: idToken,
+    userId: idTokenJson.sub,
+    userRoles: [],
   }
 }
+
+export const tokenHasNotExpired = (token: IdToken | RefreshToken, epoch: number): boolean => token.exp >= epoch

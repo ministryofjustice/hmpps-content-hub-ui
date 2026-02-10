@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { stubFor, getMatchingRequests } from './wiremock'
-import { IdToken } from '../../server/@types/launchpad'
-import { Establishment } from '../../server/@types/establishment'
+import { Establishment, IdToken } from '../../server/@types/launchpad'
 import config from '../../server/config'
 
 export interface LaunchpadUserToken {

@@ -11,6 +11,7 @@ export interface AuthStrategy {
   name: 'launchpad-auth' | 'hmpps-auth'
   signOutUrl: () => string
   tokenVerification: () => Promise<boolean>
+  tokenRefresh: () => Promise<void>
 }
 
 const launchpadAuthStrategy: (req: Request) => AuthStrategy = _req => {
@@ -18,6 +19,7 @@ const launchpadAuthStrategy: (req: Request) => AuthStrategy = _req => {
     name: 'launchpad-auth',
     signOutUrl: () => '/',
     tokenVerification: () => Promise.resolve(true),
+    tokenRefresh: async () => {},
   }
 }
 
@@ -30,5 +32,6 @@ const hmppsAuthStrategy: (req: Request) => AuthStrategy = req => {
     },
     tokenVerification: async () =>
       new VerificationClient(config.apis.tokenVerification, logger).verifyToken(req as unknown as AuthenticatedRequest),
+    tokenRefresh: async () => {},
   }
 }

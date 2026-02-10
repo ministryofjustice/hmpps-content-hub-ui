@@ -1,5 +1,4 @@
-import { Establishment } from '../@types/establishment'
-import { IdToken } from '../@types/launchpad'
+import { Establishment, IdToken } from '../@types/launchpad'
 
 export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread' | 'launchpad'
 
@@ -60,12 +59,18 @@ export interface AzureADUser extends BaseUser {
   authSource: 'azuread'
 }
 
+/**
+ * Launchpad users are prisoners authenticating to launchpad auth with their Entra Ids
+ */
 export interface LaunchpadUser extends BaseUser {
-  authSource: 'launchpad'
   establishment: Establishment
   idToken: IdToken
   refreshToken: string
   accessToken: string
+  displayName: string
+  username: string
+  authSource: 'launchpad'
+  token: string
 }
 
 export type HmppsUser = PrisonUser | ProbationUser | ExternalUser | AzureADUser | LaunchpadUser
