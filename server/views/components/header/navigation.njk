@@ -1,0 +1,29 @@
+{% from "./search.njk" import hubSearch %}
+
+{% macro headerNavigation(params, t) %}
+<nav aria-label="{{ t('common:header.navigationLabel') or 'Content Hub Navigation' }}">
+  <ul class="hmpps-header__navigation">
+    {% if params.supportedLanguages and params.supportedLanguages.length > 1 %}
+      <li class="hmpps-header__navigation__item hmpps-header__navigation__item--languages">
+        {% for lang in params.supportedLanguages %}
+          <a
+            href="?lng={{ lang.code }}"
+            lang="{{ lang.code }}"
+            class="hmpps-header__link hmpps-header__language-link {% if lang.code == params.language %}hmpps-header__language-link--active{% endif %}"
+            {% if lang.code == params.language %}aria-current="true"{% endif %}
+          >
+            {{ lang.text }}
+          </a>
+          {% if not loop.last %}<span class="hmpps-header__language-separator" aria-hidden="true">|</span>{% endif %}
+        {% endfor %}
+      </li>
+    {% endif %}
+
+    {% if params.showSearch %}
+      <li class="hmpps-header__navigation__item hmpps-header__navigation__item--search">
+        {{ hubSearch({ query: params.searchQuery, small: true }, t) }}
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endmacro %}

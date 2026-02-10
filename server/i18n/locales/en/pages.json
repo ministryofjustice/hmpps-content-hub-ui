@@ -8,9 +8,7 @@
   },
   "search": {
     "noResults": "No results found for \"{{term}}\"",
-    "searchTheContentHub": "Search the Content Hub",
-    "showingResults": "Showing results for \"{{term}}\"",
-    "title": "Search"
+    "showingResults": "Showing results for \"{{term}}\""
   },
   "recentlyAdded": {
     "summary": "The latest uploads on the Hub.",

@@ -48,7 +48,7 @@ In your Express routes, use `req.t()` to translate text:
 
 ```typescript
 router.get("/", (req, res) => {
-  const title = req.t("common:topBar.title");
+  const title = req.t("common:header.title");
   res.render("pages/index", { title });
 });
 ```
@@ -64,7 +64,7 @@ const currentLanguage = req.language; // 'en' or 'cy'
 Use the global `t` function in your templates:
 
 ```nunjucks
-<h1>{{ t('common:topBar.title') }}</h1>
+<h1>{{ t('common:header.title') }}</h1>
 <p>{{ t('features:contentTile.new') }}</p>
 <a href="/">{{ t('common:pageNavigation.home') }}</a>
 ```
@@ -180,7 +180,7 @@ import { getServerTranslation, translate, translationExists } from './i18n/helpe
 
 // Get a fixed translation function for a specific language
 const t = getServerTranslation('cy');
-const title = t('common:topBar.title');
+const title = t('common:header.title');
 
 // Translate without request context
 const text = translate('common:skipToMainContent', { lng: 'en' });
@@ -243,7 +243,7 @@ beforeAll(async () => {
 });
 
 test("should display translated text", () => {
-  const translated = i18next.t("common:topBar.title");
+  const translated = i18next.t("common:header.title");
   expect(translated).toBe("Content Hub");
 });
 

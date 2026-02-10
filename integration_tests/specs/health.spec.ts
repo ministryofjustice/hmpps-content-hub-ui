@@ -14,9 +14,9 @@ test.describe('Health', () => {
   test.describe('All healthy', () => {
     test.beforeEach(async () => {
       await Promise.all([
+        exampleApi.stubPing(),
         hmppsAuth.stubPing(),
         launchpadAuth.stubPing(),
-        exampleApi.stubPing(),
         tokenVerification.stubPing(),
       ])
     })
@@ -43,9 +43,9 @@ test.describe('Health', () => {
   test.describe('Some unhealthy', () => {
     test.beforeEach(async () => {
       await Promise.all([
+        exampleApi.stubPing(),
         hmppsAuth.stubPing(),
         launchpadAuth.stubPing(),
-        exampleApi.stubPing(),
         tokenVerification.stubPing(500),
       ])
     })
