@@ -15,6 +15,7 @@ import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpContentHubHeader from './middleware/setUpContentHubHeader'
+import setUpFooterTopics from './middleware/setUpFooterTopics'
 import setupEstablishments from './middleware/setUpEstablishments'
 import setupPortals from './middleware/setUpPortals'
 
@@ -44,6 +45,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCurrentUser())
   app.use(setUpContentHubHeader())
   app.use(setupEstablishments())
+  app.use(setUpFooterTopics(services.cmsService))
 
   app.use(routes(services))
 
