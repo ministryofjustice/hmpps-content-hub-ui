@@ -40,14 +40,21 @@ export const loginWithLaunchpadAuth = async (
   {
     name = 'A TestUser',
     establishmentCode = 'BNI',
+    tokenExpiresInSeconds = 9999,
     active = true,
     roles = DEFAULT_ROLES,
-  }: { active?: boolean; roles?: string[]; name?: string; establishmentCode?: string } = {},
+  }: {
+    active?: boolean
+    roles?: string[]
+    name?: string
+    establishmentCode?: string
+    tokenExpiresInSeconds?: number
+  } = {},
 ) => {
   await Promise.all([
     launchpadAuth.favicon(),
     launchpadAuth.stubSignInPage(),
-    launchpadAuth.token({ name, establishmentCode }),
+    launchpadAuth.token({ name, establishmentCode, expiresInSeconds: tokenExpiresInSeconds }),
     hmppsAuth.token({ name, roles, authSource: 'nomis' }),
     tokenVerification.stubVerifyToken(active),
   ])

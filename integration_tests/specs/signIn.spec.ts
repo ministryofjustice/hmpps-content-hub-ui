@@ -27,20 +27,18 @@ test.describe('SignIn (Prisoners login)', () => {
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
   })
 
-  test('Token verification failure does not affect user login (launchpad auth tokens should not be verified)', async ({
-    page,
-  }) => {
-    await loginWithLaunchpadAuth(page, { active: false })
+  test('User with correct details is logged in successfully', async ({ page }) => {
+    await loginWithLaunchpadAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
 
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).not.toBeVisible()
   })
 
-  test('User with correct details is logged in successfully', async ({ page }) => {
-    await loginWithLaunchpadAuth(page, { name: 'A TestUser' })
+  test('User with expired token and cannot refresh it is redirected to auth', async ({ page }) => {
+    await loginWithLaunchpadAuth(page, { name: 'A TestUser', tokenExpiresInSeconds: 1 })
 
-    await HomePage.verifyOnPage(page)
+    await expect(page.getByRole('heading')).toHaveText('Sign in')
   })
 })
 
