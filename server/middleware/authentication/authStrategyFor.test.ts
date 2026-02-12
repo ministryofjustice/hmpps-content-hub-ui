@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { authStrategyFor } from './authStrategy'
+import authStrategyFor from './authStrategyFor'
 
 describe('authStrategyFor', () => {
   describe('when we are on the prisoner portal', () => {
