@@ -36,9 +36,9 @@ function appSetup(
 ): Express {
   const app = express()
   const mergedServices: Services = {
-    cmsService: ({
+    cmsService: {
       getTopics: jest.fn().mockResolvedValue([]),
-    } as unknown as CmsService),
+    } as unknown as CmsService,
     ...services,
   }
 
