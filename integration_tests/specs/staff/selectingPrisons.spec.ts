@@ -1,16 +1,10 @@
 import { expect, test } from '@playwright/test'
-import exampleApi from '../../mockApis/exampleApi'
-
 import { loginWithHmppsAuth, resetStubs } from '../../testUtils'
 import HomePage from '../../pages/homePage'
 
 test.describe('Staff member selects a prison to view content for', () => {
   test.use({
     baseURL: 'http://staff.localhost:3007',
-  })
-
-  test.beforeEach(async () => {
-    await exampleApi.stubExampleTime()
   })
 
   test.afterEach(async () => {

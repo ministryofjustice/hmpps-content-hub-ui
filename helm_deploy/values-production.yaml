@@ -12,7 +12,6 @@ generic-service:
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     LAUNCHPAD_AUTH_URL: "https://launchpad-auth.hmpps.service.justice.gov.uk"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api.prison.service.justice.gov.uk"
-    EXAMPLE_API_URL: "https://template-kotlin.hmpps.service.justice.gov.uk"
     ENVIRONMENT_NAME: PRODUCTION
     AUDIT_ENABLED: "false"
 
