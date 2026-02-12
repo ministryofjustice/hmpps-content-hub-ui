@@ -6,12 +6,13 @@ import config from '../../server/config'
 export interface LaunchpadUserToken {
   name: string
   establishmentCode: string
+  expiresInSeconds: number
 }
 
-function createRefreshOrAccessToken(type: 'refresh' | 'access', userToken: LaunchpadUserToken) {
+function createRefreshOrAccessToken(userToken: LaunchpadUserToken) {
   const payload = {
     name: userToken.name,
-    exp: new Date().getTime() + 9999,
+    exp: Date.now() / 1000 + userToken.expiresInSeconds,
     scopes: [
       'user.basic.read',
       'user.establishment.read',
@@ -20,7 +21,8 @@ function createRefreshOrAccessToken(type: 'refresh' | 'access', userToken: Launc
       'user.clients.delete',
     ],
     iss: 'http://localhost:9091/launchpadauth',
-    [type === 'refresh' ? 'jti' : 'ati']: 'a610a10-cca6-41db-985f-e87efb303aaf',
+    jti: 'a610a10-cca6-41db-985f-e87efb303aaf',
+    ati: 'a610a10-cca6-41db-985f-e87efb303aaf',
   }
   return jwt.sign(payload, 'secret')
 }
@@ -36,7 +38,7 @@ function createIdToken(userToken: LaunchpadUserToken) {
     iat: new Date().getTime(),
     aud: 'clientid',
     sub: 'A-BOOKING-ID',
-    exp: new Date().getTime() + 9999,
+    exp: Date.now() / 1000 + userToken.expiresInSeconds,
     booking: {
       id: 'A-BOOKING-ID',
     },
@@ -130,11 +132,11 @@ export default {
           Location: 'http://localhost:3007/sign-in/callback?code=codexxxx&state=stateyyyy',
         },
         jsonBody: {
-          access_token: createRefreshOrAccessToken('access', userToken),
-          refresh_token: createRefreshOrAccessToken('refresh', userToken),
+          access_token: createRefreshOrAccessToken(userToken),
+          refresh_token: createRefreshOrAccessToken(userToken),
           id_token: createIdToken(userToken),
           token_type: 'Bearer',
-          expires_in: 9999,
+          expires_in: Date.now() / 1000 + userToken.expiresInSeconds,
         },
       },
     }),

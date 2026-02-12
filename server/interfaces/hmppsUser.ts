@@ -1,4 +1,4 @@
-import { Establishment, IdToken } from '../@types/launchpad'
+import { Establishment } from '../@types/launchpad'
 
 export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread' | 'launchpad'
 
@@ -64,7 +64,7 @@ export interface AzureADUser extends BaseUser {
  */
 export interface LaunchpadUser extends BaseUser {
   establishment: Establishment
-  idToken: IdToken
+  idToken: string
   refreshToken: string
   accessToken: string
   displayName: string

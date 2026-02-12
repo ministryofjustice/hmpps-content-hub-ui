@@ -38,6 +38,16 @@ export type RefreshToken = {
   scopes: string[]
 }
 
+export type AccessToken = RefreshToken
+
+export type IdTokenEstablishment = {
+  id: string
+  agency_id: string
+  name: string
+  display_name: string
+  youth: boolean
+}
+
 export type IdToken = {
   name: string
   given_name: string
@@ -50,13 +60,7 @@ export type IdToken = {
   booking: {
     id: string
   }
-  establishment: {
-    id: string
-    agency_id: string
-    name: string
-    display_name: string
-    youth: boolean
-  }
+  establishment: IdTokenEstablishment
   iss: string
 }
 

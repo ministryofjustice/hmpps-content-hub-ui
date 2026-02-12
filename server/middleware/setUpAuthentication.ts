@@ -6,7 +6,7 @@ import OpenIDConnectStrategy, { Profile, VerifyCallback } from 'passport-openidc
 import config from '../config'
 import { HmppsUser } from '../interfaces/hmppsUser'
 import generateOauthClientToken from '../utils/clientCredentials'
-import { authStrategyFor } from './authentication/authStrategy'
+import authStrategyFor from './authentication/authStrategyFor'
 import { userFromTokens } from './authentication/launchpad/tokens'
 
 passport.serializeUser((user, done) => {
@@ -80,22 +80,27 @@ export default function setupAuthentication() {
   router.use(passport.session())
   router.use(flash())
 
+  router.use((req, res, next) => {
+    req.authStrategy = authStrategyFor(req)
+    next()
+  })
+
   router.get('/autherror', (req, res) => {
     res.status(401)
     return res.render('autherror')
   })
 
-  router.get('/sign-in', (req, res, next) => passport.authenticate(authStrategyFor(req).name)(req, res, next))
+  router.get('/sign-in', (req, res, next) => passport.authenticate(req.authStrategy.name)(req, res, next))
 
   router.get('/sign-in/callback', (req, res, next) =>
-    passport.authenticate(authStrategyFor(req).name, {
+    passport.authenticate(req.authStrategy.name, {
       successReturnToOrRedirect: req.session.returnTo || '/',
       failureRedirect: '/autherror',
     })(req, res, next),
   )
 
   router.use('/sign-out', (req, res, next) => {
-    const authSignOutUrl = authStrategyFor(req).signOutUrl()
+    const authSignOutUrl = req.authStrategy.signOutUrl()
 
     if (req.user) {
       req.logout(err => {
@@ -106,13 +111,7 @@ export default function setupAuthentication() {
   })
 
   router.use(async (req, res, next) => {
-    const { tokenVerification } = authStrategyFor(req)
-
-    if (req.isAuthenticated() && (await tokenVerification())) {
-      return next()
-    }
-    req.session.returnTo = req.originalUrl
-    return res.redirect('/sign-in')
+    return req.authStrategy.checkAuthentication(req, res, next)
   })
 
   router.use((req, res, next) => {
