@@ -1,0 +1,84 @@
+{% from "govuk/components/footer/macro.njk" import govukFooter %}
+
+{% set topicItemsLeft = [] %}
+{% set topicItemsMiddle = [] %}
+{% set topicItemsRight = [] %}
+{% set sortedTopics = (topics | sort(attribute='linkText')) if topics else [] %}
+{% if sortedTopics.length %}
+  {% set columnSize = (sortedTopics.length / 3) | round(0, 'ceil') %}
+  {% for topic in sortedTopics %}
+    {% if loop.index0 < columnSize %}
+      {% set topicItemsLeft = (topicItemsLeft.push({
+        text: topic.linkText,
+        href: topic.href
+      }), topicItemsLeft) %}
+    {% elseif loop.index0 < columnSize * 2 %}
+      {% set topicItemsMiddle = (topicItemsMiddle.push({
+        text: topic.linkText,
+        href: topic.href
+      }), topicItemsMiddle) %}
+    {% else %}
+      {% set topicItemsRight = (topicItemsRight.push({
+        text: topic.linkText,
+        href: topic.href
+      }), topicItemsRight) %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<footer class="govuk-footer govuk-!-display-none-print" role="contentinfo">
+  <div class="govuk-width-container">
+    <h2 class="govuk-footer__heading">Browse all topics</h2>
+    <div class="govuk-footer__navigation govuk-grid-row">
+      <div class="govuk-footer__section govuk-grid-column-one-third">
+        <ul class="govuk-footer__list">
+          {% for topic in topicItemsLeft %}
+            <li class="govuk-footer__list-item">
+              <a class="govuk-footer__link" href="{{ topic.href }}">{{ topic.text }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="govuk-footer__section govuk-grid-column-one-third">
+        <ul class="govuk-footer__list">
+          {% for topic in topicItemsMiddle %}
+            <li class="govuk-footer__list-item">
+              <a class="govuk-footer__link" href="{{ topic.href }}">{{ topic.text }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="govuk-footer__section govuk-grid-column-one-third">
+        <ul class="govuk-footer__list">
+          {% for topic in topicItemsRight %}
+            <li class="govuk-footer__list-item">
+              <a class="govuk-footer__link" href="{{ topic.href }}">{{ topic.text }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <hr class="govuk-footer__section-break">
+
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        <h2 class="govuk-visually-hidden">Support links</h2>
+        <ul class="govuk-footer__inline-list">
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="/content/4856">Privacy</a>
+          </li>
+        </ul>
+        <span class="govuk-footer__licence-description">
+          All content is available under the
+          <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
+        </span>
+      </div>
+      <div class="govuk-footer__meta-item">
+        <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">
+          <span class="govuk-footer__copyright-logo">© Crown copyright</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

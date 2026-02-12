@@ -116,6 +116,15 @@ export default {
       },
       agent: new AgentConfig(Number(get('EXAMPLE_API_TIMEOUT_RESPONSE', 5000))),
     },
+    cmsApi: {
+      url: get('CMS_API_URL', 'http://localhost:8888', requiredInProduction),
+      healthPath: '/jsonapi',
+      timeout: {
+        response: Number(get('CMS_API_TIMEOUT_RESPONSE', 5000)),
+        deadline: Number(get('CMS_API_TIMEOUT_DEADLINE', 5000)),
+      },
+      agent: new AgentConfig(Number(get('CMS_API_TIMEOUT_RESPONSE', 5000))),
+    },
   },
   establishments: [
     { code: 'BNI', name: 'bullingdon', displayName: 'HMP Bullingdon', youth: false },

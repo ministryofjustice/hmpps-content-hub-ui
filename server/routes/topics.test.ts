@@ -2,11 +2,14 @@ import type { Express } from 'express'
 import request from 'supertest'
 import { appWithAllRoutes, user } from './testutils/appSetup'
 import AuditService, { Page } from '../services/auditService'
+import CmsService from '../services/cmsService'
 import i18next from '../i18n'
 
 jest.mock('../services/auditService')
+jest.mock('../services/cmsService')
 
 const auditService = new AuditService(null) as jest.Mocked<AuditService>
+const cmsService = new CmsService(null) as jest.Mocked<CmsService>
 
 let app: Express
 
@@ -18,6 +21,7 @@ beforeEach(() => {
   app = appWithAllRoutes({
     services: {
       auditService,
+      cmsService,
     },
     userSupplier: () => user,
   })
@@ -29,19 +33,25 @@ afterEach(() => {
 
 describe('Topics Routes', () => {
   describe('GET /topics', () => {
-    it('should throw error showing route is functional', () => {
+    it('should render topics returned from the CMS', () => {
       auditService.logPageView.mockResolvedValue(null)
+      cmsService.getTopics.mockResolvedValue([
+        { id: '1', linkText: 'Education', href: '/tags/1' },
+        { id: '2', linkText: 'Health', href: '/tags/2' },
+      ])
 
       return request(app)
         .get('/topics')
         .expect('Content-Type', /html/)
-        .expect(500)
+        .expect(200)
         .expect(res => {
-          expect(res.text).toContain('Topics route is functional - pending implementation')
+          expect(res.text).toContain('Education')
+          expect(res.text).toContain('Health')
           expect(auditService.logPageView).toHaveBeenCalledWith(Page.TOPICS, {
             who: user.username,
             correlationId: expect.any(String),
           })
+          expect(cmsService.getTopics).toHaveBeenCalled()
         })
     })
   })
