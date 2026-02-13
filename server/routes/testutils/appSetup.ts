@@ -7,9 +7,11 @@ import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
 import AuditService from '../../services/auditService'
+import CmsService from '../../services/cmsService'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 import setUpWebSession from '../../middleware/setUpWebSession'
 import setUpI18n from '../../middleware/setUpI18n'
+import setUpFooterTopics from '../../middleware/setUpFooterTopics'
 
 jest.mock('../../services/auditService')
 
@@ -33,6 +35,12 @@ function appSetup(
   isStaffPortal: boolean = false,
 ): Express {
   const app = express()
+  const mergedServices: Services = {
+    cmsService: {
+      getTopics: jest.fn().mockResolvedValue([]),
+    } as unknown as CmsService,
+    ...services,
+  }
 
   app.set('view engine', 'njk')
 
@@ -54,9 +62,10 @@ function appSetup(
     req.id = randomUUID()
     next()
   })
+  app.use(setUpFooterTopics(mergedServices.cmsService))
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(routes(services))
+  app.use(routes(mergedServices))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 
@@ -67,6 +76,9 @@ export function appWithAllRoutes({
   production = false,
   services = {
     auditService: new AuditService(null) as jest.Mocked<AuditService>,
+    cmsService: {
+      getTopics: jest.fn().mockResolvedValue([]),
+    } as unknown as CmsService,
   },
   userSupplier = () => user,
   isStaffPortal = false,

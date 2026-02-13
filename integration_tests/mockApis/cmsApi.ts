@@ -1,12 +1,13 @@
 import type { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
+import { defaultTopicsResponse } from '../fixtures/cmsTopics'
 
 export default {
   stubPing: (httpStatus = 200): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/example-api/health/ping',
+        urlPattern: '/jsonapi',
       },
       response: {
         status: httpStatus,
@@ -15,16 +16,16 @@ export default {
       },
     }),
 
-  stubExampleTime: (httpStatus = 200): SuperAgentRequest =>
+  stubTopics: (httpStatus = 200, body: Record<string, unknown> = defaultTopicsResponse): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/example-api/example/time',
+        urlPattern: '/en/jsonapi/prison/bullingdon/taxonomy_term.*',
       },
       response: {
         status: httpStatus,
-        headers: { 'Content-Type': 'application/text;charset=UTF-8' },
-        body: '2025-01-01T12:00:00Z',
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: body,
       },
     }),
 }

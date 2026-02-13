@@ -1,0 +1,18 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Topics" %}
+{% set mainClasses = "govuk-body" %}
+
+{% block content %}
+  <h1>Topics</h1>
+
+  {% if topics and topics.length %}
+    <ul class="govuk-list govuk-list--bullet">
+      {% for topic in topics %}
+        <li>{{ topic.linkText }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No topics returned from the CMS.</p>
+  {% endif %}
+{% endblock %}

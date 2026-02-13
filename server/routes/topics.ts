@@ -1,8 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
+import config from '../config'
 
-export default function topicsRoutes({ auditService }: Services): Router {
+export default function topicsRoutes({ auditService, cmsService }: Services): Router {
   const router = Router()
 
   router.get('/topics', async (req: Request, res: Response, next: NextFunction) => {
@@ -11,8 +12,11 @@ export default function topicsRoutes({ auditService }: Services): Router {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
+      const establishmentName = res.locals.establishment?.name || config.establishments[0].name
+      const language = res.locals.language || 'en'
+      const topics = await cmsService.getTopics(establishmentName, language)
 
-      throw new Error('Topics route is functional - pending implementation')
+      res.render('pages/topics', { topics })
     } catch (error) {
       next(error)
     }

@@ -25,7 +25,6 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
     environment:
       - HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-      - EXAMPLE_API_URL=http://localhost:8080
 
   app:
     build:
@@ -45,7 +44,6 @@ services:
     environment:
       - LAUNCHPAD_AUTH_URL=http://host.docker.internal:8080
       - LAUNCHPAD_AUTH_EXTERNAL_URL=http://localhost:8080
-      - EXAMPLE_API_URL=http://hmpps-template-kotlin:8080
 
 networks:
   hmpps:
