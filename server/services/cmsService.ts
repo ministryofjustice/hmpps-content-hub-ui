@@ -11,6 +11,16 @@ export interface CmsTopicItem {
   href: string
 }
 
+export interface CmsPrimaryNavigationAttributes {
+  title: string
+  url: string | { uri?: string; url?: string }
+}
+
+export interface CmsPrimaryNavigationItem {
+  text: string
+  href: string
+}
+
 export default class CmsService {
   constructor(private readonly jsonApiClient: JsonApiClient) {}
 
@@ -28,6 +38,17 @@ export default class CmsService {
       .sort((left, right) => left.linkText.localeCompare(right.linkText))
   }
 
+  async getPrimaryNavigation(establishmentName: string, language: string): Promise<CmsPrimaryNavigationItem[]> {
+    const queryString = CmsService.buildPrimaryNavigationQueryString()
+    const path = `/${language}/jsonapi/prison/${establishmentName}/primary_navigation?${queryString}`
+    const response = await this.jsonApiClient.getCollectionByPath<CmsPrimaryNavigationAttributes>(path)
+
+    return response.data.map(item => ({
+      text: item.attributes.title,
+      href: CmsService.resolveLink(item.attributes.url),
+    }))
+  }
+
   private static buildTopicsQueryString() {
     const params = new URLSearchParams({
       'fields[taxonomy_term--topics]': 'drupal_internal__tid,name',
@@ -37,5 +58,18 @@ export default class CmsService {
     })
 
     return params.toString()
+  }
+
+  private static buildPrimaryNavigationQueryString() {
+    const params = new URLSearchParams({
+      'fields[menu_link_content--menu_link_content]': 'id,title,url',
+    })
+
+    return params.toString()
+  }
+
+  private static resolveLink(value: CmsPrimaryNavigationAttributes['url']) {
+    if (typeof value === 'string') return value
+    return value.url || value.uri || '#'
   }
 }

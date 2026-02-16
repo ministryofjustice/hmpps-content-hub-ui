@@ -12,6 +12,7 @@ import { HmppsUser } from '../../interfaces/hmppsUser'
 import setUpWebSession from '../../middleware/setUpWebSession'
 import setUpI18n from '../../middleware/setUpI18n'
 import setUpFooterTopics from '../../middleware/setUpFooterTopics'
+import setUpPrimaryNavigation from '../../middleware/setUpPrimaryNavigation'
 
 jest.mock('../../services/auditService')
 
@@ -38,6 +39,7 @@ function appSetup(
   const mergedServices: Services = {
     cmsService: {
       getTopics: jest.fn().mockResolvedValue([]),
+      getPrimaryNavigation: jest.fn().mockResolvedValue([]),
     } as unknown as CmsService,
     ...services,
   }
@@ -62,6 +64,7 @@ function appSetup(
     req.id = randomUUID()
     next()
   })
+  app.use(setUpPrimaryNavigation(mergedServices.cmsService))
   app.use(setUpFooterTopics(mergedServices.cmsService))
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
@@ -78,6 +81,7 @@ export function appWithAllRoutes({
     auditService: new AuditService(null) as jest.Mocked<AuditService>,
     cmsService: {
       getTopics: jest.fn().mockResolvedValue([]),
+      getPrimaryNavigation: jest.fn().mockResolvedValue([]),
     } as unknown as CmsService,
   },
   userSupplier = () => user,

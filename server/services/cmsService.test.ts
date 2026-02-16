@@ -1,5 +1,5 @@
 import JsonApiClient, { JsonApiCollectionResponse } from '../data/jsonApiClient'
-import CmsService, { CmsTopicAttributes } from './cmsService'
+import CmsService, { CmsPrimaryNavigationAttributes, CmsTopicAttributes } from './cmsService'
 
 jest.mock('../data/jsonApiClient')
 
@@ -37,6 +37,35 @@ describe('CmsService', () => {
         id: '42',
         linkText: 'Education',
         href: '/tags/42',
+      },
+    ])
+  })
+
+  it('should fetch primary navigation and map it into navigation items', async () => {
+    const expectedResponse: JsonApiCollectionResponse<CmsPrimaryNavigationAttributes> = {
+      data: [
+        {
+          type: 'menu_link_content--menu_link_content',
+          id: 'nav-1',
+          attributes: {
+            title: 'Home',
+            url: '/home',
+          },
+        },
+      ],
+    }
+
+    jsonApiClient.getCollectionByPath.mockResolvedValue(expectedResponse)
+
+    const result = await cmsService.getPrimaryNavigation('bullingdon', 'en')
+
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      '/en/jsonapi/prison/bullingdon/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl',
+    )
+    expect(result).toEqual([
+      {
+        text: 'Home',
+        href: '/home',
       },
     ])
   })
