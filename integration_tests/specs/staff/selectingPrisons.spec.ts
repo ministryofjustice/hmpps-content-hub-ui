@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { loginWithHmppsAuth, resetStubs } from '../../testUtils'
 import HomePage from '../../pages/homePage'
+import cmsApi from '../../mockApis/cmsApi'
 
 test.describe('Staff member selects a prison to view content for', () => {
   test.use({
@@ -12,6 +13,7 @@ test.describe('Staff member selects a prison to view content for', () => {
   })
 
   test('Selecting a prison displays it on the homepage', async ({ page }) => {
+    await cmsApi.stubPrimaryNavigation()
     await loginWithHmppsAuth(page, { name: 'Test User' })
     await HomePage.verifyOnPage(page)
     await page.getByText('Change prison').click()

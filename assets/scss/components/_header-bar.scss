@@ -2,7 +2,6 @@
   @include govuk-responsive-padding(1, 'top');
   @include govuk-responsive-padding(1, 'bottom');
   background-color: govuk-colour('black');
-  border-bottom: 1px solid govuk-colour('mid-grey');
 
   &__container {
     @include govuk-width-container;
@@ -213,6 +212,10 @@
       height: 18px;
       color: govuk-colour('white');
     }
+  }
+ 
+  &__nav-divider {
+    border-bottom: 10px solid govuk-colour('blue');
   }
 
   @media print {

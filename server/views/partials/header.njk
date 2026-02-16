@@ -35,6 +35,10 @@
   </div>
 </header>
 
+<div class="hmpps-header__nav-divider"></div>
+
+{% include "./primary-navigation.njk" %}
+
 <div class="govuk-width-container">
   {% if isStaffPortal and user %}
     {{ mojOrganisationSwitcher({

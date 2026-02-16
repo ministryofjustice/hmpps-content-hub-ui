@@ -3,6 +3,7 @@ import { loginWithHmppsAuth, loginWithLaunchpadAuth, resetStubs } from '../testU
 import HomePage from '../pages/homePage'
 import launchpadAuth from '../mockApis/launchpadAuth'
 import hmppsAuth from '../mockApis/hmppsAuth'
+import cmsApi from '../mockApis/cmsApi'
 
 test.describe('SignIn (Prisoners login)', () => {
   test.use({
@@ -28,6 +29,7 @@ test.describe('SignIn (Prisoners login)', () => {
   })
 
   test('User with correct details is logged in successfully', async ({ page }) => {
+    await cmsApi.stubPrimaryNavigation()
     await loginWithLaunchpadAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
@@ -66,6 +68,7 @@ test.describe('SignIn (Staff login)', () => {
   })
 
   test('User with correct details is logged in successfully', async ({ page }) => {
+    await cmsApi.stubPrimaryNavigation()
     await loginWithHmppsAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
