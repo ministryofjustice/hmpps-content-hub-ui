@@ -4,14 +4,23 @@
 {% set mainClasses = "govuk-body" %}
 
 {% block content %}
-  <h1>Topics</h1>
+  <h1>Browse all topics</h1>
 
-  {% if topics and topics.length %}
-    <ul class="govuk-list govuk-list--bullet">
-      {% for topic in topics %}
-        <li>{{ topic.linkText }}</li>
+  {% if groupedColumns and groupedColumns.length %}
+    <div class="govuk-grid-row">
+      {% for column in groupedColumns %}
+        <div class="govuk-grid-column-one-third">
+          {% for group in column.groups %}
+            <h2>{{ group.letter }}</h2>
+            <ul class="govuk-list">
+              {% for topic in group.topics %}
+                <li><a class="govuk-link" href="{{ topic.href }}">{{ topic.linkText }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endfor %}
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
     <p>No topics returned from the CMS.</p>
   {% endif %}
