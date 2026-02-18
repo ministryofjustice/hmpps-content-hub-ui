@@ -2,12 +2,12 @@ import { Router, Request, Response, NextFunction } from 'express'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
 
-export default function gamesRoutes({ auditService }: Services): Router {
+export default function gamesRoutes({ auditServiceSource }: Services): Router {
   const router = Router()
 
   router.get('/games/2048', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_2048, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_2048, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -20,7 +20,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/fadingsnake', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_FADING_SNAKE, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_FADING_SNAKE, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -33,7 +33,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/sn4ke', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_SN4KE, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_SN4KE, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -46,7 +46,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/anagramica', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_ANAGRAMICA, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_ANAGRAMICA, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -59,7 +59,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.post('/games/anagramica', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_ANAGRAMICA_SCORE, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_ANAGRAMICA_SCORE, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -72,7 +72,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/chess', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_CHESS, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_CHESS, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -85,7 +85,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/sudoku', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_SUDOKU, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_SUDOKU, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -98,7 +98,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/neontroids', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_NEONTROIDS, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_NEONTROIDS, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -111,7 +111,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/mimstris', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_MIMSTRIS, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_MIMSTRIS, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -124,7 +124,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/invadersfromspace', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_INVADERS_FROM_SPACE, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_INVADERS_FROM_SPACE, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -137,7 +137,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/crossword', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_CROSSWORD, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_CROSSWORD, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -150,7 +150,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/christmas-crossword', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_CHRISTMAS_CROSSWORD, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_CHRISTMAS_CROSSWORD, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -163,7 +163,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/solitaire', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_SOLITAIRE, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_SOLITAIRE, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -176,7 +176,7 @@ export default function gamesRoutes({ auditService }: Services): Router {
 
   router.get('/games/smashout', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.GAME_SMASHOUT, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_SMASHOUT, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })

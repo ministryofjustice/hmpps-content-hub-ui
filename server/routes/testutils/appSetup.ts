@@ -1,20 +1,16 @@
 import express, { Express } from 'express'
 import { NotFound } from 'http-errors'
-
+import i18next from 'i18next'
 import { randomUUID } from 'crypto'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
-import AuditService from '../../services/auditService'
-import CmsService from '../../services/cmsService'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 import setUpWebSession from '../../middleware/setUpWebSession'
 import setUpI18n from '../../middleware/setUpI18n'
 import setUpFooterTopics from '../../middleware/setUpFooterTopics'
 import setUpPrimaryNavigation from '../../middleware/setUpPrimaryNavigation'
-
-jest.mock('../../services/auditService')
 
 export const user: HmppsUser = {
   name: 'FIRST LAST',
@@ -33,14 +29,11 @@ function appSetup(
   services: Services,
   production: boolean,
   userSupplier: () => HmppsUser,
-  isStaffPortal: boolean = false,
+  isStaffPortal: boolean,
 ): Express {
   const app = express()
   const mergedServices: Services = {
-    cmsService: {
-      getTopics: jest.fn().mockResolvedValue([]),
-      getPrimaryNavigation: jest.fn().mockResolvedValue([]),
-    } as unknown as CmsService,
+    ...defaultServices(),
     ...services,
   }
 
@@ -58,6 +51,7 @@ function appSetup(
       isPrisonerPortal: !isStaffPortal,
       isStaffPortal,
     }
+    req.portalType = isStaffPortal ? 'staff' : 'prisoner'
     next()
   })
   app.use((req, res, next) => {
@@ -69,6 +63,8 @@ function appSetup(
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes(mergedServices))
+  app.use(routes(services))
+  app.use((req, res, next) => i18next.on('initialized', next))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 
@@ -77,20 +73,36 @@ function appSetup(
 
 export function appWithAllRoutes({
   production = false,
-  services = {
-    auditService: new AuditService(null) as jest.Mocked<AuditService>,
-    cmsService: {
-      getTopics: jest.fn().mockResolvedValue([]),
-      getPrimaryNavigation: jest.fn().mockResolvedValue([]),
-    } as unknown as CmsService,
-  },
+  services = {},
   userSupplier = () => user,
   isStaffPortal = false,
 }: {
   production?: boolean
-  services?: Partial<Services>
+  services?: Partial<MockedServices>
   userSupplier?: () => HmppsUser
   isStaffPortal?: boolean
 }): Express {
   return appSetup(services as Services, production, userSupplier, isStaffPortal)
+}
+
+// Provide a base working set of services to be overridden, merged with or just left
+export const defaultServices = (): Partial<MockedServices> => {
+  return {
+    auditServiceSource: {
+      get: jest.fn().mockReturnValue({
+        logAuditEvent: jest.fn(),
+        logPageView: jest.fn(),
+      }),
+    },
+    cmsService: {
+      getTopics: jest.fn().mockResolvedValue([]),
+      getPrimaryNavigation: jest.fn().mockResolvedValue([]),
+    },
+  }
+}
+
+// Partial, as the type system enforces we also mock private fields
+// which we don't want to couple in tests
+export type MockedServices = {
+  [T in keyof Services]: Partial<Services[T]>
 }

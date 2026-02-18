@@ -2,24 +2,22 @@ import type { Express } from 'express'
 import request from 'supertest'
 import { appWithAllRoutes, user } from './testutils/appSetup'
 import AuditService, { Page } from '../services/auditService'
-import i18next from '../i18n'
+import AuditServiceSource from '../services/auditServiceSource'
 
 jest.mock('../services/auditService')
+jest.mock('../services/auditServiceSource')
 
+const auditServiceSource = new AuditServiceSource(null) as jest.Mocked<AuditServiceSource>
 const auditService = new AuditService(null) as jest.Mocked<AuditService>
-
 let app: Express
 
-beforeAll(async () => {
-  await i18next.isInitialized
-})
-
 beforeEach(() => {
+  auditServiceSource.get.mockReturnValue(auditService)
+
   app = appWithAllRoutes({
     services: {
-      auditService,
+      auditServiceSource,
     },
-    userSupplier: () => user,
   })
 })
 
@@ -30,8 +28,6 @@ afterEach(() => {
 describe('Content Routes', () => {
   describe('GET /content/:id', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/content/abc123')
         .expect('Content-Type', /html/)

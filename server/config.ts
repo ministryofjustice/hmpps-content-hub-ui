@@ -16,15 +16,11 @@ const requiredInProduction = { requireInProduction: true }
 
 const requiredInProductionIf = (condition: boolean) => ({ requireInProduction: condition })
 
-const auditConfig = () => {
+const auditConfig = (queueUrlName: string) => {
   const auditEnabled = get('AUDIT_ENABLED', 'false') === 'true'
   return {
     enabled: auditEnabled,
-    queueUrl: get(
-      'AUDIT_SQS_QUEUE_URL',
-      'http://localhost:4566/000000000000/mainQueue',
-      requiredInProductionIf(auditEnabled),
-    ),
+    queueUrl: get(queueUrlName, 'http://localhost:4566/000000000000/mainQueue', requiredInProductionIf(auditEnabled)),
     serviceName: get('AUDIT_SERVICE_NAME', 'UNASSIGNED', requiredInProductionIf(auditEnabled)),
     region: get('AUDIT_SQS_REGION', 'eu-west-2'),
   }
@@ -140,7 +136,8 @@ export default {
     { code: 'WYI', name: 'wetherby', displayName: 'HMYOI Wetherby', youth: true },
   ],
   sqs: {
-    audit: auditConfig(),
+    prisonerAudit: auditConfig('PRISONER_AUDIT_SQS_QUEUE_URL'),
+    staffAudit: auditConfig('STAFF_AUDIT_SQS_QUEUE_URL'),
   },
   environmentName: get('ENVIRONMENT_NAME', ''),
 }

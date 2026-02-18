@@ -2,12 +2,12 @@ import { Router, Request, Response, NextFunction } from 'express'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
 
-export default function searchRoutes({ auditService }: Services): Router {
+export default function searchRoutes({ auditServiceSource }: Services): Router {
   const router = Router()
 
   router.get('/search', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.SEARCH, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.SEARCH, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -20,7 +20,7 @@ export default function searchRoutes({ auditService }: Services): Router {
 
   router.get('/search/suggest', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.SEARCH_SUGGEST, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.SEARCH_SUGGEST, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })

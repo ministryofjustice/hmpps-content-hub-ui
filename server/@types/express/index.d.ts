@@ -1,6 +1,7 @@
 import { i18n, TFunction } from 'i18next'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 import { Establishment } from '../launchpad'
+import { PortalType } from '../portalType'
 
 export declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
@@ -25,6 +26,7 @@ export declare global {
       verified?: boolean
       id: string
       authStrategy?: AuthStrategy
+      portalType?: PortalType
       logout(done: (err: unknown) => void): void
       t?: TFunction
       i18n?: i18n

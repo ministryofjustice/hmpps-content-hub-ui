@@ -2,24 +2,22 @@ import type { Express } from 'express'
 import request from 'supertest'
 import { appWithAllRoutes, user } from './testutils/appSetup'
 import AuditService, { Page } from '../services/auditService'
-import i18next from '../i18n'
+import AuditServiceSource from '../services/auditServiceSource'
 
 jest.mock('../services/auditService')
+jest.mock('../services/auditServiceSource')
 
+const auditServiceSource = new AuditServiceSource(null) as jest.Mocked<AuditServiceSource>
 const auditService = new AuditService(null) as jest.Mocked<AuditService>
-
 let app: Express
 
-beforeAll(async () => {
-  await i18next.isInitialized
-})
-
 beforeEach(() => {
+  auditServiceSource.get.mockReturnValue(auditService)
+
   app = appWithAllRoutes({
     services: {
-      auditService,
+      auditServiceSource,
     },
-    userSupplier: () => user,
   })
 })
 
@@ -30,8 +28,6 @@ afterEach(() => {
 describe('Games Routes', () => {
   describe('GET /games/2048', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/2048')
         .expect('Content-Type', /html/)
@@ -48,8 +44,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/fadingsnake', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/fadingsnake')
         .expect('Content-Type', /html/)
@@ -66,8 +60,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/sn4ke', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/sn4ke')
         .expect('Content-Type', /html/)
@@ -84,8 +76,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/anagramica', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/anagramica')
         .expect('Content-Type', /html/)
@@ -102,8 +92,6 @@ describe('Games Routes', () => {
 
   describe('POST /games/anagramica', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .post('/games/anagramica')
         .expect('Content-Type', /html/)
@@ -120,8 +108,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/chess', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/chess')
         .expect('Content-Type', /html/)
@@ -138,8 +124,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/sudoku', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/sudoku')
         .expect('Content-Type', /html/)
@@ -156,8 +140,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/neontroids', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/neontroids')
         .expect('Content-Type', /html/)
@@ -174,8 +156,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/mimstris', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/mimstris')
         .expect('Content-Type', /html/)
@@ -192,8 +172,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/invadersfromspace', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/invadersfromspace')
         .expect('Content-Type', /html/)
@@ -210,8 +188,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/crossword', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/crossword')
         .expect('Content-Type', /html/)
@@ -228,8 +204,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/christmas-crossword', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/christmas-crossword')
         .expect('Content-Type', /html/)
@@ -246,8 +220,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/solitaire', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/solitaire')
         .expect('Content-Type', /html/)
@@ -264,8 +236,6 @@ describe('Games Routes', () => {
 
   describe('GET /games/smashout', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/games/smashout')
         .expect('Content-Type', /html/)
