@@ -13,7 +13,7 @@ let app: Express
 
 beforeEach(() => {
   auditServiceSource.get.mockReturnValue(auditService)
-  
+
   app = appWithAllRoutes({
     services: {
       auditServiceSource,
