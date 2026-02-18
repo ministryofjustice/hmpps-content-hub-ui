@@ -45,7 +45,8 @@ describe('GET /', () => {
       .expect('Content-Type', /html/)
       .expect(200)
       .expect(res => {
-        expect(res.text).toContain('This site is under construction...')
+        expect(res.text).toContain('Browse all topics')
+        expect(res.text).toContain('hmpps-home-section--dark')
         expect(res.text).toContain('Education')
         expect(res.text).toContain('Health')
         expect(auditService.logPageView).toHaveBeenCalledWith(Page.HOMEPAGE, {
@@ -65,7 +66,7 @@ describe('GET /', () => {
       .expect('Content-Type', /html/)
       .expect(200)
       .expect(res => {
-        expect(res.text).toContain('This site is under construction...')
+        expect(res.text).toContain('Browse all topics')
       })
   })
 })

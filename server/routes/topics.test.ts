@@ -33,11 +33,12 @@ afterEach(() => {
 
 describe('Topics Routes', () => {
   describe('GET /topics', () => {
-    it('should render topics returned from the CMS', () => {
+    it('should render topics grouped by letter with links', () => {
       auditService.logPageView.mockResolvedValue(null)
       cmsService.getTopics.mockResolvedValue([
         { id: '1', linkText: 'Education', href: '/tags/1' },
         { id: '2', linkText: 'Health', href: '/tags/2' },
+        { id: '3', linkText: 'Art', href: '/tags/3' },
       ])
 
       return request(app)
@@ -45,8 +46,15 @@ describe('Topics Routes', () => {
         .expect('Content-Type', /html/)
         .expect(200)
         .expect(res => {
+          expect(res.text).toContain('<h2>A</h2>')
+          expect(res.text).toContain('<h2>E</h2>')
+          expect(res.text).toContain('<h2>H</h2>')
           expect(res.text).toContain('Education')
           expect(res.text).toContain('Health')
+          expect(res.text).toContain('Art')
+          expect(res.text).toContain('href="/tags/1"')
+          expect(res.text).toContain('href="/tags/2"')
+          expect(res.text).toContain('href="/tags/3"')
           expect(auditService.logPageView).toHaveBeenCalledWith(Page.TOPICS, {
             who: user.username,
             correlationId: expect.any(String),
