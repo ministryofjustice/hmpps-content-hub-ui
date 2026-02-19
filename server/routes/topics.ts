@@ -12,12 +12,12 @@ type TopicColumn = {
   groups: TopicGroup[]
 }
 
-export default function topicsRoutes({ auditService, cmsService }: Services): Router {
+export default function topicsRoutes({ auditServiceSource, cmsService }: Services): Router {
   const router = Router()
 
   router.get('/topics', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.TOPICS, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.TOPICS, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -48,7 +48,7 @@ export default function topicsRoutes({ auditService, cmsService }: Services): Ro
 
   router.get('/tags/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.TAG, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.TAG, {
         who: res.locals.user?.username,
         correlationId: req.id,
         subjectId: req.params.id,
@@ -62,7 +62,7 @@ export default function topicsRoutes({ auditService, cmsService }: Services): Ro
 
   router.get('/tags/:id/json', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.TAG_JSON, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.TAG_JSON, {
         who: res.locals.user?.username,
         correlationId: req.id,
         subjectId: req.params.id,

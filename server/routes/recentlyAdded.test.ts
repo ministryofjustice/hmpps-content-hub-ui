@@ -2,24 +2,22 @@ import type { Express } from 'express'
 import request from 'supertest'
 import { appWithAllRoutes, user } from './testutils/appSetup'
 import AuditService, { Page } from '../services/auditService'
-import i18next from '../i18n'
+import AuditServiceSource from '../services/auditServiceSource'
 
 jest.mock('../services/auditService')
+jest.mock('../services/auditServiceSource')
 
+const auditServiceSource = new AuditServiceSource(null) as jest.Mocked<AuditServiceSource>
 const auditService = new AuditService(null) as jest.Mocked<AuditService>
-
 let app: Express
 
-beforeAll(async () => {
-  await i18next.isInitialized
-})
-
 beforeEach(() => {
+  auditServiceSource.get.mockReturnValue(auditService)
+
   app = appWithAllRoutes({
     services: {
-      auditService,
+      auditServiceSource,
     },
-    userSupplier: () => user,
   })
 })
 
@@ -30,8 +28,6 @@ afterEach(() => {
 describe('Recently Added Routes', () => {
   describe('GET /recently-added', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/recently-added')
         .expect('Content-Type', /html/)
@@ -48,8 +44,6 @@ describe('Recently Added Routes', () => {
 
   describe('GET /recently-added/json', () => {
     it('should throw error showing route is functional', () => {
-      auditService.logPageView.mockResolvedValue(null)
-
       return request(app)
         .get('/recently-added/json')
         .expect('Content-Type', /html/)

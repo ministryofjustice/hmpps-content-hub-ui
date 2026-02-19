@@ -28,7 +28,8 @@ export const dataAccess = () => {
     applicationInfo,
     hmppsAuthClient,
     jsonApiClient: new JsonApiClient(hmppsAuthClient),
-    hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
+    hmppsPrisonerAuditClient: new HmppsAuditClient(config.sqs.prisonerAudit),
+    hmppsStaffAuditClient: new HmppsAuditClient(config.sqs.staffAudit),
   }
 }
 

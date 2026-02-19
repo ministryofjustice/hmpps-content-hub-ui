@@ -5,6 +5,7 @@ export const isRequestForStaffPortal = (req: Request) => req.host.startsWith('st
 export const portalsMiddleware: RequestHandler = (req, res, next) => {
   const isStaffPortal = isRequestForStaffPortal(req)
 
+  req.portalType = isStaffPortal ? 'staff' : 'prisoner'
   res.locals.isStaffPortal = isStaffPortal
   res.locals.isPrisonerPortal = !isStaffPortal
 

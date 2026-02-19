@@ -2,12 +2,12 @@ import { Router, Request, Response, NextFunction } from 'express'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
 
-export default function recentlyAddedRoutes({ auditService }: Services): Router {
+export default function recentlyAddedRoutes({ auditServiceSource }: Services): Router {
   const router = Router()
 
   router.get('/recently-added', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.RECENTLY_ADDED, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.RECENTLY_ADDED, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -20,7 +20,7 @@ export default function recentlyAddedRoutes({ auditService }: Services): Router 
 
   router.get('/recently-added/json', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.RECENTLY_ADDED_JSON, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.RECENTLY_ADDED_JSON, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
