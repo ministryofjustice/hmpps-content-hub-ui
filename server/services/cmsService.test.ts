@@ -174,9 +174,7 @@ describe('CmsService', () => {
       },
     }
 
-    jsonApiClient.getCollectionByPath
-      .mockResolvedValueOnce(termResponse)
-      .mockResolvedValueOnce({ data: [] })
+    jsonApiClient.getCollectionByPath.mockResolvedValueOnce(termResponse).mockResolvedValueOnce({ data: [] })
     jsonApiClient.getSingleByPath.mockResolvedValueOnce(seriesHeaderResponse)
 
     const result = (await cmsService.getTag('bullingdon', '99', 'en')) as CmsTag
