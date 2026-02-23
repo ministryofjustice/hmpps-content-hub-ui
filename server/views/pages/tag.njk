@@ -5,7 +5,9 @@
 
 {% block content %}
   {% if tag %}
-    <h1>{{ tag.name or "Tag" }}</h1>
+    {% if tag.type == "category" %}
+      <h1>{{ tag.name or "Tag" }}</h1>
+    {% endif %}
 
     {% if tag.type == "topic" %}
       {% include "./tagTopic.njk" %}

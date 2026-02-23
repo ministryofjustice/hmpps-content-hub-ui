@@ -52,8 +52,28 @@ export interface CmsTag {
   type: CmsTagType
   name?: string
   description?: string
+  seriesHeaderImageUrl?: string
+  seriesItems?: CmsSeriesItem[]
+  topicHeaderImageUrl?: string
+  topicItems?: CmsTopicContentItem[]
   categoryFeaturedContent?: CmsCategoryFeaturedItem[]
   categoryMenu?: CmsCategoryMenuItem[]
+}
+
+export interface CmsSeriesItem {
+  id: string
+  title?: string
+  summary?: string
+  href: string
+  thumbnailUrl?: string
+}
+
+export interface CmsTopicContentItem {
+  id: string
+  title?: string
+  summary?: string
+  href: string
+  thumbnailUrl?: string
 }
 
 export interface CmsCategoryFeaturedItem {
@@ -121,6 +141,20 @@ type CmsFileAttributes = {
 }
 
 type CmsCategoryTermAttributes = {
+  name?: string
+  description?: { processed?: string }
+  path?: CmsPath
+  drupal_internal__tid?: number
+}
+
+type CmsSeriesTermAttributes = {
+  name?: string
+  description?: { processed?: string }
+  path?: CmsPath
+  drupal_internal__tid?: number
+}
+
+type CmsTopicHeaderAttributes = {
   name?: string
   description?: { processed?: string }
   path?: CmsPath
@@ -205,6 +239,36 @@ export default class CmsService {
       type: tagType,
       name: match.attributes.name,
       description: match.attributes.description,
+    }
+
+    if (tagType === 'topic') {
+      const [topicHeader, topicItems] = await Promise.all([
+        this.getTopicHeader(establishmentName, match.id, language),
+        this.getTopicItems(establishmentName, match.id, language),
+      ])
+
+      return {
+        ...baseTag,
+        name: topicHeader?.name ?? baseTag.name,
+        description: topicHeader?.description ?? baseTag.description,
+        topicHeaderImageUrl: topicHeader?.thumbnailUrl,
+        topicItems,
+      }
+    }
+
+    if (tagType === 'series') {
+      const [seriesHeader, seriesItems] = await Promise.all([
+        this.getSeriesHeader(establishmentName, match.id, language),
+        this.getSeriesItems(establishmentName, match.id, language),
+      ])
+
+      return {
+        ...baseTag,
+        name: seriesHeader?.name ?? baseTag.name,
+        description: seriesHeader?.description ?? baseTag.description,
+        seriesHeaderImageUrl: seriesHeader?.thumbnailUrl,
+        seriesItems,
+      }
     }
 
     if (tagType !== 'category') return baseTag
@@ -293,6 +357,84 @@ export default class CmsService {
     return params.toString()
   }
 
+  private static buildSeriesHeaderQueryString() {
+    const params = new URLSearchParams({
+      'fields[taxonomy_term--series]':
+        'name,description,drupal_internal__tid,field_moj_thumbnail_image,path,published_at',
+      include: 'field_moj_thumbnail_image',
+      'fields[file--file]': 'image_style_uri,uri,url',
+    })
+
+    return params.toString()
+  }
+
+  private static buildTopicHeaderQueryString() {
+    const params = new URLSearchParams({
+      'fields[taxonomy_term--topics]':
+        'name,description,drupal_internal__tid,field_moj_thumbnail_image,path,published_at',
+      include: 'field_moj_thumbnail_image',
+      'fields[file--file]': 'image_style_uri,uri,url',
+    })
+
+    return params.toString()
+  }
+
+  private static buildSeriesItemsQueryString(seriesUuid: string, page: number) {
+    const pageSize = 40
+    const tileFields = [
+      'drupal_internal__nid',
+      'title',
+      'field_summary',
+      'field_moj_thumbnail_image',
+      'field_moj_series',
+      'path',
+      'published_at',
+    ].join(',')
+
+    const params = new URLSearchParams({
+      'filter[field_moj_series.id]': seriesUuid,
+      'fields[node--page]': tileFields,
+      'fields[node--moj_video_item]': tileFields,
+      'fields[node--moj_radio_item]': tileFields,
+      'fields[node--moj_pdf_item]': tileFields,
+      'fields[file--file]': 'image_style_uri,uri,url',
+      include: 'field_moj_thumbnail_image,field_moj_series.field_moj_thumbnail_image',
+      sort: 'series_sort_value,created',
+      'page[limit]': `${pageSize}`,
+      'page[offset]': `${Math.max(page - 1, 0) * pageSize}`,
+    })
+
+    return params.toString()
+  }
+
+  private static buildTopicItemsQueryString(topicUuid: string, page: number) {
+    const pageSize = 40
+    const tileFields = [
+      'drupal_internal__nid',
+      'title',
+      'field_summary',
+      'field_moj_thumbnail_image',
+      'field_topics',
+      'path',
+      'published_at',
+    ].join(',')
+
+    const params = new URLSearchParams({
+      'filter[field_topics.id]': topicUuid,
+      'fields[node--page]': tileFields,
+      'fields[node--moj_video_item]': tileFields,
+      'fields[node--moj_radio_item]': tileFields,
+      'fields[node--moj_pdf_item]': tileFields,
+      'fields[file--file]': 'image_style_uri,uri,url',
+      include: 'field_moj_thumbnail_image,field_topics.field_moj_thumbnail_image',
+      sort: 'created',
+      'page[limit]': `${pageSize}`,
+      'page[offset]': `${Math.max(page - 1, 0) * pageSize}`,
+    })
+
+    return params.toString()
+  }
+
   private static buildTopicPageQueryString(topicUuid: string, page: number) {
     const pageSize = 40
     const params = new URLSearchParams({
@@ -357,6 +499,84 @@ export default class CmsService {
     }
 
     return response.data.map(item => mapItem(item, response.included))
+  }
+
+  private async getSeriesHeader(establishmentName: string, seriesUuid: string, language: string) {
+    const queryString = CmsService.buildSeriesHeaderQueryString()
+    const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/series/${seriesUuid}?${queryString}`
+    const response = await this.jsonApiClient.getSingleByPath<CmsSeriesTermAttributes>(path)
+    const term = response.data
+    const thumbnailIdentifier = CmsService.relationshipDataArray(term.relationships?.field_moj_thumbnail_image)[0]
+    const thumbnail = thumbnailIdentifier
+      ? CmsService.findIncluded<CmsFileAttributes>(response.included ?? [], thumbnailIdentifier)
+      : undefined
+
+    return {
+      name: term.attributes.name,
+      description: term.attributes.description?.processed,
+      thumbnailUrl: CmsService.resolveFileUrl(thumbnail),
+    }
+  }
+
+  private async getTopicHeader(establishmentName: string, topicUuid: string, language: string) {
+    const queryString = CmsService.buildTopicHeaderQueryString()
+    const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/topics/${topicUuid}?${queryString}`
+    const response = await this.jsonApiClient.getSingleByPath<CmsTopicHeaderAttributes>(path)
+    const term = response.data
+    const thumbnailIdentifier = CmsService.relationshipDataArray(term.relationships?.field_moj_thumbnail_image)[0]
+    const thumbnail = thumbnailIdentifier
+      ? CmsService.findIncluded<CmsFileAttributes>(response.included ?? [], thumbnailIdentifier)
+      : undefined
+
+    return {
+      name: term.attributes.name,
+      description: term.attributes.description?.processed,
+      thumbnailUrl: CmsService.resolveFileUrl(thumbnail),
+    }
+  }
+
+  private async getSeriesItems(establishmentName: string, seriesUuid: string, language: string, page: number = 1) {
+    const queryString = CmsService.buildSeriesItemsQueryString(seriesUuid, page)
+    const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
+    const response = await this.jsonApiClient.getCollectionByPath<CmsNodeAttributes>(path)
+
+    return response.data.map(item => {
+      const thumbnailIdentifier = CmsService.relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
+      const thumbnail =
+        thumbnailIdentifier && response.included
+          ? CmsService.findIncluded<CmsFileAttributes>(response.included, thumbnailIdentifier)
+          : undefined
+
+      return {
+        id: item.id,
+        title: item.attributes.title,
+        summary: item.attributes.field_summary,
+        href: CmsService.resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
+        thumbnailUrl: CmsService.resolveFileUrl(thumbnail),
+      }
+    })
+  }
+
+  private async getTopicItems(establishmentName: string, topicUuid: string, language: string, page: number = 1) {
+    const queryString = CmsService.buildTopicItemsQueryString(topicUuid, page)
+    const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
+    const response = await this.jsonApiClient.getCollectionByPath<CmsNodeAttributes>(path)
+
+    return response.data.map(item => {
+      const thumbnailIdentifier = CmsService.relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
+      const thumbnail =
+        thumbnailIdentifier && response.included
+          ? CmsService.findIncluded<CmsFileAttributes>(response.included, thumbnailIdentifier)
+          : undefined
+
+      return {
+        id: item.id,
+        title: item.attributes.title,
+        summary: item.attributes.field_summary,
+        href: CmsService.resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
+        thumbnailUrl: CmsService.resolveFileUrl(thumbnail),
+      }
+    })
   }
 
   private static resolveLink(value: CmsPrimaryNavigationAttributes['url']) {

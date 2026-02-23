@@ -46,10 +46,17 @@ $hmpps-category-grid-gap: 5px;
 
 .hmpps-category-card {
   background-color: $hmpps-category-card-bg;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   position: relative;
   text-decoration: none;
   transition: transform 0.5s;
+
+  .govuk-heading-s,
+  .govuk-tag {
+    color: govuk-colour('white');
+  }
 
   &:hover,
   &:focus {
@@ -58,6 +65,11 @@ $hmpps-category-grid-gap: 5px;
     outline: none;
     transform: scale(1.1);
     z-index: 100;
+
+    .govuk-heading-s,
+    .govuk-tag {
+      color: govuk-colour('black');
+    }
 
     .hmpps-category-card__title {
       background-color: transparent;
@@ -85,12 +97,24 @@ $hmpps-category-grid-gap: 5px;
 }
 
 .hmpps-category-grid {
+  display: flex;
+  flex-wrap: wrap;
   margin-left: calc($hmpps-category-grid-gap / -2);
   margin-right: calc($hmpps-category-grid-gap / -2);
 
   > .govuk-grid-column-one-quarter {
+    box-sizing: border-box;
+    display: flex;
+    float: none;
     margin-bottom: $hmpps-category-grid-gap;
     padding-left: calc($hmpps-category-grid-gap / 2);
     padding-right: calc($hmpps-category-grid-gap / 2);
+    width: 25%;
   }
+}
+
+.hmpps-series-header__image {
+  display: block;
+  height: auto;
+  width: 100%;
 }

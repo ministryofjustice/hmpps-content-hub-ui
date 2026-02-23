@@ -1,1 +1,31 @@
-<p>Topic template placeholder.</p>
+<div class="govuk-grid-row govuk-!-margin-bottom-6">
+	<div class="govuk-grid-column-one-half">
+		<h1>{{ tag.name or "Topic" }}</h1>
+		{% if tag.description %}
+			<p>{{ tag.description | safe }}</p>
+		{% endif %}
+	</div>
+	<div class="govuk-grid-column-one-half">
+		{% if tag.topicHeaderImageUrl %}
+			<img class="hmpps-series-header__image" src="{{ tag.topicHeaderImageUrl }}" alt="{{ tag.name or 'Topic image' }}">
+		{% endif %}
+	</div>
+</div>
+
+<section class="hmpps-home-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6">
+	<div class="govuk-width-container">
+		{% if tag.topicItems and tag.topicItems.length %}
+			<div class="govuk-grid-row hmpps-category-grid">
+				{% for item in tag.topicItems %}
+					<div class="govuk-grid-column-one-quarter">
+						{% set cardItem = item %}
+						{% set showSeriesTag = false %}
+						{% include "../partials/category-card.njk" %}
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p>No content is available for this topic yet.</p>
+		{% endif %}
+	</div>
+</section>
