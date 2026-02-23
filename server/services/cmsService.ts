@@ -349,9 +349,10 @@ export default class CmsService {
       included: JsonApiResource[] | undefined,
     ): CmsCategoryMenuItem => {
       const thumbnailIdentifier = CmsService.relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
-      const thumbnail = included && thumbnailIdentifier
-        ? CmsService.findIncluded<CmsFileAttributes>(included, thumbnailIdentifier)
-        : undefined
+      const thumbnail =
+        included && thumbnailIdentifier
+          ? CmsService.findIncluded<CmsFileAttributes>(included, thumbnailIdentifier)
+          : undefined
 
       return {
         id: `${item.attributes.drupal_internal__tid ?? item.id}`,
@@ -399,7 +400,7 @@ export default class CmsService {
 
   private static mapCategoryDetails(response: JsonApiSingleResponse<CmsCategoryTermAttributes>) {
     const category = response.data
-    const name = category.attributes.name
+    const { name } = category.attributes
     const description = category.attributes.description?.processed
     const featured = CmsService.mapCategoryFeaturedContent(category.relationships, response.included)
 
@@ -436,7 +437,9 @@ export default class CmsService {
       })
   }
 
-  private static relationshipDataArray(relationship?: { data?: JsonApiResourceIdentifier | JsonApiResourceIdentifier[] | null }) {
+  private static relationshipDataArray(relationship?: {
+    data?: JsonApiResourceIdentifier | JsonApiResourceIdentifier[] | null
+  }) {
     if (!relationship?.data) return []
     return Array.isArray(relationship.data) ? relationship.data : [relationship.data]
   }
@@ -465,7 +468,6 @@ export default class CmsService {
     if (file.attributes.uri?.value) return file.attributes.uri.value
     return undefined
   }
-
 
   private static mapTagType(resourceType: string): CmsTagType | null {
     switch (resourceType) {
