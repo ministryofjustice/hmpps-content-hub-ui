@@ -3,12 +3,12 @@ import type { Services } from '../services'
 import { Page } from '../services/auditService'
 import config from '../config'
 
-export default function staffRoutes({ auditService }: Services): Router {
+export default function staffRoutes({ auditServiceSource }: Services): Router {
   const router = Router()
 
   router.use(async (req, res, next) => {
     if (res.locals.isPrisonerPortal && req.path.startsWith('/staff/')) {
-      await auditService.logPageView(Page.STAFF_PORTAL_UNAUTHORIZED, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.STAFF_PORTAL_UNAUTHORIZED, {
         who: res.locals.user.username,
         correlationId: req.id,
       })
@@ -20,7 +20,10 @@ export default function staffRoutes({ auditService }: Services): Router {
   })
 
   router.get('/staff/prisons', async (req, res, next) => {
-    await auditService.logPageView(Page.STAFF_CHANGE_PRISON, { who: res.locals.user.username, correlationId: req.id })
+    await auditServiceSource.get(req.portalType).logPageView(Page.STAFF_CHANGE_PRISON, {
+      who: res.locals.user.username,
+      correlationId: req.id,
+    })
 
     const { establishments } = config
     const establishmentOptions = establishments.map(({ code, displayName }) => ({ value: code, text: displayName }))

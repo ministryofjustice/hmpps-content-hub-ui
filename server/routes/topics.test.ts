@@ -2,28 +2,26 @@ import type { Express } from 'express'
 import request from 'supertest'
 import { appWithAllRoutes, user } from './testutils/appSetup'
 import AuditService, { Page } from '../services/auditService'
+import AuditServiceSource from '../services/auditServiceSource'
 import CmsService from '../services/cmsService'
-import i18next from '../i18n'
 
-jest.mock('../services/auditService')
 jest.mock('../services/cmsService')
+jest.mock('../services/auditService')
+jest.mock('../services/auditServiceSource')
 
-const auditService = new AuditService(null) as jest.Mocked<AuditService>
+const auditServiceSource = new AuditServiceSource(null) as jest.Mocked<AuditServiceSource>
 const cmsService = new CmsService(null) as jest.Mocked<CmsService>
-
+const auditService = new AuditService(null) as jest.Mocked<AuditService>
 let app: Express
 
-beforeAll(async () => {
-  await i18next.isInitialized
-})
-
 beforeEach(() => {
+  auditServiceSource.get.mockReturnValue(auditService)
+
   app = appWithAllRoutes({
     services: {
-      auditService,
       cmsService,
+      auditServiceSource,
     },
-    userSupplier: () => user,
   })
 })
 
@@ -34,7 +32,6 @@ afterEach(() => {
 describe('Topics Routes', () => {
   describe('GET /topics', () => {
     it('should render topics grouped by letter with links', () => {
-      auditService.logPageView.mockResolvedValue(null)
       cmsService.getTopics.mockResolvedValue([
         { id: '1', linkText: 'Education', href: '/tags/1' },
         { id: '2', linkText: 'Health', href: '/tags/2' },
@@ -73,7 +70,6 @@ describe('Topics Routes', () => {
         name: 'Education',
         description: 'Topic description',
       })
-
       return request(app)
         .get('/tags/123')
         .expect('Content-Type', /html/)

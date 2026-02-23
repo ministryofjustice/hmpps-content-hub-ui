@@ -2,12 +2,12 @@ import { Router, Request, Response, NextFunction } from 'express'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
 
-export default function updatesRoutes({ auditService }: Services): Router {
+export default function updatesRoutes({ auditServiceSource }: Services): Router {
   const router = Router()
 
   router.get('/updates', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.UPDATES, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.UPDATES, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })
@@ -20,7 +20,7 @@ export default function updatesRoutes({ auditService }: Services): Router {
 
   router.get('/updates/json', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.UPDATES_JSON, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.UPDATES_JSON, {
         who: res.locals.user?.username,
         correlationId: req.id,
       })

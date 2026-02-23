@@ -2,12 +2,12 @@ import { Router, Request, Response, NextFunction } from 'express'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
 
-export default function feedbackRoutes({ auditService }: Services): Router {
+export default function feedbackRoutes({ auditServiceSource }: Services): Router {
   const router = Router()
 
   router.post('/feedback/:feedbackId', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await auditService.logPageView(Page.FEEDBACK, {
+      await auditServiceSource.get(req.portalType).logPageView(Page.FEEDBACK, {
         who: res.locals.user?.username,
         correlationId: req.id,
         subjectId: req.params.feedbackId,

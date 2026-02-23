@@ -1,30 +1,28 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import { appWithAllRoutes, user } from './testutils/appSetup'
-import AuditService, { Page } from '../services/auditService'
 import CmsService from '../services/cmsService'
 import config from '../config'
-import i18next from '../i18n'
+import AuditService, { Page } from '../services/auditService'
+import AuditServiceSource from '../services/auditServiceSource'
 
 jest.mock('../services/auditService')
+jest.mock('../services/auditServiceSource')
 jest.mock('../services/cmsService')
 
-const auditService = new AuditService(null) as jest.Mocked<AuditService>
 const cmsService = new CmsService(null) as jest.Mocked<CmsService>
-
+const auditServiceSource = new AuditServiceSource(null) as jest.Mocked<AuditServiceSource>
+const auditService = new AuditService(null) as jest.Mocked<AuditService>
 let app: Express
 
-beforeAll(async () => {
-  await i18next.isInitialized
-})
-
 beforeEach(() => {
+  auditServiceSource.get.mockReturnValue(auditService)
+
   app = appWithAllRoutes({
     services: {
-      auditService,
       cmsService,
+      auditServiceSource,
     },
-    userSupplier: () => user,
   })
 })
 
@@ -34,7 +32,6 @@ afterEach(() => {
 
 describe('GET /', () => {
   it('should render the homepage with footer topics', () => {
-    auditService.logPageView.mockResolvedValue(null)
     cmsService.getTopics.mockResolvedValue([
       { id: '1', linkText: 'Education', href: '/tags/1' },
       { id: '2', linkText: 'Health', href: '/tags/2' },
@@ -58,7 +55,6 @@ describe('GET /', () => {
   })
 
   it('should render the homepage even if the cms service errors', () => {
-    auditService.logPageView.mockResolvedValue(null)
     cmsService.getTopics.mockRejectedValue(new Error('CMS service error!'))
 
     return request(app)
