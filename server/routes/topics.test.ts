@@ -76,7 +76,7 @@ describe('Topics Routes', () => {
         .expect(200)
         .expect(res => {
           expect(res.text).toContain('Education')
-          expect(res.text).toContain('Tag type: topic')
+          expect(res.text).toContain('Topic description')
           expect(auditService.logPageView).toHaveBeenCalledWith(Page.TAG, {
             who: user.username,
             correlationId: expect.any(String),

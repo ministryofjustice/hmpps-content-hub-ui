@@ -1,4 +1,4 @@
-import JsonApiClient, { JsonApiCollectionResponse } from '../data/jsonApiClient'
+import JsonApiClient, { JsonApiCollectionResponse, JsonApiSingleResponse } from '../data/jsonApiClient'
 import CmsService, { CmsPrimaryNavigationAttributes, CmsTag, CmsTopicAttributes, CmsTopicPage } from './cmsService'
 
 jest.mock('../data/jsonApiClient')
@@ -163,7 +163,21 @@ describe('CmsService', () => {
       ],
     }
 
-    jsonApiClient.getCollectionByPath.mockResolvedValueOnce(termResponse)
+    const seriesHeaderResponse: JsonApiSingleResponse<{ name: string; description?: { processed?: string } }> = {
+      data: {
+        type: 'taxonomy_term--series',
+        id: 'uuid-1',
+        attributes: {
+          name: 'Induction',
+          description: { processed: 'Series description' },
+        },
+      },
+    }
+
+    jsonApiClient.getCollectionByPath
+      .mockResolvedValueOnce(termResponse)
+      .mockResolvedValueOnce({ data: [] })
+    jsonApiClient.getSingleByPath.mockResolvedValueOnce(seriesHeaderResponse)
 
     const result = (await cmsService.getTag('bullingdon', '99', 'en')) as CmsTag
 
@@ -173,8 +187,11 @@ describe('CmsService', () => {
     expect(result).toEqual({
       id: '99',
       type: 'series',
+      uuid: 'uuid-1',
       name: 'Induction',
       description: 'Series description',
+      seriesHeaderImageUrl: undefined,
+      seriesItems: [],
     })
   })
 })
