@@ -7,4 +7,31 @@
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   width: 100vw;
+
+  .govuk-heading-m,
+  .govuk-heading-s,
+  p,
+  li {
+    color: govuk-colour('white');
+  }
+
+  .govuk-link {
+    color: govuk-colour('white');
+  }
+
+  .govuk-link:visited {
+    color: govuk-colour('light-grey');
+  }
+
+  .govuk-link:hover,
+  .govuk-link:active {
+    color: govuk-colour('light-grey');
+  }
+}
+
+.hmpps-category__thumbnail {
+  display: block;
+  height: auto;
+  margin-bottom: govuk-spacing(2);
+  width: 100%;
 }
