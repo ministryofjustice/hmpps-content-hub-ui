@@ -348,7 +348,8 @@ export default class CmsService {
 
       return {
         id: `${item.attributes.drupal_internal__tid ?? item.id}`,
-        linkText: item.attributes.name ?? (item as JsonApiResource<CmsTaxonomyAttributes>).attributes.name ?? 'Untitled',
+        linkText:
+          item.attributes.name ?? (item as JsonApiResource<CmsTaxonomyAttributes>).attributes.name ?? 'Untitled',
         href: CmsService.resolveTagHref(item.attributes.path, item.attributes.drupal_internal__tid),
         thumbnailUrl: CmsService.resolveFileUrl(thumbnail),
         contentType: item.type === 'taxonomy_term--series' ? 'series' : 'category',
@@ -430,11 +431,12 @@ export default class CmsService {
 
         const isSeries = item.type === 'taxonomy_term--series' || Boolean(series)
         const isCategory = item.type === 'taxonomy_term--moj_categories'
-        const taxonomyItem = (series ?? (item as JsonApiResource<CmsTaxonomyAttributes>))
+        const taxonomyItem = series ?? (item as JsonApiResource<CmsTaxonomyAttributes>)
         const title = isSeries || isCategory ? taxonomyItem.attributes.name : item.attributes.title
-        const href = isSeries || isCategory
-          ? CmsService.resolveTagHref(taxonomyItem.attributes.path, taxonomyItem.attributes.drupal_internal__tid)
-          : CmsService.resolvePath(item.attributes.path, item.attributes.drupal_internal__nid)
+        const href =
+          isSeries || isCategory
+            ? CmsService.resolveTagHref(taxonomyItem.attributes.path, taxonomyItem.attributes.drupal_internal__tid)
+            : CmsService.resolvePath(item.attributes.path, item.attributes.drupal_internal__nid)
 
         return {
           id: item.id,
