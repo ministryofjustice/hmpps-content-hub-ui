@@ -1,10 +1,5 @@
 import JsonApiClient, { JsonApiCollectionResponse } from '../data/jsonApiClient'
-import CmsService, {
-  CmsPrimaryNavigationAttributes,
-  CmsTag,
-  CmsTopicAttributes,
-  CmsTopicPage,
-} from './cmsService'
+import CmsService, { CmsPrimaryNavigationAttributes, CmsTag, CmsTopicAttributes, CmsTopicPage } from './cmsService'
 
 jest.mock('../data/jsonApiClient')
 
@@ -102,35 +97,41 @@ describe('CmsService', () => {
   })
 
   it('should fetch topic page data and map it into items', async () => {
-    const termResponse: JsonApiCollectionResponse<{ name: string; description?: string; drupal_internal__tid: number }> =
-      {
-        data: [
-          {
-            type: 'taxonomy_term--topics',
-            id: 'uuid-1',
-            attributes: {
-              name: 'Education',
-              drupal_internal__tid: 42,
-              description: 'Topic description',
-            },
+    const termResponse: JsonApiCollectionResponse<{
+      name: string
+      description?: string
+      drupal_internal__tid: number
+    }> = {
+      data: [
+        {
+          type: 'taxonomy_term--topics',
+          id: 'uuid-1',
+          attributes: {
+            name: 'Education',
+            drupal_internal__tid: 42,
+            description: 'Topic description',
           },
-        ],
-      }
+        },
+      ],
+    }
 
-    const nodeResponse: JsonApiCollectionResponse<{ title: string; field_summary?: string; path?: { alias?: string } }> =
-      {
-        data: [
-          {
-            type: 'node--page',
-            id: 'node-1',
-            attributes: {
-              title: 'Learning skills',
-              field_summary: 'Improve your skills',
-              path: { alias: '/content/123' },
-            },
+    const nodeResponse: JsonApiCollectionResponse<{
+      title: string
+      field_summary?: string
+      path?: { alias?: string }
+    }> = {
+      data: [
+        {
+          type: 'node--page',
+          id: 'node-1',
+          attributes: {
+            title: 'Learning skills',
+            field_summary: 'Improve your skills',
+            path: { alias: '/content/123' },
           },
-        ],
-      }
+        },
+      ],
+    }
 
     jsonApiClient.getCollectionByPath.mockResolvedValueOnce(termResponse).mockResolvedValueOnce(nodeResponse)
 
@@ -144,20 +145,23 @@ describe('CmsService', () => {
   })
 
   it('should resolve tag type by taxonomy term id', async () => {
-    const termResponse: JsonApiCollectionResponse<{ name: string; drupal_internal__tid: number; description?: string }> =
-      {
-        data: [
-          {
-            type: 'taxonomy_term--series',
-            id: 'uuid-1',
-            attributes: {
-              name: 'Induction',
-              drupal_internal__tid: 99,
-              description: 'Series description',
-            },
+    const termResponse: JsonApiCollectionResponse<{
+      name: string
+      drupal_internal__tid: number
+      description?: string
+    }> = {
+      data: [
+        {
+          type: 'taxonomy_term--series',
+          id: 'uuid-1',
+          attributes: {
+            name: 'Induction',
+            drupal_internal__tid: 99,
+            description: 'Series description',
           },
-        ],
-      }
+        },
+      ],
+    }
 
     jsonApiClient.getCollectionByPath.mockResolvedValueOnce(termResponse)
 
