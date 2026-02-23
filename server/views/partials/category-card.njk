@@ -1,4 +1,3 @@
-{# Expects: cardItem, showSeriesTag #}
 <a class="hmpps-category-card" href="{{ cardItem.href or '#' }}">
   {% if cardItem.thumbnailUrl %}
     <img class="hmpps-category__thumbnail" src="{{ cardItem.thumbnailUrl }}" alt="{{ cardItem.title or cardItem.linkText or 'Card thumbnail' }}">
