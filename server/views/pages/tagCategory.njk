@@ -1,39 +1,47 @@
 <section class="hmpps-home-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6 govuk-!-margin-top-6">
 	<div class="govuk-width-container">
 		{% if tag.categoryFeaturedContent and tag.categoryFeaturedContent.length %}
-			<div class="govuk-grid-row">
-				<div class="govuk-grid-column-full">
-					<h2 class="govuk-heading-m">Featured</h2>
-				</div>
+			<h2 class="govuk-heading-m govuk-!-margin-bottom-4">Featured</h2>
+			<div class="govuk-grid-row hmpps-category-grid">
 
 				{% for item in tag.categoryFeaturedContent %}
 					<div class="govuk-grid-column-one-quarter">
-						{% if item.thumbnailUrl %}
-							<img class="hmpps-category__thumbnail" src="{{ item.thumbnailUrl }}" alt="{{ item.title or 'Featured content thumbnail' }}">
-						{% endif %}
-						<h3 class="govuk-heading-s">
-							<a class="govuk-link" href="{{ item.href or '#' }}">{{ item.title or item.linkText or 'Untitled' }}</a>
-						</h3>
+						<a class="hmpps-category-card" href="{{ item.href or '#' }}">
+							{% if item.thumbnailUrl %}
+								<img class="hmpps-category__thumbnail" src="{{ item.thumbnailUrl }}" alt="{{ item.title or 'Featured content thumbnail' }}">
+							{% endif %}
+							<div class="hmpps-category-card__title">
+								<h3 class="govuk-heading-s">{{ item.title or item.linkText or 'Untitled' }}</h3>
+								{% if item.contentType == "series" %}
+									<strong class="govuk-tag govuk-tag--purple hmpps-category-card__tag">Series</strong>
+								{% endif %}
+							</div>
+						</a>
 						{% if item.summary %}
-							<p>{{ item.summary }}</p>
+							<p class="govuk-!-margin-top-2">{{ item.summary }}</p>
 						{% endif %}
 					</div>
 				{% endfor %}
 			</div>
 		{% endif %}
 
-		<div class="govuk-grid-row govuk-!-margin-top-6">
-			<div class="govuk-grid-column-full">
-				<h2 class="govuk-heading-m">In this section</h2>
-			</div>
+		<h2 class="govuk-heading-m govuk-!-margin-top-6 govuk-!-margin-bottom-4">In this section</h2>
+		<div class="govuk-grid-row hmpps-category-grid">
 
 			{% if tag.categoryMenu and tag.categoryMenu.length %}
 				{% for link in tag.categoryMenu %}
 					<div class="govuk-grid-column-one-quarter">
-						{% if link.thumbnailUrl %}
-							<img class="hmpps-category__thumbnail" src="{{ link.thumbnailUrl }}" alt="{{ link.linkText or 'Section thumbnail' }}">
-						{% endif %}
-						<a class="govuk-link" href="{{ link.href or '#' }}">{{ link.linkText or link.title or 'Untitled' }}</a>
+						<a class="hmpps-category-card" href="{{ link.href or '#' }}">
+							{% if link.thumbnailUrl %}
+								<img class="hmpps-category__thumbnail" src="{{ link.thumbnailUrl }}" alt="{{ link.linkText or 'Section thumbnail' }}">
+							{% endif %}
+							<div class="hmpps-category-card__title">
+								<h3 class="govuk-heading-s">{{ link.linkText or link.title or 'Untitled' }}</h3>
+								{% if link.contentType == "series" %}
+									<strong class="govuk-tag govuk-tag--purple hmpps-category-card__tag">Series</strong>
+								{% endif %}
+							</div>
+						</a>
 					</div>
 				{% endfor %}
 			{% else %}

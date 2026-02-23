@@ -4,7 +4,6 @@ import JsonApiClient, {
   JsonApiRelationships,
   JsonApiSingleResponse,
 } from '../data/jsonApiClient'
-import logger from '../../logger'
 
 export interface CmsTopicAttributes {
   drupal_internal__tid: number
@@ -63,6 +62,7 @@ export interface CmsCategoryFeaturedItem {
   summary?: string
   href: string
   thumbnailUrl?: string
+  contentType?: 'series' | 'category' | 'content'
 }
 
 export interface CmsCategoryMenuItem {
@@ -70,6 +70,7 @@ export interface CmsCategoryMenuItem {
   linkText: string
   href: string
   thumbnailUrl?: string
+  contentType?: 'series' | 'category'
 }
 
 type CmsPath = {
@@ -105,6 +106,12 @@ type CmsNodeAttributes = {
   field_summary?: string
   path?: CmsPath
   drupal_internal__nid?: number
+}
+
+type CmsTaxonomyAttributes = {
+  name?: string
+  path?: CmsPath
+  drupal_internal__tid?: number
 }
 
 type CmsFileAttributes = {
@@ -263,21 +270,21 @@ export default class CmsService {
       'fields[node--moj_video_item]': tileFields,
       'fields[node--moj_radio_item]': tileFields,
       'fields[node--moj_pdf_item]': tileFields,
-      'fields[taxonomy_term--series]': tileFields,
+      'fields[taxonomy_term--series]': 'drupal_internal__tid,name,path,field_moj_thumbnail_image',
       'fields[taxonomy_term--moj_categories]':
         'name,description,field_exclude_feedback,field_featured_tiles,breadcrumbs,child_term_count',
-      include: 'field_featured_tiles,field_featured_tiles.field_moj_thumbnail_image',
+      include:
+        'field_featured_tiles,field_featured_tiles.field_moj_thumbnail_image,field_featured_tiles.field_moj_series,field_featured_tiles.field_moj_series.field_moj_thumbnail_image',
       'fields[file--file]': 'image_style_uri,uri,url',
     })
 
     return params.toString()
   }
 
-  private static buildCategoryMenuQueryString(termType: 'moj_categories' | 'series', categoryUuid: string) {
+  private static buildCategoryMenuQueryString() {
     const params = new URLSearchParams({
-      [`fields[taxonomy_term--${termType}]`]: 'drupal_internal__tid,name,path,field_moj_thumbnail_image',
-      'filter[vid.meta.drupal_internal__target_id]': termType,
-      'filter[parent.id]': categoryUuid,
+      'fields[taxonomy_term--series]': 'drupal_internal__tid,name,path,field_moj_thumbnail_image',
+      'fields[taxonomy_term--moj_categories]': 'drupal_internal__tid,name,path,field_moj_thumbnail_image',
       'page[limit]': '100',
       include: 'field_moj_thumbnail_image',
       'fields[file--file]': 'image_style_uri,uri,url',
@@ -320,29 +327,14 @@ export default class CmsService {
     const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/moj_categories/${categoryUuid}?${queryString}`
     const response = await this.jsonApiClient.getSingleByPath<CmsCategoryTermAttributes>(path)
 
-    logger.info('CMS category response', {
-      categoryUuid,
-      type: response.data?.type,
-      attributes: response.data?.attributes,
-      relationships: response.data?.relationships,
-      includedCount: response.included?.length ?? 0,
-    })
-
     return CmsService.mapCategoryDetails(response)
   }
 
   private async getCategoryMenu(establishmentName: string, categoryUuid: string, language: string) {
-    const categoryQuery = CmsService.buildCategoryMenuQueryString('moj_categories', categoryUuid)
-    const seriesQuery = CmsService.buildCategoryMenuQueryString('series', categoryUuid)
-
-    const [categoryResponse, seriesResponse] = await Promise.all([
-      this.jsonApiClient.getCollectionByPath<CmsCategoryMenuAttributes>(
-        `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term?${categoryQuery}`,
-      ),
-      this.jsonApiClient.getCollectionByPath<CmsCategoryMenuAttributes>(
-        `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term?${seriesQuery}`,
-      ),
-    ])
+    const queryString = CmsService.buildCategoryMenuQueryString()
+    const response = await this.jsonApiClient.getCollectionByPath<CmsCategoryMenuAttributes>(
+      `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/moj_categories/${categoryUuid}/sub_terms?${queryString}`,
+    )
 
     const mapItem = (
       item: JsonApiResource<CmsCategoryMenuAttributes>,
@@ -356,16 +348,14 @@ export default class CmsService {
 
       return {
         id: `${item.attributes.drupal_internal__tid ?? item.id}`,
-        linkText: item.attributes.name ?? 'Untitled',
+        linkText: item.attributes.name ?? (item as JsonApiResource<CmsTaxonomyAttributes>).attributes.name ?? 'Untitled',
         href: CmsService.resolveTagHref(item.attributes.path, item.attributes.drupal_internal__tid),
         thumbnailUrl: CmsService.resolveFileUrl(thumbnail),
+        contentType: item.type === 'taxonomy_term--series' ? 'series' : 'category',
       }
     }
 
-    return [
-      ...categoryResponse.data.map(item => mapItem(item, categoryResponse.included)),
-      ...seriesResponse.data.map(item => mapItem(item, seriesResponse.included)),
-    ]
+    return response.data.map(item => mapItem(item, response.included))
   }
 
   private static resolveLink(value: CmsPrimaryNavigationAttributes['url']) {
@@ -427,12 +417,32 @@ export default class CmsService {
           ? CmsService.findIncluded<CmsFileAttributes>(included, thumbnailIdentifier)
           : undefined
 
+        const seriesIdentifier = CmsService.relationshipDataArray(item.relationships?.field_moj_series)[0]
+        const series = seriesIdentifier
+          ? CmsService.findIncluded<CmsTaxonomyAttributes>(included, seriesIdentifier)
+          : undefined
+        const seriesThumbnailIdentifier = series
+          ? CmsService.relationshipDataArray(series.relationships?.field_moj_thumbnail_image)[0]
+          : undefined
+        const seriesThumbnail = seriesThumbnailIdentifier
+          ? CmsService.findIncluded<CmsFileAttributes>(included, seriesThumbnailIdentifier)
+          : undefined
+
+        const isSeries = item.type === 'taxonomy_term--series' || Boolean(series)
+        const isCategory = item.type === 'taxonomy_term--moj_categories'
+        const taxonomyItem = (series ?? (item as JsonApiResource<CmsTaxonomyAttributes>))
+        const title = isSeries || isCategory ? taxonomyItem.attributes.name : item.attributes.title
+        const href = isSeries || isCategory
+          ? CmsService.resolveTagHref(taxonomyItem.attributes.path, taxonomyItem.attributes.drupal_internal__tid)
+          : CmsService.resolvePath(item.attributes.path, item.attributes.drupal_internal__nid)
+
         return {
           id: item.id,
-          title: item.attributes.title,
-          summary: item.attributes.field_summary,
-          href: CmsService.resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
-          thumbnailUrl: CmsService.resolveFileUrl(thumbnail),
+          title: title ?? 'Untitled',
+          summary: isSeries || isCategory ? undefined : item.attributes.field_summary,
+          href,
+          thumbnailUrl: CmsService.resolveFileUrl(thumbnail) ?? CmsService.resolveFileUrl(seriesThumbnail),
+          contentType: isSeries ? 'series' : isCategory ? 'category' : 'content',
         }
       })
   }

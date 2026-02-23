@@ -1,5 +1,14 @@
+$hmpps-category-card-bg: rgb(35, 36, 37);
+$hmpps-category-card-hover-bg: rgb(255, 221, 0);
+$hmpps-category-card-shadow: rgba(0, 0, 0, 0.75) 0 0 20px 5px;
+$hmpps-category-tag-offset-x: 15px;
+$hmpps-category-tag-offset-y: 10px;
+$hmpps-category-grid-gap: 5px;
+
 .govuk-main-wrapper {
   min-height: 600px;
+  margin-bottom: 0;
+  padding: 0;
 }
 
 .hmpps-home-section--dark {
@@ -11,27 +20,77 @@
   .govuk-heading-m,
   .govuk-heading-s,
   p,
-  li {
-    color: govuk-colour('white');
-  }
-
+  li,
   .govuk-link {
     color: govuk-colour('white');
   }
 
-  .govuk-link:visited {
-    color: govuk-colour('light-grey');
-  }
-
+  .govuk-link:visited,
   .govuk-link:hover,
   .govuk-link:active {
     color: govuk-colour('light-grey');
   }
 }
 
+.hmpps-footer {
+  border-top: 10px solid govuk-colour('blue');
+}
+
 .hmpps-category__thumbnail {
   display: block;
-  height: auto;
+  height: 11rem;
   margin-bottom: govuk-spacing(2);
+  object-fit: cover;
   width: 100%;
+}
+
+.hmpps-category-card {
+  background-color: $hmpps-category-card-bg;
+  display: block;
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.5s;
+
+  &:hover,
+  &:focus {
+    background-color: $hmpps-category-card-hover-bg;
+    box-shadow: $hmpps-category-card-shadow;
+    outline: none;
+    transform: scale(1.1);
+    z-index: 100;
+
+    .hmpps-category-card__title {
+      background-color: transparent;
+    }
+  }
+}
+
+.hmpps-category-card__title {
+  background-color: $hmpps-category-card-bg;
+  min-height: 80px;
+  padding: govuk-spacing(2);
+
+  .govuk-heading-s {
+    margin-bottom: govuk-spacing(1);
+  }
+}
+
+.hmpps-category-card__tag {
+  margin-right: $hmpps-category-tag-offset-x;
+  margin-top: $hmpps-category-tag-offset-y;
+  position: absolute;
+  right: 0;
+  text-transform: uppercase;
+  top: 0;
+}
+
+.hmpps-category-grid {
+  margin-left: calc($hmpps-category-grid-gap / -2);
+  margin-right: calc($hmpps-category-grid-gap / -2);
+
+  > .govuk-grid-column-one-quarter {
+    margin-bottom: $hmpps-category-grid-gap;
+    padding-left: calc($hmpps-category-grid-gap / 2);
+    padding-right: calc($hmpps-category-grid-gap / 2);
+  }
 }
