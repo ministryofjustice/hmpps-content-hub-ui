@@ -53,22 +53,16 @@ export default function topicsRoutes({ auditService, cmsService }: Services): Ro
         correlationId: req.id,
         subjectId: req.params.id,
       })
+      const establishmentName = res.locals.establishment?.name || config.establishments[0].name
+      const language = res.locals.language || 'en'
+      const tag = await cmsService.getTag(establishmentName, req.params.id, language)
 
-      throw new Error('Tag route is functional - pending implementation')
-    } catch (error) {
-      next(error)
-    }
-  })
+      if (!tag) {
+        res.status(404)
+        return res.render('pages/tag', { tag: null })
+      }
 
-  router.get('/tags/:id/json', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await auditService.logPageView(Page.TAG_JSON, {
-        who: res.locals.user?.username,
-        correlationId: req.id,
-        subjectId: req.params.id,
-      })
-
-      throw new Error('Tag JSON route is functional - pending implementation')
+      return res.render('pages/tag', { tag })
     } catch (error) {
       next(error)
     }

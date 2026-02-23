@@ -40,6 +40,7 @@ function appSetup(
     cmsService: {
       getTopics: jest.fn().mockResolvedValue([]),
       getPrimaryNavigation: jest.fn().mockResolvedValue([]),
+      getTag: jest.fn().mockResolvedValue(null),
     } as unknown as CmsService,
     ...services,
   }
@@ -82,6 +83,7 @@ export function appWithAllRoutes({
     cmsService: {
       getTopics: jest.fn().mockResolvedValue([]),
       getPrimaryNavigation: jest.fn().mockResolvedValue([]),
+      getTag: jest.fn().mockResolvedValue(null),
     } as unknown as CmsService,
   },
   userSupplier = () => user,

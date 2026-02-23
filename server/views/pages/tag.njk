@@ -1,0 +1,26 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Tag" %}
+{% set mainClasses = "govuk-body" %}
+
+{% block content %}
+  {% if tag %}
+    <h1>{{ tag.name or "Tag" }}</h1>
+    <p class="govuk-body">Tag type: {{ tag.type }}</p>
+
+    {% if tag.description %}
+      <p>{{ tag.description | safe }}</p>
+    {% endif %}
+
+    {% if tag.type == "topic" %}
+      {% include "./tagTopic.njk" %}
+    {% elif tag.type == "series" %}
+      {% include "./tagSeries.njk" %}
+    {% elif tag.type == "category" %}
+      {% include "./tagCategory.njk" %}
+    {% endif %}
+  {% else %}
+    <h1>Tag not found</h1>
+    <p>We could not find this tag.</p>
+  {% endif %}
+{% endblock %}
