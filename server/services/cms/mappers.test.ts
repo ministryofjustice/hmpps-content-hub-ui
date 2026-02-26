@@ -166,6 +166,7 @@ describe('cms mappers', () => {
       summary: 'Summary',
       href: '/content/1',
       thumbnailUrl: '/img/content.png',
+      contentType: 'page',
     })
     expect(mapTopicItem(item, included)).toEqual({
       id: 'node-1',
@@ -173,6 +174,29 @@ describe('cms mappers', () => {
       summary: 'Summary',
       href: '/content/1',
       thumbnailUrl: '/img/content.png',
+      contentType: 'page',
+    })
+  })
+
+  it('omits content tags for link items', () => {
+    const item: JsonApiResource<CmsNodeAttributes> = {
+      type: 'node--page',
+      id: 'node-2',
+      attributes: {
+        title: 'External link',
+        field_summary: 'Summary',
+        path: { alias: '/link/123' },
+        drupal_internal__nid: 2,
+      },
+    }
+
+    expect(mapSeriesItem(item, undefined)).toEqual({
+      id: 'node-2',
+      title: 'External link',
+      summary: 'Summary',
+      href: '/link/123',
+      thumbnailUrl: undefined,
+      contentType: 'link',
     })
   })
 

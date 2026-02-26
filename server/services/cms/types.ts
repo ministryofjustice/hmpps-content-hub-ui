@@ -59,6 +59,7 @@ export interface CmsSeriesItem {
   summary?: string
   href: string
   thumbnailUrl?: string
+  contentType?: 'video' | 'radio' | 'page' | 'link'
 }
 
 export interface CmsTopicContentItem {
@@ -67,6 +68,7 @@ export interface CmsTopicContentItem {
   summary?: string
   href: string
   thumbnailUrl?: string
+  contentType?: 'video' | 'radio' | 'page' | 'link'
 }
 
 export interface CmsCategoryFeaturedItem {
