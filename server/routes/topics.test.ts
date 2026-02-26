@@ -66,6 +66,7 @@ describe('Topics Routes', () => {
       auditService.logPageView.mockResolvedValue(null)
       cmsService.getTag.mockResolvedValue({
         id: '1',
+        uuid: 'uuid-1',
         type: 'topic',
         name: 'Education',
         description: 'Topic description',
