@@ -63,7 +63,6 @@ function appSetup(
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes(mergedServices))
-  app.use(routes(services))
   app.use((req, res, next) => i18next.on('initialized', next))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))
@@ -97,6 +96,7 @@ export const defaultServices = (): Partial<MockedServices> => {
     cmsService: {
       getTopics: jest.fn().mockResolvedValue([]),
       getPrimaryNavigation: jest.fn().mockResolvedValue([]),
+      getTag: jest.fn().mockResolvedValue(null),
     },
   }
 }

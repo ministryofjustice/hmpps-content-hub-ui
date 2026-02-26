@@ -1,0 +1,20 @@
+<a class="hmpps-category-card" href="{{ cardItem.href or '#' }}">
+  {% if cardItem.thumbnailUrl %}
+    <img class="hmpps-category__thumbnail" src="{{ cardItem.thumbnailUrl }}" alt="{{ cardItem.title or cardItem.linkText or 'Card thumbnail' }}">
+  {% endif %}
+  <div class="hmpps-category-card__title">
+    <h3 class="govuk-heading-s">{{ cardItem.title or cardItem.linkText or 'Untitled' }}</h3>
+    {% if showContentTag and cardItem.contentType and cardItem.contentType != "series" and cardItem.contentType != "category" and cardItem.contentType != "category_bottom" and cardItem.contentType != "link" %}
+      {% if cardItem.contentType == "video" %}
+        <span class="hmpps-category-card__content-label hmpps-category-card__content-label--watch">Watch</span>
+      {% elif cardItem.contentType == "radio" %}
+        <span class="hmpps-category-card__content-label hmpps-category-card__content-label--listen">Listen</span>
+      {% else %}
+        <span class="hmpps-category-card__content-label hmpps-category-card__content-label--read">Read</span>
+      {% endif %}
+    {% endif %}
+    {% if showSeriesTag and cardItem.contentType == "series" %}
+      <strong class="govuk-tag govuk-tag--purple hmpps-category-card__tag">Series</strong>
+    {% endif %}
+  </div>
+</a>

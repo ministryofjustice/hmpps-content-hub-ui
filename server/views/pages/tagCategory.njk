@@ -1,0 +1,38 @@
+<section class="hmpps-home-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6 govuk-!-margin-top-6">
+	<div class="govuk-width-container">
+		{% if tag.categoryFeaturedContent and tag.categoryFeaturedContent.length %}
+			<h2 class="govuk-heading-m govuk-!-margin-bottom-4">Featured</h2>
+			<div class="govuk-grid-row hmpps-category-grid">
+
+				{% for item in tag.categoryFeaturedContent %}
+					<div class="govuk-grid-column-one-quarter">
+						{% set cardItem = item %}
+						{% set showSeriesTag = true %}
+						{% include "../partials/category-card.njk" %}
+						{% if item.summary %}
+							<p class="govuk-!-margin-top-2">{{ item.summary }}</p>
+						{% endif %}
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+
+		<h2 class="govuk-heading-m govuk-!-margin-top-6 govuk-!-margin-bottom-4">In this section</h2>
+		<div class="govuk-grid-row hmpps-category-grid">
+
+			{% if tag.categoryMenu and tag.categoryMenu.length %}
+				{% for link in tag.categoryMenu %}
+					<div class="govuk-grid-column-one-quarter">
+						{% set cardItem = link %}
+						{% set showSeriesTag = true %}
+						{% include "../partials/category-card.njk" %}
+					</div>
+				{% endfor %}
+			{% else %}
+				<div class="govuk-grid-column-full">
+					<p>No links are available for this category yet.</p>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</section>
