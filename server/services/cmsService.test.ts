@@ -1,5 +1,6 @@
 import JsonApiClient, { JsonApiCollectionResponse, JsonApiSingleResponse } from '../data/jsonApiClient'
-import CmsService, { CmsPrimaryNavigationAttributes, CmsTag, CmsTopicAttributes, CmsTopicPage } from './cmsService'
+import CmsService from './cmsService'
+import { CmsPrimaryNavigationAttributes, CmsTag, CmsTopicAttributes, CmsTopicPage } from './cms/types'
 
 jest.mock('../data/jsonApiClient')
 

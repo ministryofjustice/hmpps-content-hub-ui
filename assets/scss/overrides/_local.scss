@@ -58,6 +58,10 @@ $hmpps-category-grid-gap: 5px;
     color: govuk-colour('white');
   }
 
+  .hmpps-category-card__tag {
+    color: govuk-colour('black');
+  }
+
   &:hover,
   &:focus {
     background-color: $hmpps-category-card-hover-bg;
