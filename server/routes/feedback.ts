@@ -10,7 +10,7 @@ export default function feedbackRoutes({ auditServiceSource }: Services): Router
       await auditServiceSource.get(req.portalType).logPageView(Page.FEEDBACK, {
         who: res.locals.user?.username,
         correlationId: req.id,
-        subjectId: req.params.feedbackId,
+        subjectId: req.params.feedbackId?.toString(),
       })
 
       throw new Error('Feedback route is functional - pending implementation')
