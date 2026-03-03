@@ -1,9 +1,16 @@
 {% extends "../partials/layout.njk" %}
+{% from "../partials/breadcrumb.njk" import breadcrumb, breadcrumbBackForward %}
 
 {% set pageTitle = applicationName + " - Topics" %}
 {% set mainClasses = "govuk-body" %}
 
 {% block content %}
+  {{ breadcrumbBackForward() }}
+
+  {% if breadcrumbs and breadcrumbs.length %}
+    {{ breadcrumb(breadcrumbs) }}
+  {% endif %}
+
   <h1>Browse all topics</h1>
 
   {% if groupedColumns and groupedColumns.length %}

@@ -100,6 +100,7 @@ export default class CmsService {
       type: tagType,
       name: match.attributes.name,
       description: match.attributes.description,
+      breadcrumbs: [],
     }
 
     if (tagType === 'topic') {
@@ -112,6 +113,7 @@ export default class CmsService {
         ...baseTag,
         name: topicHeader?.name ?? baseTag.name,
         description: topicHeader?.description ?? baseTag.description,
+        breadcrumbs: topicHeader?.breadcrumbs ?? baseTag.breadcrumbs,
         topicHeaderImageUrl: topicHeader?.thumbnailUrl,
         topicItems,
       }
@@ -127,6 +129,7 @@ export default class CmsService {
         ...baseTag,
         name: seriesHeader?.name ?? baseTag.name,
         description: seriesHeader?.description ?? baseTag.description,
+        breadcrumbs: seriesHeader?.breadcrumbs ?? baseTag.breadcrumbs,
         seriesHeaderImageUrl: seriesHeader?.thumbnailUrl,
         seriesItems,
       }
@@ -142,6 +145,7 @@ export default class CmsService {
       ...baseTag,
       name: categoryDetails?.name ?? baseTag.name,
       description: categoryDetails?.description ?? baseTag.description,
+      breadcrumbs: categoryDetails?.breadcrumbs ?? baseTag.breadcrumbs,
       categoryFeaturedContent: categoryDetails?.categoryFeaturedContent ?? [],
       categoryMenu,
     }
@@ -159,7 +163,7 @@ export default class CmsService {
     const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/moj_categories/${categoryUuid}?${queryString}`
     const response = await this.jsonApiClient.getSingleByPath<CmsCategoryTermAttributes>(path)
 
-    return mapCategoryDetails(response)
+    return mapCategoryDetails(response, language)
   }
 
   private async getCategoryMenu(establishmentName: string, categoryUuid: string, language: string) {
@@ -174,14 +178,14 @@ export default class CmsService {
     const queryString = buildSeriesHeaderQueryString()
     const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/series/${seriesUuid}?${queryString}`
     const response = await this.jsonApiClient.getSingleByPath<CmsSeriesTermAttributes>(path)
-    return mapSeriesHeader(response)
+    return mapSeriesHeader(response, language)
   }
 
   private async getTopicHeader(establishmentName: string, topicUuid: string, language: string) {
     const queryString = buildTopicHeaderQueryString()
     const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/topics/${topicUuid}?${queryString}`
     const response = await this.jsonApiClient.getSingleByPath<CmsTopicHeaderAttributes>(path)
-    return mapTopicHeader(response)
+    return mapTopicHeader(response, language)
   }
 
   private async getSeriesItems(establishmentName: string, seriesUuid: string, language: string, page: number = 1) {

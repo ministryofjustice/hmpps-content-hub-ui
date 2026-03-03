@@ -60,7 +60,9 @@ export default function topicsRoutes({ auditServiceSource, cmsService }: Service
       if (!tag) {
         res.status(404)
         res.render('pages/tag', { tag: null })
+        return
       }
+
       res.render('pages/tag', { tag })
     } catch (error) {
       next(error)

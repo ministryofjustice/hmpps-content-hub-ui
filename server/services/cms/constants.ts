@@ -5,6 +5,7 @@ const COMMON_TILE_FIELDS = ['drupal_internal__nid', 'title', 'field_moj_thumbnai
 const HEADER_FIELDS = joinFields([
   'name',
   'description',
+  'breadcrumbs',
   'drupal_internal__tid',
   'field_moj_thumbnail_image',
   'path',
