@@ -5,7 +5,6 @@ import * as lazyLoading from './components/lazyLoading'
 govukFrontend.initAll()
 mojFrontend.initAll()
 lazyLoading.initAll()
-
 ;(function setUpPageNavigation() {
   const historyActions = {
     back: () => window.history.go(-1),
