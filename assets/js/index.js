@@ -9,16 +9,13 @@ mojFrontend.initAll()
     forward: () => window.history.go(1),
   }
 
-  document.body.addEventListener('click', event => {
-    if (!(event.target instanceof Element)) return
-
-    const link = event.target.closest('[data-page-nav-action]')
-    if (!link) return
-
-    const action = link.getAttribute('data-page-nav-action')
-    if (!action || !(action in historyActions)) return
-
-    event.preventDefault()
-    historyActions[action]()
+  document.querySelectorAll('[data-page-nav-action]').forEach(link => {
+    link.addEventListener('click', event => {
+      const action = link.getAttribute('data-page-nav-action')
+      if (action in historyActions) {
+        event.preventDefault()
+        historyActions[action]()
+      }
+    })
   })
 })()
