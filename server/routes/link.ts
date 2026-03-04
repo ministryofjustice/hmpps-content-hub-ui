@@ -10,7 +10,7 @@ export default function linkRoutes({ auditServiceSource }: Services): Router {
       await auditServiceSource.get(req.portalType).logPageView(Page.LINK, {
         who: res.locals.user?.username,
         correlationId: req.id,
-        subjectId: req.params.id,
+        subjectId: req.params.id?.toString(),
       })
 
       throw new Error('Link route is functional - pending implementation')

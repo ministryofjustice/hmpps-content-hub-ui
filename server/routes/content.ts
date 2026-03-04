@@ -10,7 +10,7 @@ export default function contentRoutes({ auditServiceSource }: Services): Router 
       await auditServiceSource.get(req.portalType).logPageView(Page.CONTENT, {
         who: res.locals.user?.username,
         correlationId: req.id,
-        subjectId: req.params.id,
+        subjectId: req.params.id?.toString(),
       })
 
       throw new Error('Content route is functional - pending implementation')

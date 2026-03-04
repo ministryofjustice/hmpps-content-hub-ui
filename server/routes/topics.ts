@@ -51,11 +51,11 @@ export default function topicsRoutes({ auditServiceSource, cmsService }: Service
       await auditServiceSource.get(req.portalType).logPageView(Page.TAG, {
         who: res.locals.user?.username,
         correlationId: req.id,
-        subjectId: req.params.id,
+        subjectId: req.params.id?.toString(),
       })
       const establishmentName = res.locals.establishment?.name || config.establishments[0].name
       const language = res.locals.language || 'en'
-      const tag = await cmsService.getTag(establishmentName, req.params.id, language)
+      const tag = await cmsService.getTag(establishmentName, req.params.id?.toString(), language)
 
       if (!tag) {
         res.status(404)
