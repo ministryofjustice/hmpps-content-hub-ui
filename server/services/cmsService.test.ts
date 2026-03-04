@@ -189,6 +189,7 @@ describe('CmsService', () => {
       uuid: 'uuid-1',
       name: 'Induction',
       description: 'Series description',
+      breadcrumbs: [],
       seriesHeaderImageUrl: undefined,
       seriesItems: [],
     })

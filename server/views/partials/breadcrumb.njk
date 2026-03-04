@@ -1,35 +1,20 @@
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 
-{% macro breadcrumb(pageTitle, breadcrumbList, displayCurrentPageTitle="true") %}
+{% macro breadcrumbBackForward(hideHomePage=false) %}
+<div class="page-navigation govuk-!-display-none-print">
+  <nav class="page-navigation__links" aria-label="Page navigation">
+    <a href="#" class="govuk-link page-navigation__link page-navigation__link--back" data-page-nav-action="back">Back</a>
+    <a href="#" class="govuk-link page-navigation__link page-navigation__link--forward" data-page-nav-action="forward">Forward</a>
+  </nav>
+</div>
 
-  {% set rows = [ {
-    text: "Home",
-    href: '/'
-    } ]
-  %}
+{% endmacro %}
 
-  {% for item in breadcrumbList %}
-    {% set rows = (rows.push(
-      {
-        text: item.title,
-        href: item.href
-      }
-    ), rows) %}
-  {% endfor %}
-
-  {% if displayCurrentPageTitle %}
-    {% set completedRows = (rows.push(
-      {
-        text: pageTitle
-      }
-    ), rows) %}
-  {% else %}
-    {% set completedRows = rows %}
-  {% endif %}
+{% macro breadcrumb(breadcrumbs) %}
 
 {{ govukBreadcrumbs({
   collapseOnMobile: true,
-  items: completedRows,
+  items: breadcrumbs,
   classes: "govuk-!-display-none-print"
 }) }}
 

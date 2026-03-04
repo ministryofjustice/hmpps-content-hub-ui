@@ -1,10 +1,16 @@
 {% extends "../partials/layout.njk" %}
+{% from "../partials/breadcrumb.njk" import breadcrumb, breadcrumbBackForward %}
 
 {% set pageTitle = applicationName + " - Tag" %}
 {% set mainClasses = "govuk-body" %}
 
 {% block content %}
   {% if tag %}
+    {{ breadcrumbBackForward() }}
+    {% if tag.breadcrumbs and tag.breadcrumbs.length %}
+      {{ breadcrumb(tag.breadcrumbs) }}
+    {% endif %}
+
     {% if tag.type == "category" %}
       <h1>{{ tag.name or "Tag" }}</h1>
     {% endif %}

@@ -22,6 +22,7 @@ import {
   relationshipDataArray,
   resolveFileUrl,
   resolveLink,
+  mapBreadcrumbs,
   resolvePath,
   resolveTagHref,
   stripLanguagePrefix,
@@ -48,7 +49,10 @@ export const mapTopicPageItem = (item: JsonApiResource<CmsNodeAttributes>): CmsT
   href: resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
 })
 
-export const mapCategoryDetails = (response: JsonApiSingleResponse<CmsCategoryTermAttributes>) => {
+export const mapCategoryDetails = (
+  response: JsonApiSingleResponse<CmsCategoryTermAttributes>,
+  language: string = 'en',
+) => {
   const category = response.data
   const { name } = category.attributes
   const description = category.attributes.description?.processed
@@ -57,6 +61,7 @@ export const mapCategoryDetails = (response: JsonApiSingleResponse<CmsCategoryTe
   return {
     name,
     description,
+    breadcrumbs: mapBreadcrumbs(category.attributes.breadcrumbs, language),
     categoryFeaturedContent: featured,
   }
 }
@@ -78,7 +83,7 @@ export const mapCategoryMenuItem = (
   }
 }
 
-export const mapSeriesHeader = (response: JsonApiSingleResponse<CmsSeriesTermAttributes>) => {
+export const mapSeriesHeader = (response: JsonApiSingleResponse<CmsSeriesTermAttributes>, language: string = 'en') => {
   const term = response.data
   const thumbnailIdentifier = relationshipDataArray(term.relationships?.field_moj_thumbnail_image)[0]
   const thumbnail = thumbnailIdentifier
@@ -88,11 +93,12 @@ export const mapSeriesHeader = (response: JsonApiSingleResponse<CmsSeriesTermAtt
   return {
     name: term.attributes.name,
     description: term.attributes.description?.processed,
+    breadcrumbs: mapBreadcrumbs(term.attributes.breadcrumbs, language),
     thumbnailUrl: resolveFileUrl(thumbnail),
   }
 }
 
-export const mapTopicHeader = (response: JsonApiSingleResponse<CmsTopicHeaderAttributes>) => {
+export const mapTopicHeader = (response: JsonApiSingleResponse<CmsTopicHeaderAttributes>, language: string = 'en') => {
   const term = response.data
   const thumbnailIdentifier = relationshipDataArray(term.relationships?.field_moj_thumbnail_image)[0]
   const thumbnail = thumbnailIdentifier
@@ -102,6 +108,7 @@ export const mapTopicHeader = (response: JsonApiSingleResponse<CmsTopicHeaderAtt
   return {
     name: term.attributes.name,
     description: term.attributes.description?.processed,
+    breadcrumbs: mapBreadcrumbs(term.attributes.breadcrumbs, language),
     thumbnailUrl: resolveFileUrl(thumbnail),
   }
 }

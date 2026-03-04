@@ -1,6 +1,8 @@
 import { JsonApiResource } from '../../data/jsonApiClient'
 import {
   findIncluded,
+  mapBreadcrumbHref,
+  mapBreadcrumbs,
   mapTagType,
   relationshipDataArray,
   resolveFileUrl,
@@ -77,5 +79,23 @@ describe('cms utils', () => {
     expect(mapTagType('taxonomy_term--series')).toBe('series')
     expect(mapTagType('taxonomy_term--moj_categories')).toBe('category')
     expect(mapTagType('unknown')).toBeNull()
+  })
+
+  it('maps breadcrumb hrefs for internal aliases and absolute urls', () => {
+    expect(mapBreadcrumbHref('internal:/en/topics', 'en')).toBe('/topics')
+    expect(mapBreadcrumbHref('/taxonomy/term/42', 'en')).toBe('/taxonomy/term/42')
+    expect(mapBreadcrumbHref('/node/99', 'en')).toBe('/node/99')
+    expect(mapBreadcrumbHref('https://example.com/help', 'en')).toBe('https://example.com/help')
+  })
+
+  it('maps raw breadcrumbs into govuk breadcrumb items', () => {
+    expect(
+      mapBreadcrumbs(
+        [{ title: 'Home', uri: '/' }, { title: 'Topics', uri: '/taxonomy/term/10' }, { title: 'Current page' }],
+        'en',
+      ),
+    ).toEqual([{ text: 'Home', href: '/' }, { text: 'Topics', href: '/taxonomy/term/10' }, { text: 'Current page' }])
+
+    expect(mapBreadcrumbs(undefined, 'en')).toEqual([])
   })
 })

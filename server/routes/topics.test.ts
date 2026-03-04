@@ -70,12 +70,15 @@ describe('Topics Routes', () => {
         type: 'topic',
         name: 'Education',
         description: 'Topic description',
+        breadcrumbs: [{ text: 'Home', href: '/' }, { text: 'Topics', href: '/topics' }, { text: 'Education' }],
       })
       return request(app)
         .get('/tags/123')
         .expect('Content-Type', /html/)
         .expect(200)
         .expect(res => {
+          expect(res.text).toContain('govuk-breadcrumbs')
+          expect(res.text).toContain('href="/topics"')
           expect(res.text).toContain('Education')
           expect(res.text).toContain('Topic description')
           expect(auditService.logPageView).toHaveBeenCalledWith(Page.TAG, {

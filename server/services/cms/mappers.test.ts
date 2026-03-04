@@ -94,7 +94,14 @@ describe('cms mappers', () => {
       data: {
         type: 'taxonomy_term--series',
         id: 'series-1',
-        attributes: { name: 'Series A', description: { processed: 'Series desc' } },
+        attributes: {
+          name: 'Series A',
+          description: { processed: 'Series desc' },
+          breadcrumbs: [
+            { title: 'Home', uri: '/' },
+            { title: 'Series', uri: '/taxonomy/term/77' },
+          ],
+        },
         relationships: {
           field_moj_thumbnail_image: { data: { type: 'file--file', id: 'file-series' } },
         },
@@ -112,7 +119,11 @@ describe('cms mappers', () => {
       data: {
         type: 'taxonomy_term--topics',
         id: 'topic-1',
-        attributes: { name: 'Topic A', description: { processed: 'Topic desc' } },
+        attributes: {
+          name: 'Topic A',
+          description: { processed: 'Topic desc' },
+          breadcrumbs: [{ title: 'Home', uri: '/' }, { title: 'Current topic' }],
+        },
         relationships: {
           field_moj_thumbnail_image: { data: { type: 'file--file', id: 'file-topic' } },
         },
@@ -129,11 +140,16 @@ describe('cms mappers', () => {
     expect(mapSeriesHeader(seriesResponse)).toEqual({
       name: 'Series A',
       description: 'Series desc',
+      breadcrumbs: [
+        { text: 'Home', href: '/' },
+        { text: 'Series', href: '/taxonomy/term/77' },
+      ],
       thumbnailUrl: '/img/series.png',
     })
     expect(mapTopicHeader(topicResponse)).toEqual({
       name: 'Topic A',
       description: 'Topic desc',
+      breadcrumbs: [{ text: 'Home', href: '/' }, { text: 'Current topic' }],
       thumbnailUrl: '/img/topic.png',
     })
   })
@@ -274,7 +290,15 @@ describe('cms mappers', () => {
       data: {
         type: 'taxonomy_term--moj_categories',
         id: 'cat-1',
-        attributes: { name: 'Category', description: { processed: 'Category desc' } },
+        attributes: {
+          name: 'Category',
+          description: { processed: 'Category desc' },
+          breadcrumbs: [
+            { title: 'Home', uri: '/' },
+            { title: 'Category parent', uri: '/taxonomy/term/200' },
+            { title: 'Category' },
+          ],
+        },
         relationships: {
           field_featured_tiles: {
             data: [{ type: 'node--page', id: 'node-1' }],
@@ -298,6 +322,11 @@ describe('cms mappers', () => {
     expect(mapCategoryDetails(response)).toEqual({
       name: 'Category',
       description: 'Category desc',
+      breadcrumbs: [
+        { text: 'Home', href: '/' },
+        { text: 'Category parent', href: '/taxonomy/term/200' },
+        { text: 'Category' },
+      ],
       categoryFeaturedContent: [
         {
           id: 'node-1',

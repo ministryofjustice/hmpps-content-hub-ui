@@ -37,6 +37,19 @@ export interface CmsTopicPage {
   items: CmsTopicPageItem[]
 }
 
+export interface CmsRawBreadcrumb {
+  title?: string
+  text?: string
+  uri?: string
+  url?: string
+  href?: string
+}
+
+export interface CmsBreadcrumbItem {
+  text: string
+  href?: string
+}
+
 export type CmsTagType = 'topic' | 'series' | 'category'
 
 export interface CmsTag {
@@ -45,6 +58,7 @@ export interface CmsTag {
   type: CmsTagType
   name?: string
   description?: string
+  breadcrumbs?: CmsBreadcrumbItem[]
   seriesHeaderImageUrl?: string
   seriesItems?: CmsSeriesItem[]
   topicHeaderImageUrl?: string
@@ -138,6 +152,7 @@ export type CmsFileAttributes = {
 export type CmsCategoryTermAttributes = {
   name?: string
   description?: { processed?: string }
+  breadcrumbs?: CmsRawBreadcrumb[]
   path?: CmsPath
   drupal_internal__tid?: number
 }
@@ -145,6 +160,7 @@ export type CmsCategoryTermAttributes = {
 export type CmsSeriesTermAttributes = {
   name?: string
   description?: { processed?: string }
+  breadcrumbs?: CmsRawBreadcrumb[]
   path?: CmsPath
   drupal_internal__tid?: number
 }
@@ -152,6 +168,7 @@ export type CmsSeriesTermAttributes = {
 export type CmsTopicHeaderAttributes = {
   name?: string
   description?: { processed?: string }
+  breadcrumbs?: CmsRawBreadcrumb[]
   path?: CmsPath
   drupal_internal__tid?: number
 }
