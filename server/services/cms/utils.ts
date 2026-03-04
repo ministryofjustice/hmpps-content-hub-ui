@@ -35,7 +35,7 @@ export const mapBreadcrumbs = (raw: CmsRawBreadcrumb[] | undefined, language: st
   if (!raw?.length) return []
 
   return raw
-    .map(item => {
+    .map((item): CmsBreadcrumbItem | null => {
       const text = (item.title || item.text || '').trim()
       if (!text) return null
 
