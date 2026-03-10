@@ -1,5 +1,7 @@
 {% extends "govuk/template.njk" %}
 
+{% from "../components/feedback-widget.njk" import feedbackWidget %}
+
 {% block htmlLang %}{{ language or 'en' }}{% endblock %}
 
 {% block head %}
@@ -13,6 +15,29 @@
 {% endblock %}
 
 {% block bodyStart %}
+{% endblock %}
+
+{% block main %}
+  <div class="govuk-width-container {{ containerClasses }}">
+    {% block beforeContent %}{% endblock %}
+    <main class="govuk-main-wrapper {{ mainClasses }}" id="main-content">
+      {% block content %}{% endblock %}
+      {% block feedbackWidget %}
+        {% if not excludeFeedback and feedbackId %}
+          {{ feedbackWidget({
+            feedbackId: feedbackId,
+            title: feedbackTitle or pageTitle or '',
+            contentType: feedbackContentType or '',
+            series: feedbackSeries or '',
+            categories: feedbackCategories or '',
+            topics: feedbackTopics or '',
+            csrfToken: csrfToken,
+            cspNonce: cspNonce
+          }) }}
+        {% endif %}
+      {% endblock %}
+    </main>
+  </div>
 {% endblock %}
 
 {% block bodyEnd %}

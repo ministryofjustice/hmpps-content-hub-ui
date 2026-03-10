@@ -2,9 +2,11 @@ import { dataAccess } from '../data'
 import AuditService from './auditService'
 import AuditServiceSource from './auditServiceSource'
 import CmsService from './cmsService'
+import FeedbackService from './feedbackService'
 
 export const services = () => {
-  const { applicationInfo, hmppsPrisonerAuditClient, hmppsStaffAuditClient, jsonApiClient } = dataAccess()
+  const { applicationInfo, hmppsPrisonerAuditClient, hmppsStaffAuditClient, jsonApiClient, feedbackClient } =
+    dataAccess()
 
   return {
     applicationInfo,
@@ -13,6 +15,7 @@ export const services = () => {
       staff: new AuditService(hmppsStaffAuditClient),
     }),
     cmsService: new CmsService(jsonApiClient),
+    feedbackService: new FeedbackService(feedbackClient),
   }
 }
 

@@ -98,6 +98,9 @@ export const defaultServices = (): Partial<MockedServices> => {
       getPrimaryNavigation: jest.fn().mockResolvedValue([]),
       getTag: jest.fn().mockResolvedValue(null),
     },
+    feedbackService: {
+      sendFeedback: jest.fn().mockResolvedValue(undefined),
+    },
   }
 }
 

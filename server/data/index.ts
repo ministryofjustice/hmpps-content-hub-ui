@@ -16,6 +16,7 @@ import config from '../config'
 import HmppsAuditClient from './hmppsAuditClient'
 import logger from '../../logger'
 import JsonApiClient from './jsonApiClient'
+import FeedbackClient from './feedbackClient'
 
 export const dataAccess = () => {
   const hmppsAuthClient = new AuthenticationClient(
@@ -30,9 +31,10 @@ export const dataAccess = () => {
     jsonApiClient: new JsonApiClient(hmppsAuthClient),
     hmppsPrisonerAuditClient: new HmppsAuditClient(config.sqs.prisonerAudit),
     hmppsStaffAuditClient: new HmppsAuditClient(config.sqs.staffAudit),
+    feedbackClient: new FeedbackClient(),
   }
 }
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { AuthenticationClient, HmppsAuditClient, JsonApiClient }
+export { AuthenticationClient, HmppsAuditClient, JsonApiClient, FeedbackClient }

@@ -1,0 +1,118 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro feedbackOptions(feedbackTexts, sentiment) %}
+  <div class="feedback-widget__options feedback-widget__options--{{ sentiment }} govuk-u-hidden">
+    {{ govukRadios({
+      classes: "govuk-radios--small",
+      name: "feedback-reason",
+      fieldset: {
+        legend: {
+          text: "features:feedback.select" | t,
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      items: feedbackTexts
+    }) }}
+  </div>
+{% endmacro %}
+
+{% macro feedbackWidget(params) %}
+  <div id="feedback-widget"
+       class="feedback-widget"
+       data-content-type="{{ params.contentType }}"
+       data-title="{{ params.title }}"
+       data-series="{{ params.series }}"
+       data-topics="{{ params.topics }}"
+       data-categories="{{ params.categories }}"
+       data-feedback-id="{{ params.feedbackId }}">
+
+    {# Interactive UI #}
+    <div class="feedback-widget__ui">
+
+      {% if params.heading is not defined %}
+        <h3 class="feedback-widget__heading">{{ "features:feedback.headings.default" | t }}</h3>
+      {% elif params.heading != "" %}
+        <h3 class="feedback-widget__heading">{{ params.heading }}</h3>
+      {% endif %}
+
+      <div class="feedback-widget__buttons">
+        <button type="button"
+                class="feedback-widget__thumb feedback-widget__thumb--up"
+                data-feedback-sentiment="LIKE"
+                aria-label="like">
+        </button>
+        <button type="button"
+                class="feedback-widget__thumb feedback-widget__thumb--down"
+                data-feedback-sentiment="DISLIKE"
+                aria-label="dislike">
+        </button>
+      </div>
+
+      <div class="feedback-widget__sentiment-text"></div>
+
+      <form class="feedback-widget__form govuk-u-hidden" data-feedback-form>
+        {% set likeText1 = "features:feedback.like.1" | t %}
+        {% set likeText2 = "features:feedback.like.2" | t %}
+        {% set likeText3 = "features:feedback.like.3" | t %}
+        {% set likeText4 = "features:feedback.like.4" | t %}
+        {{ feedbackOptions([
+          { value: likeText1, text: likeText1 },
+          { value: likeText2, text: likeText2 },
+          { value: likeText3, text: likeText3 },
+          { value: likeText4, text: likeText4 }
+        ], "like") }}
+
+        {% set dislikeText1 = "features:feedback.dislike.1" | t %}
+        {% set dislikeText2 = "features:feedback.dislike.2" | t %}
+        {% set dislikeText3 = "features:feedback.dislike.3" | t %}
+        {% set dislikeText4 = "features:feedback.dislike.4" | t %}
+        {{ feedbackOptions([
+          { value: dislikeText1, text: dislikeText1 },
+          { value: dislikeText2, text: dislikeText2 },
+          { value: dislikeText3, text: dislikeText3 },
+          { value: dislikeText4, text: dislikeText4 }
+        ], "dislike") }}
+
+        {{ govukButton({
+          text: "features:feedback.send" | t,
+          type: "submit",
+          classes: "feedback-widget__submit"
+        }) }}
+      </form>
+    </div>
+
+    {# Confirmation #}
+    <div class="feedback-widget__confirmation govuk-u-hidden">
+      <h3 class="feedback-widget__heading">{{ "features:feedback.thanks" | t }}</h3>
+      <a href="/help" class="govuk-link">{{ "features:feedback.whatHappens" | t }}</a>
+    </div>
+
+    {# Contact info #}
+    <div class="feedback-widget__contact govuk-u-hidden">
+      <p>{{ "features:feedback.contact.preamble" | t }}</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>{{ "features:feedback.contact.1" | t }}</li>
+        <li>{{ "features:feedback.contact.2" | t }}</li>
+        <li><a href="/help" class="govuk-link">{{ "features:feedback.contact.3" | t }}</a></li>
+        <li><a href="/content/mental-health" class="govuk-link">{{ "features:feedback.contact.4" | t }}</a></li>
+        <li><a href="/content/npr-request" class="govuk-link">{{ "features:feedback.contact.5" | t }}</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script nonce="{{ params.cspNonce }}">
+    window.__feedbackCsrfToken = '{{ params.csrfToken }}';
+    window.__feedbackI18n = {
+      iLikeThis: '{{ "features:feedback.like.iLikeThis" | t }}',
+      iDontLikeThis: '{{ "features:feedback.dislike.iDontLikeThis" | t }}',
+      article: '{{ "features:feedback.contentTypes.article" | t }}',
+      category: '{{ "features:feedback.contentTypes.category" | t }}',
+      game: '{{ "features:feedback.contentTypes.game" | t }}',
+      podcast: '{{ "features:feedback.contentTypes.podcast" | t }}',
+      series: '{{ "features:feedback.contentTypes.series" | t }}',
+      topic: '{{ "features:feedback.contentTypes.topic" | t }}',
+      video: '{{ "features:feedback.contentTypes.video" | t }}'
+    };
+  </script>
+{% endmacro %}

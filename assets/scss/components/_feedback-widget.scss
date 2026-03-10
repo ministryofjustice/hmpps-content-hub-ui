@@ -1,0 +1,109 @@
+// Feedback widget
+//
+// Two-stage feedback component: sentiment buttons → reason radios → confirmation.
+// Uses Unicode thumb characters instead of SVG assets for simplicity.
+
+.feedback-widget {
+  border-top: solid 1px $govuk-border-colour;
+  margin-top: govuk-spacing(4);
+  padding-top: govuk-spacing(4);
+}
+
+.feedback-widget__heading {
+  @include govuk-font($size: 19, $weight: bold);
+  margin-bottom: govuk-spacing(2);
+}
+
+// Sentiment buttons (thumbs up / down)
+.feedback-widget__buttons {
+  display: flex;
+  gap: govuk-spacing(2);
+  margin-bottom: govuk-spacing(3);
+
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+.feedback-widget__thumb {
+  @include govuk-font($size: 24);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid $govuk-border-colour;
+  border-radius: 4px;
+  background: govuk-colour("white");
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+
+  &:hover {
+    background-color: govuk-colour("light-grey");
+  }
+
+  &:focus {
+    @include govuk-focused-text;
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: default;
+
+    &:hover {
+      background: govuk-colour("white");
+    }
+  }
+}
+
+.feedback-widget__thumb--up::before {
+  content: '👍';
+  font-size: 20px;
+}
+
+.feedback-widget__thumb--down::before {
+  content: '👎';
+  font-size: 20px;
+}
+
+.feedback-widget__thumb--selected {
+  border-color: govuk-colour("black");
+  background-color: govuk-colour("light-grey");
+}
+
+// Sentiment text ("I like this article")
+.feedback-widget__sentiment-text {
+  @include govuk-font($size: 19);
+  margin-bottom: govuk-spacing(3);
+}
+
+// Form (radio options + submit)
+.feedback-widget__form {
+  margin-bottom: govuk-spacing(4);
+}
+
+.feedback-widget__options {
+  margin-bottom: govuk-spacing(2);
+}
+
+.feedback-widget__submit {
+  margin-top: govuk-spacing(2);
+}
+
+// Confirmation state
+.feedback-widget__confirmation {
+  padding: govuk-spacing(3) 0;
+}
+
+// Contact info
+.feedback-widget__contact {
+  margin-top: govuk-spacing(4);
+}
+
+// Utility class (if not provided by GOV.UK Frontend)
+.govuk-u-hidden {
+  display: none !important;
+}

@@ -139,5 +139,15 @@ export default {
     prisonerAudit: auditConfig('PRISONER_AUDIT_SQS_QUEUE_URL'),
     staffAudit: auditConfig('STAFF_AUDIT_SQS_QUEUE_URL'),
   },
+  feedback: {
+    searchEndpoint: get('FEEDBACK_SEARCH_ENDPOINT', 'http://localhost:9200/feedback', requiredInProduction),
+    database: {
+      host: get('FEEDBACK_DATABASE_URL', 'localhost', requiredInProduction).replace(/^https?:\/\//, ''),
+      port: Number(get('FEEDBACK_DATABASE_PORT', 5432)),
+      user: get('FEEDBACK_DATABASE_USERNAME', 'feedbackuser', requiredInProduction),
+      password: get('FEEDBACK_DATABASE_PASSWORD', 'feedbackpassword', requiredInProduction),
+      database: get('FEEDBACK_DATABASE_NAME', 'feedbackdatabase', requiredInProduction),
+    },
+  },
   environmentName: get('ENVIRONMENT_NAME', ''),
 }
