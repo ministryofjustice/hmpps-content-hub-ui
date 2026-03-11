@@ -15,7 +15,11 @@ jest.mock('knex', () => {
 jest.mock('../../logger', () => ({
   debug: jest.fn(),
   error: jest.fn(),
+  info: jest.fn(),
 }))
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const logger = require('../../logger')
 
 jest.mock('../config', () => ({
   production: false,
@@ -36,7 +40,6 @@ global.fetch = mockFetch
 
 describe('FeedbackClient', () => {
   let client: FeedbackClient
-  const logger = require('../../logger')
 
   const record: FeedbackRecord = {
     feedbackId: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',

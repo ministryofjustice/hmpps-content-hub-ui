@@ -78,7 +78,7 @@ export default function feedbackRoutes({ auditServiceSource, feedbackService }: 
 
       logger.info('Feedback from user %s: %s', res.locals.user?.username ?? 'anon', feedbackId)
 
-      void feedbackService.sendFeedback(record)
+      feedbackService.sendFeedback(record).catch(() => {})
 
       res.status(200).send()
     } catch (error) {
