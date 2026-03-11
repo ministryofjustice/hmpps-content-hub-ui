@@ -4,8 +4,10 @@ export default function initFeedbackWidget() {
 
   const i18n = window.feedbackWidgetI18n || {}
 
+  const pageH1 = document.querySelector('h1')
+
   const feedbackData = {
-    title: widget.dataset.title || '',
+    title: widget.dataset.title || (pageH1 ? pageH1.textContent.trim() : ''),
     url: window.location.pathname,
     contentType: widget.dataset.contentType || '',
     series: widget.dataset.series || '',

@@ -4,6 +4,18 @@
 {% set pageTitle = applicationName + " - Tag" %}
 {% set mainClasses = "govuk-body" %}
 
+{% if tag %}
+  {% set feedbackContentType = tag.type or '' %}
+  {% set feedbackTitle = tag.name or '' %}
+  {% if tag.type == "category" %}
+    {% set feedbackCategories = tag.name or '' %}
+  {% elif tag.type == "series" %}
+    {% set feedbackSeries = tag.name or '' %}
+  {% elif tag.type == "topic" %}
+    {% set feedbackTopics = tag.name or '' %}
+  {% endif %}
+{% endif %}
+
 {% block content %}
   {% if tag %}
     {{ breadcrumbBackForward() }}
