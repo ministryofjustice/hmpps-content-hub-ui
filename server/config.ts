@@ -141,9 +141,10 @@ export default {
   },
   feedback: {
     searchEndpoint: get('FEEDBACK_SEARCH_ENDPOINT', 'http://localhost:9200/feedback', requiredInProduction),
-    database: {
-      host: get('FEEDBACK_DATABASE_URL', 'localhost', requiredInProduction).replace(/^https?:\/\//, ''),
-      port: Number(get('FEEDBACK_DATABASE_PORT', 5432)),
+    client: 'pg',
+    connection: {
+      host: get('FEEDBACK_DATABASE_URL', 'localhost', requiredInProduction),
+      port: 5432,
       user: get('FEEDBACK_DATABASE_USERNAME', 'feedbackuser', requiredInProduction),
       password: get('FEEDBACK_DATABASE_PASSWORD', 'feedbackpassword', requiredInProduction),
       database: get('FEEDBACK_DATABASE_NAME', 'feedbackdatabase', requiredInProduction),

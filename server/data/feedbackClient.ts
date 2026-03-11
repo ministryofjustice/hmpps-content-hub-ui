@@ -14,14 +14,12 @@ export interface FeedbackDatabaseConfig {
 export default class FeedbackClient {
   private connection: Knex
 
-  constructor(dbConfig: FeedbackDatabaseConfig = config.feedback.database) {
+  constructor(dbConfig: FeedbackDatabaseConfig = config.feedback.connection) {
     const isRemote = dbConfig.host !== 'localhost' && dbConfig.host !== '127.0.0.1'
-    const sslConfig = isRemote
-      ? { rejectUnauthorized: false }
-      : false
+    const sslConfig = isRemote ? { rejectUnauthorized: false } : false
 
     this.connection = knex({
-      client: 'pg',
+      client: config.feedback.client,
       connection: {
         host: dbConfig.host as string,
         port: dbConfig.port,
@@ -36,6 +34,8 @@ export default class FeedbackClient {
   }
 
   async sendFeedback(record: FeedbackRecord): Promise<void> {
+    logger.info('FeedbackClient.sendFeedback called for %s', record.feedbackId)
+
     const [searchResult, databaseResult] = await Promise.allSettled([
       this.postToSearch(record),
       this.insertToDatabase(record),
@@ -43,14 +43,24 @@ export default class FeedbackClient {
 
     if (searchResult.status === 'rejected') {
       logger.error('Feedback search index write failed', searchResult.reason)
+    } else {
+      logger.info('Feedback search index write succeeded for %s', record.feedbackId)
     }
 
     if (databaseResult.status === 'rejected') {
       logger.error('Feedback database write failed', databaseResult.reason)
+    } else {
+      logger.info('Feedback database write succeeded for %s', record.feedbackId)
     }
   }
 
   private async insertToDatabase(record: FeedbackRecord): Promise<void> {
+    logger.info(
+      'Inserting feedback %s into database (host: %s, db: %s)',
+      record.feedbackId,
+      this.connection.client.config.connection.host,
+      this.connection.client.config.connection.database,
+    )
     await this.connection('feedback').insert({
       title: record.title,
       url: record.url,

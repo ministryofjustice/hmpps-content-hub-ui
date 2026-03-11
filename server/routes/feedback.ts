@@ -18,7 +18,12 @@ function validateFeedbackPayload(body: unknown): FeedbackPayload | null {
 
   if (typeof title !== 'string') return null
   if (typeof url !== 'string') return null
-  if (!VALID_CONTENT_TYPES.includes(contentType as FeedbackContentType)) return null
+  if (
+    contentType !== undefined &&
+    contentType !== '' &&
+    !VALID_CONTENT_TYPES.includes(contentType as FeedbackContentType)
+  )
+    return null
   if (!VALID_SENTIMENTS.includes(sentiment as FeedbackSentiment)) return null
 
   if (series !== undefined && typeof series !== 'string') return null
@@ -52,6 +57,7 @@ export default function feedbackRoutes({ auditServiceSource, feedbackService }: 
 
       const payload = validateFeedbackPayload(req.body)
       if (!payload) {
+        logger.warn({ body: req.body }, 'Feedback validation failed')
         res.status(400).send()
         return
       }
