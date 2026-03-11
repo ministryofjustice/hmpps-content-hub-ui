@@ -1,5 +1,4 @@
 export type FeedbackSentiment = 'LIKE' | 'DISLIKE'
-
 export type FeedbackContentType = 'article' | 'video' | 'audio' | 'game' | 'series' | 'topic' | 'category'
 
 export interface FeedbackPayload {
