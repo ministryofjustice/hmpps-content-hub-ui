@@ -1,20 +1,14 @@
-// Feedback widget
-//
-// Two-stage feedback component: sentiment buttons → reason radios → confirmation.
-// Uses Unicode thumb characters instead of SVG assets for simplicity.
-
 .feedback-widget {
-  border-top: solid 1px $govuk-border-colour;
-  margin-top: govuk-spacing(4);
-  padding-top: govuk-spacing(4);
+  padding-top: govuk-spacing(2);
+  color: govuk-colour('white');
 }
 
 .feedback-widget__heading {
   @include govuk-font($size: 19, $weight: bold);
   margin-bottom: govuk-spacing(2);
+  color: govuk-colour('white');
 }
 
-// Sentiment buttons (thumbs up / down)
 .feedback-widget__buttons {
   display: flex;
   gap: govuk-spacing(2);
@@ -35,14 +29,14 @@
   width: 44px;
   height: 44px;
   padding: 0;
-  border: 2px solid $govuk-border-colour;
+  border: 2px solid govuk-colour('white');
   border-radius: 4px;
-  background: govuk-colour("white");
+  background: transparent;
   cursor: pointer;
   transition: background-color 0.15s, border-color 0.15s;
 
   &:hover {
-    background-color: govuk-colour("light-grey");
+    background-color: rgba(255, 255, 255, 0.15);
   }
 
   &:focus {
@@ -54,7 +48,7 @@
     cursor: default;
 
     &:hover {
-      background: govuk-colour("white");
+      background: transparent;
     }
   }
 }
@@ -70,40 +64,67 @@
 }
 
 .feedback-widget__thumb--selected {
-  border-color: govuk-colour("black");
-  background-color: govuk-colour("light-grey");
+  border-color: govuk-colour('yellow');
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
-// Sentiment text ("I like this article")
 .feedback-widget__sentiment-text {
   @include govuk-font($size: 19);
   margin-bottom: govuk-spacing(3);
+  color: govuk-colour('white');
 }
 
-// Form (radio options + submit)
 .feedback-widget__form {
   margin-bottom: govuk-spacing(4);
 }
 
 .feedback-widget__options {
   margin-bottom: govuk-spacing(2);
+
+  .govuk-label,
+  .govuk-fieldset__legend {
+    color: govuk-colour('white');
+  }
+
+  .govuk-radios__input + .govuk-radios__label::before {
+    border-color: govuk-colour('white');
+  }
 }
 
 .feedback-widget__submit {
   margin-top: govuk-spacing(2);
 }
 
-// Confirmation state
 .feedback-widget__confirmation {
   padding: govuk-spacing(3) 0;
 }
 
-// Contact info
 .feedback-widget__contact {
   margin-top: govuk-spacing(4);
+
+  .govuk-link,
+  .govuk-link:visited {
+    color: govuk-colour('white');
+  }
+
+  .govuk-link:hover,
+  .govuk-link:active {
+    color: govuk-colour('light-grey');
+  }
 }
 
-// Utility class (if not provided by GOV.UK Frontend)
+.feedback-widget__confirmation {
+  .govuk-link,
+  .govuk-link:visited {
+    color: govuk-colour('white');
+  }
+
+  .govuk-link:hover,
+  .govuk-link:active {
+    color: govuk-colour('light-grey');
+  }
+}
+
 .govuk-u-hidden {
   display: none !important;
 }

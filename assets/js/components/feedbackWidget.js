@@ -61,7 +61,6 @@ export default function initFeedbackWidget() {
 
   function showConfirmation() {
     if (uiSection) uiSection.classList.add('govuk-u-hidden')
-    if (contactSection) contactSection.classList.add('govuk-u-hidden')
     if (confirmationSection) confirmationSection.classList.remove('govuk-u-hidden')
   }
 
