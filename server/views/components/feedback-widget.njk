@@ -27,7 +27,6 @@
        data-categories="{{ params.categories }}"
        data-feedback-id="{{ params.feedbackId }}">
 
-    {# Interactive UI #}
     <div class="feedback-widget__ui">
 
       {% if params.heading is not defined %}
@@ -82,13 +81,11 @@
       </form>
     </div>
 
-    {# Confirmation #}
     <div class="feedback-widget__confirmation govuk-u-hidden">
       <h3 class="feedback-widget__heading">{{ "features:feedback.thanks" | t }}</h3>
       <a href="/help" class="govuk-link">{{ "features:feedback.whatHappens" | t }}</a>
     </div>
 
-    {# Contact info #}
     <div class="feedback-widget__contact govuk-u-hidden">
       <p>{{ "features:feedback.contact.preamble" | t }}</p>
       <ul class="govuk-list govuk-list--bullet">
