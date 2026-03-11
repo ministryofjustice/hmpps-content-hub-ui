@@ -2,7 +2,7 @@ export default function initFeedbackWidget() {
   const widget = document.getElementById('feedback-widget')
   if (!widget) return
 
-  const i18n = window.__feedbackI18n || {}
+  const i18n = window.feedbackWidgetI18n || {}
 
   const feedbackData = {
     title: widget.dataset.title || '',
@@ -28,7 +28,7 @@ export default function initFeedbackWidget() {
   function sendFeedback(data) {
     const { feedbackId, ...body } = data
     const headers = { 'Content-Type': 'application/json' }
-    const csrfToken = window.__feedbackCsrfToken
+    const csrfToken = window.feedbackWidgetCsrfToken
     if (csrfToken) {
       headers['x-csrf-token'] = csrfToken
     }
@@ -64,12 +64,12 @@ export default function initFeedbackWidget() {
   }
 
   function disableControls() {
-    sentimentButtons.forEach(btn => {
-      btn.disabled = true
+    sentimentButtons.forEach(el => {
+      el.setAttribute('disabled', 'true')
     })
     if (form) {
-      form.querySelectorAll('button').forEach(btn => {
-        btn.disabled = true
+      form.querySelectorAll('button').forEach(el => {
+        el.setAttribute('disabled', 'true')
       })
     }
   }

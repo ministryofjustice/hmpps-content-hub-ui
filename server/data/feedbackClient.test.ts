@@ -8,6 +8,11 @@ jest.mock('knex', () => {
   return jest.fn().mockImplementation(() => {
     const knexInstance = (table: string) => mockTable(table)
     knexInstance.destroy = jest.fn().mockResolvedValue(undefined)
+    knexInstance.client = {
+      config: {
+        connection: { host: 'localhost', database: 'testdb' },
+      },
+    }
     return knexInstance
   })
 })
@@ -25,7 +30,7 @@ jest.mock('../config', () => ({
   production: false,
   feedback: {
     searchEndpoint: 'http://localhost:9200/feedback',
-    database: {
+    connection: {
       host: 'localhost',
       port: 5432,
       user: 'testuser',
