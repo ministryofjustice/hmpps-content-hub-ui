@@ -14,7 +14,7 @@ export type FeedbackContentType = 'article' | 'video' | 'audio' | 'game' | 'seri
 export interface FeedbackPayload {
   title: string
   url: string
-  contentType: FeedbackContentType
+  contentType: FeedbackContentType | ''
   series?: string
   categories?: string
   topics?: string
@@ -30,17 +30,4 @@ export interface FeedbackRecord extends FeedbackPayload {
   date: string
   establishment?: string
   sessionId?: string
-}
-
-/**
- * Props passed to the Nunjucks feedback widget template.
- */
-export interface FeedbackWidgetParams {
-  feedbackId: string
-  title: string
-  contentType: FeedbackContentType
-  series?: string
-  categories?: string
-  topics?: string
-  heading?: string
 }

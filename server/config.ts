@@ -141,7 +141,6 @@ export default {
   },
   feedback: {
     searchEndpoint: get('FEEDBACK_SEARCH_ENDPOINT', 'http://localhost:9200/feedback', requiredInProduction),
-    client: 'pg',
     connection: {
       host: get('FEEDBACK_DATABASE_URL', 'localhost', requiredInProduction),
       port: 5432,

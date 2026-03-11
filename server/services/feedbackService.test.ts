@@ -36,7 +36,7 @@ describe('FeedbackService', () => {
   it('logs the feedback record at info level', async () => {
     await service.sendFeedback(record)
 
-    expect(mockedLogger.info).toHaveBeenCalledWith({ record }, `Feedback received: ${record.feedbackId}`)
+    expect(mockedLogger.info).toHaveBeenCalledWith('Feedback received: %s', record.feedbackId)
   })
 
   it('delegates to the feedback client', async () => {

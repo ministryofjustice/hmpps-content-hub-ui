@@ -42,6 +42,9 @@ export default function createApp(services: Services): express.Application {
   const njkEnv = nunjucksSetup(app)
 
   app.use(setUpI18n())
+  // Nunjucks macros imported via {% from %} have isolated scope and lose access
+  // to res.locals (including the i18next `t` function). Setting `t` as a Nunjucks
+  // global per-request makes it available to the `| t` filter inside macros.
   app.use((req, _res, next) => {
     njkEnv.addGlobal('t', req.t)
     next()

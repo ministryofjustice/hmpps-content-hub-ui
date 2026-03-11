@@ -4,11 +4,11 @@ import type { FeedbackRecord } from '../@types/feedbackTypes'
 import config from '../config'
 
 export interface FeedbackDatabaseConfig {
-  host: string | unknown
+  host: string
   port: number
-  user: string | unknown
-  password: string | unknown
-  database: string | unknown
+  user: string
+  password: string
+  database: string
 }
 
 export default class FeedbackClient {
@@ -19,48 +19,34 @@ export default class FeedbackClient {
     const sslConfig = isRemote ? { rejectUnauthorized: false } : false
 
     this.connection = knex({
-      client: config.feedback.client,
+      client: 'pg',
       connection: {
-        host: dbConfig.host as string,
+        host: dbConfig.host,
         port: dbConfig.port,
-        user: dbConfig.user as string,
-        password: dbConfig.password as string,
-        database: dbConfig.database as string,
+        user: dbConfig.user,
+        password: dbConfig.password,
+        database: dbConfig.database,
         ssl: sslConfig,
       },
     })
-
-    logger.debug('Feedback database connection established')
   }
 
   async sendFeedback(record: FeedbackRecord): Promise<void> {
-    logger.info('FeedbackClient.sendFeedback called for %s', record.feedbackId)
-
     const [searchResult, databaseResult] = await Promise.allSettled([
       this.postToSearch(record),
       this.insertToDatabase(record),
     ])
 
     if (searchResult.status === 'rejected') {
-      logger.error('Feedback search index write failed', searchResult.reason)
-    } else {
-      logger.info('Feedback search index write succeeded for %s', record.feedbackId)
+      logger.error('Feedback search index write failed for %s', record.feedbackId, searchResult.reason)
     }
 
     if (databaseResult.status === 'rejected') {
-      logger.error('Feedback database write failed', databaseResult.reason)
-    } else {
-      logger.info('Feedback database write succeeded for %s', record.feedbackId)
+      logger.error('Feedback database write failed for %s', record.feedbackId, databaseResult.reason)
     }
   }
 
   private async insertToDatabase(record: FeedbackRecord): Promise<void> {
-    logger.info(
-      'Inserting feedback %s into database (host: %s, db: %s)',
-      record.feedbackId,
-      this.connection.client.config.connection.host,
-      this.connection.client.config.connection.database,
-    )
     await this.connection('feedback').insert({
       title: record.title,
       url: record.url,

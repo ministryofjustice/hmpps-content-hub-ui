@@ -116,7 +116,11 @@ describe('FeedbackClient', () => {
       mockInsert.mockRejectedValueOnce(new Error('connection refused'))
 
       await expect(client.sendFeedback(record)).resolves.toBeUndefined()
-      expect(logger.error).toHaveBeenCalledWith('Feedback database write failed', expect.any(Error))
+      expect(logger.error).toHaveBeenCalledWith(
+        'Feedback database write failed for %s',
+        record.feedbackId,
+        expect.any(Error),
+      )
     })
   })
 
@@ -165,7 +169,11 @@ describe('FeedbackClient', () => {
       mockFetch.mockResolvedValueOnce({ ok: false, status: 500, statusText: 'Internal Server Error' })
 
       await expect(client.sendFeedback(record)).resolves.toBeUndefined()
-      expect(logger.error).toHaveBeenCalledWith('Feedback search index write failed', expect.any(Error))
+      expect(logger.error).toHaveBeenCalledWith(
+        'Feedback search index write failed for %s',
+        record.feedbackId,
+        expect.any(Error),
+      )
     })
   })
 

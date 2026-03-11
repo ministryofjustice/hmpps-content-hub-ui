@@ -6,7 +6,7 @@ export default class FeedbackService {
   constructor(private readonly feedbackClient: FeedbackClient) {}
 
   async sendFeedback(record: FeedbackRecord): Promise<void> {
-    logger.info({ record }, `Feedback received: ${record.feedbackId}`)
+    logger.info('Feedback received: %s', record.feedbackId)
     await this.feedbackClient.sendFeedback(record)
   }
 }
