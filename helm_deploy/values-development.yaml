@@ -5,7 +5,7 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    hosts: 
+    hosts:
       - content-hub-dev.hmpps.service.justice.gov.uk
       - staff.content-hub-dev.hmpps.service.justice.gov.uk
 
@@ -16,7 +16,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
     CMS_API_URL: "https://jsonapi-cms-prisoner-content-hub-development.apps.live.cloud-platform.service.justice.gov.uk"
     ENVIRONMENT_NAME: DEVELOPMENT
-    AUDIT_ENABLED: "false"
+    AUDIT_ENABLED: "true"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-launchpad-nonprod
