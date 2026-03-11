@@ -38,12 +38,15 @@ export default function createApp(services: Services): express.Application {
 
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
+
   const njkEnv = nunjucksSetup(app)
+
   app.use(setUpI18n())
   app.use((req, _res, next) => {
     njkEnv.addGlobal('t', req.t)
     next()
   })
+
   app.use(setupPortals())
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())
