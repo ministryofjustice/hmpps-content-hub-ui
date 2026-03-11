@@ -11,7 +11,7 @@ jest.mock('../services/feedbackService')
 
 const auditServiceSource = new AuditServiceSource(null) as jest.Mocked<AuditServiceSource>
 const auditService = new AuditService(null) as jest.Mocked<AuditService>
-const feedbackService = new FeedbackService() as jest.Mocked<FeedbackService>
+const feedbackService = new FeedbackService(null as never) as jest.Mocked<FeedbackService>
 let app: Express
 
 const validUUID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
