@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { stubFor, getMatchingRequests } from './wiremock'
-import { Establishment, IdToken } from '../../server/@types/launchpad'
+import { Establishment } from '../../server/@types/launchpad'
 import config from '../../server/config'
 
 export interface LaunchpadUserToken {
@@ -31,7 +31,7 @@ function createIdToken(userToken: LaunchpadUserToken) {
   const establishment: Establishment =
     config.establishments.find(({ code }) => code === userToken.establishmentCode) || config.establishments[0]
 
-  const payload: IdToken = {
+  const payload = {
     name: userToken.name,
     given_name: '',
     family_name: '',

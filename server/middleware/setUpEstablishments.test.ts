@@ -4,12 +4,14 @@ import { establishmentsMiddleware } from './setUpEstablishments'
 describe('establishmentsMiddleware', () => {
   describe('when we are on the prisoners portal', () => {
     const req = {} as Request
-    const res = { locals: { isPrisonerPortal: true, user: { establishment: { code: 'LEI' } } } } as Response
+    const res = {
+      locals: { isPrisonerPortal: true, user: { establishment: { agency_id: 'WYI' } } },
+    } as Response
     const next = jest.fn()
 
     it('sets the establishment to the one given at authentication', () => {
       establishmentsMiddleware(req, res, next)
-      expect(res.locals.establishment.code).toBe('LEI')
+      expect(res.locals.establishment.code).toBe('WYI')
     })
   })
 

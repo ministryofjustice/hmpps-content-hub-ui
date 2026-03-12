@@ -60,7 +60,7 @@ export default {
       systemClientId: get('CLIENT_CREDS_CLIENT_ID', 'clientid', requiredInProduction),
       systemClientSecret: get('CLIENT_CREDS_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
-    launchpadAuth: {
+    prisonerAuth: {
       url: get('LAUNCHPAD_AUTH_URL', 'http://localhost:8080', requiredInProduction),
       healthPath: '/health/ping',
       externalUrl: get('LAUNCHPAD_AUTH_EXTERNAL_URL', get('LAUNCHPAD_AUTH_URL', 'http://localhost:8080')),

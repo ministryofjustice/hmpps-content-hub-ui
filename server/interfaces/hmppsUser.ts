@@ -1,6 +1,6 @@
-import { Establishment } from '../@types/launchpad'
+import { LaunchpadUser } from '@ministryofjustice/hmpps-prisoner-auth'
 
-export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread' | 'launchpad'
+export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread' | 'prisoner-auth'
 
 /**
  * These are the details that all user types share.
@@ -57,20 +57,6 @@ export interface ExternalUser extends BaseUser {
  */
 export interface AzureADUser extends BaseUser {
   authSource: 'azuread'
-}
-
-/**
- * Launchpad users are prisoners authenticating to launchpad auth with their Entra Ids
- */
-export interface LaunchpadUser extends BaseUser {
-  establishment: Establishment
-  idToken: string
-  refreshToken: string
-  accessToken: string
-  displayName: string
-  username: string
-  authSource: 'launchpad'
-  token: string
 }
 
 export type HmppsUser = PrisonUser | ProbationUser | ExternalUser | AzureADUser | LaunchpadUser
