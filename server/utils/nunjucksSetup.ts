@@ -7,7 +7,7 @@ import { initialiseName } from './utils'
 import config from '../config'
 import logger from '../../logger'
 
-export default function nunjucksSetup(app: express.Express): void {
+export default function nunjucksSetup(app: express.Express): nunjucks.Environment {
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
@@ -41,10 +41,16 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
   njkEnv.addFilter('t', function t(key: string, options?: Record<string, unknown>) {
-    const context = this.ctx
-    if (context.t && typeof context.t === 'function') {
-      return context.t(key, options)
+    const ctxT = this.ctx?.t
+    if (ctxT && typeof ctxT === 'function') {
+      return ctxT(key, options)
+    }
+    const globalT = this.env?.globals?.t
+    if (globalT && typeof globalT === 'function') {
+      return globalT(key, options)
     }
     return key
   })
+
+  return njkEnv
 }

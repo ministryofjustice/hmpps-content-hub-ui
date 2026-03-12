@@ -15,6 +15,7 @@ import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpContentHubHeader from './middleware/setUpContentHubHeader'
+import setUpFeedback from './middleware/setUpFeedback'
 import setUpFooterTopics from './middleware/setUpFooterTopics'
 import setUpPrimaryNavigation from './middleware/setUpPrimaryNavigation'
 import setupEstablishments from './middleware/setUpEstablishments'
@@ -37,14 +38,25 @@ export default function createApp(services: Services): express.Application {
 
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
+
+  const njkEnv = nunjucksSetup(app)
+
   app.use(setUpI18n())
-  nunjucksSetup(app)
+  // Nunjucks macros imported via {% from %} have isolated scope and lose access
+  // to res.locals (including the i18next `t` function). Setting `t` as a Nunjucks
+  // global per-request makes it available to the `| t` filter inside macros.
+  app.use((req, _res, next) => {
+    njkEnv.addGlobal('t', req.t)
+    next()
+  })
+
   app.use(setupPortals())
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
   app.use(setUpContentHubHeader())
+  app.use(setUpFeedback())
   app.use(setupEstablishments())
   app.use(setUpPrimaryNavigation(services.cmsService))
   app.use(setUpFooterTopics(services.cmsService))

@@ -1,10 +1,12 @@
 import * as govukFrontend from 'govuk-frontend'
 import * as mojFrontend from '@ministryofjustice/frontend'
 import * as lazyLoading from './components/lazyLoading'
+import initFeedbackWidget from './components/feedbackWidget'
 
 govukFrontend.initAll()
 mojFrontend.initAll()
 lazyLoading.initAll()
+initFeedbackWidget()
 ;(function setUpPageNavigation() {
   const historyActions = {
     back: () => window.history.go(-1),

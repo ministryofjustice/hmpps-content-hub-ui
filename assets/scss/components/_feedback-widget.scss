@@ -1,0 +1,110 @@
+.feedback-widget {
+  padding-top: govuk-spacing(2);
+  color: govuk-colour('white');
+
+  .govuk-link,
+  .govuk-link:visited {
+    color: govuk-colour('white');
+  }
+
+  .govuk-link:hover,
+  .govuk-link:active {
+    color: govuk-colour('light-grey');
+  }
+}
+
+.feedback-widget__heading {
+  @include govuk-font($size: 19, $weight: bold);
+  margin-bottom: govuk-spacing(2);
+}
+
+.feedback-widget__buttons {
+  display: flex;
+  gap: govuk-spacing(2);
+  margin-bottom: govuk-spacing(3);
+}
+
+.feedback-widget__thumb {
+  height: 39px;
+  width: 44px;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  cursor: pointer;
+
+  &:focus {
+    @include govuk-focused-text;
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &--up {
+    background-image: url('#{$path}icons/thumbs/thumbs-up-white.svg');
+
+    &:focus {
+      background-image: url('#{$path}icons/thumbs/thumbs-up-black.svg');
+    }
+  }
+
+  &--down {
+    background-image: url('#{$path}icons/thumbs/thumbs-down-white.svg');
+
+    &:focus {
+      background-image: url('#{$path}icons/thumbs/thumbs-down-black.svg');
+    }
+  }
+
+  &--selected {
+    &.feedback-widget__thumb--up {
+      background-image: url('#{$path}icons/thumbs/thumbs-up-selected.svg');
+    }
+
+    &.feedback-widget__thumb--down {
+      background-image: url('#{$path}icons/thumbs/thumbs-down-selected.svg');
+    }
+  }
+}
+
+.feedback-widget__sentiment-text {
+  @include govuk-font($size: 19);
+  margin-bottom: govuk-spacing(3);
+}
+
+.feedback-widget__form {
+  margin-bottom: govuk-spacing(4);
+}
+
+.feedback-widget__options {
+  margin-bottom: govuk-spacing(2);
+
+  .govuk-label,
+  .govuk-fieldset__legend {
+    color: govuk-colour('white');
+  }
+
+  .govuk-radios__input + .govuk-radios__label::before {
+    border-color: govuk-colour('white');
+  }
+}
+
+.feedback-widget__submit {
+  margin-top: govuk-spacing(2);
+}
+
+.feedback-widget__confirmation {
+  padding: govuk-spacing(3) 0;
+}
+
+.feedback-widget__contact {
+  margin-top: govuk-spacing(4);
+}
+
+.govuk-u-hidden {
+  display: none !important;
+}
