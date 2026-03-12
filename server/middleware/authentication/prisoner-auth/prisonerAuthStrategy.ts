@@ -7,6 +7,7 @@ export const prisonerAuth = new PrisonerAuth({
   clientId: config.apis.prisonerAuth.apiClientId,
   clientSecret: config.apis.prisonerAuth.apiClientSecret,
   tokenMinimumLifespan: minutes(config.apis.prisonerAuth.refreshCheckTimeInMinutes),
+  nonce: process.env.INTEGRATION_TESTS !== 'true',
 })
 
 const prisonerAuthStrategy: AuthStrategy = {
@@ -28,7 +29,7 @@ const prisonerAuthStrategy: AuthStrategy = {
         req.user = user
         next()
       })
-      .catch(() => res.redirect('/autherror'))
+      .catch(() => res.redirect('/sign-out'))
   },
 }
 

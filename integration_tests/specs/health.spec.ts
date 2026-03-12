@@ -4,7 +4,7 @@ import tokenVerification from '../mockApis/tokenVerification'
 import cmsApi from '../mockApis/cmsApi'
 
 import { resetStubs } from '../testUtils'
-import launchpadAuth from '../mockApis/launchpadAuth'
+import prisonerAuth from '../mockApis/prisonerAuth'
 
 test.describe('Health', () => {
   test.beforeEach(async () => {
@@ -15,7 +15,7 @@ test.describe('Health', () => {
     test.beforeEach(async () => {
       await Promise.all([
         hmppsAuth.stubPing(),
-        launchpadAuth.stubPing(),
+        prisonerAuth.stubPing(),
         tokenVerification.stubPing(),
         cmsApi.stubPing(),
       ])
@@ -44,7 +44,7 @@ test.describe('Health', () => {
     test.beforeEach(async () => {
       await Promise.all([
         hmppsAuth.stubPing(),
-        launchpadAuth.stubPing(),
+        prisonerAuth.stubPing(),
         tokenVerification.stubPing(500),
         cmsApi.stubPing(),
       ])
@@ -54,7 +54,7 @@ test.describe('Health', () => {
       const response = await page.request.get('/health')
       const payload = await response.json()
       expect(payload.components.hmppsAuth.status).toBe('UP')
-      expect(payload.components.launchpadAuth.status).toBe('UP')
+      expect(payload.components.prisonerAuth.status).toBe('UP')
       expect(payload.components.tokenVerification.status).toBe('DOWN')
       expect(payload.components.tokenVerification.details.status).toBe(500)
       expect(payload.components.tokenVerification.details.attempts).toBe(3)

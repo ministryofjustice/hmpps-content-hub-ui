@@ -17,7 +17,7 @@ passport.deserializeUser((user, done) => {
 })
 
 passport.use('hmpps-auth', hmppsAuthPassportStrategy)
-passport.use('launchpad-auth', prisonerAuth.passportStrategy())
+passport.use('prisoner-auth', prisonerAuth.passportStrategy())
 
 export default function setupAuthentication() {
   const router = Router()

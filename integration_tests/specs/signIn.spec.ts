@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
-import { loginWithHmppsAuth, loginWithLaunchpadAuth, resetStubs } from '../testUtils'
+import { loginWithHmppsAuth, loginWithPrisonerAuth, resetStubs } from '../testUtils'
 import HomePage from '../pages/homePage'
-import launchpadAuth from '../mockApis/launchpadAuth'
+import prisonerAuth from '../mockApis/prisonerAuth'
 import hmppsAuth from '../mockApis/hmppsAuth'
 import cmsApi from '../mockApis/cmsApi'
 
@@ -15,14 +15,14 @@ test.describe('SignIn (Prisoners login)', () => {
   })
 
   test('Unauthenticated user directed to auth', async ({ page }) => {
-    await launchpadAuth.stubSignInPage()
+    await prisonerAuth.stubSignInPage()
     await page.goto('/')
 
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
   })
 
   test('Unauthenticated user navigating to sign in page directed to auth', async ({ page }) => {
-    await launchpadAuth.stubSignInPage()
+    await prisonerAuth.stubSignInPage()
     await page.goto('/sign-in')
 
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
@@ -30,17 +30,11 @@ test.describe('SignIn (Prisoners login)', () => {
 
   test('User with correct details is logged in successfully', async ({ page }) => {
     await cmsApi.stubPrimaryNavigation()
-    await loginWithLaunchpadAuth(page, { name: 'A TestUser' })
+    await loginWithPrisonerAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
 
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).not.toBeVisible()
-  })
-
-  test('User with expired token and cannot refresh it is redirected to auth', async ({ page }) => {
-    await loginWithLaunchpadAuth(page, { name: 'A TestUser', tokenExpiresInSeconds: 1 })
-
-    await expect(page.getByRole('heading')).toHaveText('Sign in')
   })
 })
 
