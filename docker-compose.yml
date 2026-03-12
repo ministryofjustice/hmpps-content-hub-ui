@@ -6,7 +6,7 @@ services:
       - "8080:8080"
     network_mode: "bridge"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/8080"]
     env_file: docker-compose.launchpad-auth.env
     environment:
       - azure.launchpad-redirectUri=http://localhost:8080/v1/oauth2/callback
@@ -22,7 +22,7 @@ services:
     ports:
       - "8181:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/8080"]
     environment:
       - HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
 
@@ -39,7 +39,7 @@ services:
     ports:
       - "3000:3000"
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:3000/health"]
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/3000"]
     env_file: docker-compose.app.env
     environment:
       - LAUNCHPAD_AUTH_URL=http://host.docker.internal:8080
