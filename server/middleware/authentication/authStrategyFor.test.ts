@@ -5,8 +5,8 @@ describe('authStrategyFor', () => {
   describe('when we are on the prisoner portal', () => {
     const req = { host: 'contenthub-ui.com' } as Request
 
-    it('the strategy is launchpad-auth', () => {
-      expect(authStrategyFor(req).name).toBe('launchpad-auth')
+    it('the strategy is prisoner-auth', () => {
+      expect(authStrategyFor(req).name).toBe('prisoner-auth')
     })
   })
 

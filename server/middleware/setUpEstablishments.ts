@@ -1,6 +1,6 @@
+import { LaunchpadUser } from '@ministryofjustice/hmpps-prisoner-auth'
 import express, { RequestHandler, Router } from 'express'
 import config from '../config'
-import { LaunchpadUser } from '../interfaces/hmppsUser'
 
 export const establishmentsMiddleware: RequestHandler = (req, res, next) => {
   // Staff can choose the establishment but by default are assigned the first establishment in the list
@@ -11,7 +11,9 @@ export const establishmentsMiddleware: RequestHandler = (req, res, next) => {
 
   // Prisoners are assigned the establishment from login
   if (res.locals.isPrisonerPortal) {
-    res.locals.establishment = (res.locals.user as LaunchpadUser).establishment
+    res.locals.establishment = config.establishments.find(
+      ({ code }) => code === (res.locals.user as LaunchpadUser).establishment.agency_id,
+    )
   }
 
   next()

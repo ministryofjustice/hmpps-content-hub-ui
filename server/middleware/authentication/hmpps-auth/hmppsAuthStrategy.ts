@@ -1,7 +1,24 @@
+import { Strategy } from 'passport-oauth2'
 import { AuthenticatedRequest, VerificationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../../../config'
 import { AuthStrategy } from '../authStrategy'
 import logger from '../../../../logger'
+import generateOauthClientToken from '../../../utils/clientCredentials'
+
+export const hmppsAuthPassportStrategy = new Strategy(
+  {
+    authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
+    tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
+    clientID: config.apis.hmppsAuth.authClientId,
+    clientSecret: config.apis.hmppsAuth.authClientSecret,
+    callbackURL: `/sign-in/callback`,
+    state: true,
+    customHeaders: { Authorization: generateOauthClientToken() },
+  },
+  (token, refreshToken, params, profile, done) => {
+    return done(null, { token, username: params.user_name, authSource: params.auth_source })
+  },
+)
 
 const hmppsAuthStrategy: AuthStrategy = {
   name: 'hmpps-auth',

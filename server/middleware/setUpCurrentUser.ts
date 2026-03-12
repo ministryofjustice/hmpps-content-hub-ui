@@ -7,6 +7,10 @@ export default function setUpCurrentUser() {
   const router = express.Router()
 
   router.use((req, res, next) => {
+    if (req.user?.authSource === 'prisoner-auth') {
+      return next()
+    }
+
     try {
       const {
         name,
@@ -30,10 +34,10 @@ export default function setUpCurrentUser() {
         res.locals.user.staffId = parseInt(userId, 10) || undefined
       }
 
-      next()
+      return next()
     } catch (error) {
       logger.error(error, `Failed to populate user details for: ${res.locals.user && res.locals.user.username}`)
-      next(error)
+      return next(error)
     }
   })
 
