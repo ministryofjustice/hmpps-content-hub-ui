@@ -1,4 +1,5 @@
 import JsonApiClient from '../data/jsonApiClient'
+import type { EpisodeTile, ContentTile } from '../@types/content'
 import {
   mapCategoryDetails,
   mapCategoryMenuItem,
@@ -9,28 +10,45 @@ import {
   mapTopicHeader,
   mapTopicItem,
   mapTopicPageItem,
+  mapPageContent,
+  mapVideoContent,
+  mapAudioContent,
+  mapNextEpisodes,
+  mapSuggestedContent,
 } from './cms/mappers'
 import {
+  buildAudioContentQueryString,
   buildCategoryMenuQueryString,
   buildCategoryPageQueryString,
+  buildContentLookupQueryString,
+  buildNextEpisodesQueryString,
+  buildPageContentQueryString,
   buildPrimaryNavigationQueryString,
   buildSeriesHeaderQueryString,
   buildSeriesItemsQueryString,
+  buildSuggestionsQueryString,
   buildTagLookupQueryString,
   buildTopicHeaderQueryString,
   buildTopicItemsQueryString,
   buildTopicPageQueryString,
   buildTopicTermByTidQueryString,
   buildTopicsQueryString,
+  buildVideoContentQueryString,
 } from './cms/queries'
 import { mapTagType } from './cms/utils'
 import {
+  CmsAudioNodeAttributes,
   CmsCategoryMenuAttributes,
   CmsCategoryTermAttributes,
+  CmsContent,
+  CmsEpisodeTileNodeAttributes,
+  CmsMediaContent,
   CmsNodeAttributes,
+  CmsPageNodeAttributes,
   CmsPrimaryNavigationAttributes,
   CmsPrimaryNavigationItem,
   CmsSeriesTermAttributes,
+  CmsSuggestionNodeAttributes,
   CmsTag,
   CmsTagTermAttributes,
   CmsTagTermItem,
@@ -40,6 +58,7 @@ import {
   CmsTopicPage,
   CmsTopicTermAttributes,
   CmsTopicTermItem,
+  CmsVideoNodeAttributes,
 } from './cms/types'
 
 export default class CmsService {
@@ -200,5 +219,79 @@ export default class CmsService {
     const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
     const response = await this.jsonApiClient.getCollectionByPath<CmsNodeAttributes>(path)
     return response.data.map(item => mapTopicItem(item, response.included))
+  }
+
+  async getContent(establishmentName: string, contentId: number, language: string): Promise<CmsContent | null> {
+    const lookupQs = buildContentLookupQueryString(`${contentId}`)
+    const lookupPath = `/${language}/jsonapi/prison/${establishmentName}/node?${lookupQs}`
+    const lookupResponse = await this.jsonApiClient.getCollectionByPath<CmsNodeAttributes>(lookupPath)
+    const match = lookupResponse.data[0]
+    if (!match) return null
+
+    const { id: uuid } = match
+
+    switch (match.type) {
+      case 'node--page': {
+        const qs = buildPageContentQueryString()
+        const path = `/${language}/jsonapi/prison/${establishmentName}/node/page/${uuid}?${qs}`
+        const response = await this.jsonApiClient.getSingleByPath<CmsPageNodeAttributes>(path)
+        return mapPageContent(response, language)
+      }
+      case 'node--moj_video_item': {
+        const qs = buildVideoContentQueryString()
+        const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_video_item/${uuid}?${qs}`
+        const response = await this.jsonApiClient.getSingleByPath<CmsVideoNodeAttributes>(path)
+        const content = mapVideoContent(response, language)
+        return this.enrichMediaContent(establishmentName, content, language)
+      }
+      case 'node--moj_radio_item': {
+        const qs = buildAudioContentQueryString()
+        const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_radio_item/${uuid}?${qs}`
+        const response = await this.jsonApiClient.getSingleByPath<CmsAudioNodeAttributes>(path)
+        const content = mapAudioContent(response, language)
+        return this.enrichMediaContent(establishmentName, content, language)
+      }
+      default:
+        return null
+    }
+  }
+
+  private async enrichMediaContent(
+    establishmentName: string,
+    content: CmsMediaContent,
+    language: string,
+  ): Promise<CmsMediaContent & { nextEpisodes: EpisodeTile[]; suggestedContent: ContentTile[] }> {
+    const [nextEpisodes, suggestedContent] = await Promise.all([
+      this.getNextEpisodes(establishmentName, content.seriesId, content.seriesSortValue, content.created, language),
+      this.getSuggestions(establishmentName, content.uuid, language),
+    ])
+
+    return { ...content, nextEpisodes, suggestedContent }
+  }
+
+  private async getNextEpisodes(
+    establishmentName: string,
+    seriesId: number | null,
+    seriesSortValue: number | null,
+    created: string | null,
+    language: string,
+  ): Promise<EpisodeTile[]> {
+    if (!seriesId) return []
+
+    const qs = buildNextEpisodesQueryString(seriesId, seriesSortValue, created)
+    const path = `/${language}/jsonapi/prison/${establishmentName}/node?${qs}`
+    const response = await this.jsonApiClient.getCollectionByPath<CmsEpisodeTileNodeAttributes>(path)
+    return mapNextEpisodes(response)
+  }
+
+  private async getSuggestions(
+    establishmentName: string,
+    uuid: string,
+    language: string,
+  ): Promise<ContentTile[]> {
+    const qs = buildSuggestionsQueryString()
+    const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_radio_item/${uuid}/suggestions?${qs}`
+    const response = await this.jsonApiClient.getCollectionByPath<CmsSuggestionNodeAttributes>(path)
+    return mapSuggestedContent(response)
   }
 }

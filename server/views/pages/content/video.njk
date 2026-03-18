@@ -1,0 +1,118 @@
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbBackForward %}
+
+{% set pageTitle = data.title or applicationName %}
+{% set mainClasses = "govuk-body" %}
+
+{% block content %}
+  {{ breadcrumbBackForward() }}
+  {% if data.breadcrumbs and data.breadcrumbs.length %}
+    {{ breadcrumb(data.breadcrumbs) }}
+  {% endif %}
+
+  <section class="hmpps-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6">
+    <div class="govuk-width-container">
+      <div class="hmpps-content-main">
+        <header class="hmpps-content-header">
+          {% if data.image %}
+            <div class="hmpps-content-header__thumbnail">
+              <img src="{{ data.image }}" alt="" class="hmpps-content-header__image">
+            </div>
+          {% endif %}
+          <div class="hmpps-content-header__title">
+            {% if data.seriesName %}
+              <p class="govuk-heading-m govuk-!-margin-bottom-1">
+                <a class="govuk-link" href="/tags/{{ data.seriesId }}">{{ data.seriesName }}</a>
+              </p>
+            {% elif data.categories %}
+              <p class="govuk-heading-m govuk-!-margin-bottom-1">
+                <a class="govuk-link" href="/tags/{{ data.categories.id }}">{{ data.categories.name }}</a>
+              </p>
+            {% elif data.topics and data.topics.length %}
+              <p class="govuk-heading-m govuk-!-margin-bottom-1">
+                <a class="govuk-link" href="/tags/{{ data.topics[0].id }}">{{ data.topics[0].name }}</a>
+              </p>
+            {% endif %}
+            <h1 class="govuk-heading-xl govuk-!-font-size-36">{{ data.title }}</h1>
+          </div>
+        </header>
+
+        {% if data.media %}
+          <div class="govuk-!-margin-bottom-6">
+            <video
+              id="hub-video"
+              class="video-js vjs-default-skin vjs-big-play-centered"
+              controls
+              preload="auto"
+              {% if data.image %}poster="{{ data.image }}"{% endif %}
+              data-setup='{ "fluid": true }'
+            >
+              <source src="{{ data.media }}" type="video/mp4"/>
+            </video>
+          </div>
+        {% elif data.image %}
+          <div class="govuk-!-margin-bottom-6">
+            <img src="{{ data.image }}" alt="{{ data.title }}" class="hmpps-content-image">
+          </div>
+        {% endif %}
+
+        {% if data.seriesName and data.seasonId and data.episodeId %}
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            {{ "features:content.season" | t }} {{ data.seasonId }}, {{ "features:content.episode" | t }} {{ data.episodeId % 1000 }}
+          </p>
+        {% endif %}
+
+        {% if data.description %}
+          <div class="govuk-body">
+            {{ data.description | safe }}
+          </div>
+        {% endif %}
+
+        {% if data.topics and data.topics.length %}
+          <div class="govuk-!-margin-top-6">
+            <h2 class="govuk-heading-m">{{ "features:content.topics" | t }}</h2>
+            <ul class="govuk-list">
+              {% for topic in data.topics %}
+                <li>
+                  <a class="govuk-link" href="/tags/{{ topic.id }}">{{ topic.name }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if data.nextEpisodes and data.nextEpisodes.length %}
+          <div class="govuk-!-margin-top-6">
+            <h2 class="govuk-heading-m">{{ "features:nextEpisodes.heading" | t }}</h2>
+            <div class="govuk-grid-row hmpps-category-grid">
+              {% for episode in data.nextEpisodes %}
+                <div class="govuk-grid-column-one-third">
+                  {% set cardItem = { href: '/content/' + episode.id, title: episode.title, thumbnailUrl: episode.image.url if episode.image else '', contentType: data.contentType } %}
+                  {% set showContentTag = true %}
+                  {% set showSeriesTag = false %}
+                  {% include "../../partials/category-card.njk" %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if data.suggestedContent and data.suggestedContent.length %}
+      <div class="govuk-width-container govuk-!-margin-top-8">
+        <h2 class="govuk-heading-m">{{ "features:suggestedContent.youMightLike" | t }}</h2>
+        <div class="govuk-grid-row hmpps-category-grid">
+          {% for item in data.suggestedContent %}
+            <div class="govuk-grid-column-one-quarter">
+              {% set cardItem = { href: item.contentUrl, title: item.title, thumbnailUrl: item.image.url if item.image else '', contentType: item.contentType } %}
+              {% set showContentTag = true %}
+              {% set showSeriesTag = false %}
+              {% include "../../partials/category-card.njk" %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}
