@@ -1,4 +1,9 @@
-import { JsonApiCollectionResponse, JsonApiRelationships, JsonApiResource, JsonApiSingleResponse } from '../../data/jsonApiClient'
+import {
+  JsonApiCollectionResponse,
+  JsonApiRelationships,
+  JsonApiResource,
+  JsonApiSingleResponse,
+} from '../../data/jsonApiClient'
 import type { EpisodeTile, ContentTile } from '../../@types/content'
 import {
   CmsAudioContent,
@@ -383,9 +388,8 @@ export const mapEpisodeTile = (
   }
 }
 
-export const mapNextEpisodes = (
-  response: JsonApiCollectionResponse<CmsEpisodeTileNodeAttributes>,
-): EpisodeTile[] => response.data.map(item => mapEpisodeTile(item, response.included))
+export const mapNextEpisodes = (response: JsonApiCollectionResponse<CmsEpisodeTileNodeAttributes>): EpisodeTile[] =>
+  response.data.map(item => mapEpisodeTile(item, response.included))
 
 const EXTERNAL_CONTENT_TYPES = new Set(['moj_pdf_item', 'link'])
 
@@ -419,6 +423,5 @@ export const mapContentTile = (
   }
 }
 
-export const mapSuggestedContent = (
-  response: JsonApiCollectionResponse<CmsSuggestionNodeAttributes>,
-): ContentTile[] => response.data.map(item => mapContentTile(item, response.included))
+export const mapSuggestedContent = (response: JsonApiCollectionResponse<CmsSuggestionNodeAttributes>): ContentTile[] =>
+  response.data.map(item => mapContentTile(item, response.included))

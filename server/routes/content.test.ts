@@ -124,9 +124,7 @@ describe('Content Routes', () => {
     it('should return 404 when content is not found', () => {
       cmsService.getContent.mockResolvedValue(null)
 
-      return request(app)
-        .get('/content/999')
-        .expect(404)
+      return request(app).get('/content/999').expect(404)
     })
   })
 })

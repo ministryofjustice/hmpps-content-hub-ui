@@ -284,11 +284,7 @@ export default class CmsService {
     return mapNextEpisodes(response)
   }
 
-  private async getSuggestions(
-    establishmentName: string,
-    uuid: string,
-    language: string,
-  ): Promise<ContentTile[]> {
+  private async getSuggestions(establishmentName: string, uuid: string, language: string): Promise<ContentTile[]> {
     const qs = buildSuggestionsQueryString()
     const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_radio_item/${uuid}/suggestions?${qs}`
     const response = await this.jsonApiClient.getCollectionByPath<CmsSuggestionNodeAttributes>(path)
