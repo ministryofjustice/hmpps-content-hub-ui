@@ -1,3 +1,5 @@
+import type { ContentTile } from '../../@types/content'
+
 export interface CmsTopicAttributes {
   drupal_internal__tid: number
   name: string
@@ -65,6 +67,7 @@ export interface CmsTag {
   topicItems?: CmsTopicContentItem[]
   categoryFeaturedContent?: CmsCategoryFeaturedItem[]
   categoryMenu?: CmsCategoryMenuItem[]
+  categoryContent?: ContentTile[]
 }
 
 export interface CmsSeriesItem {

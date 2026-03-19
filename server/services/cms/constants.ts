@@ -16,6 +16,10 @@ const MENU_FIELDS = joinFields(['drupal_internal__tid', 'name', 'path', 'field_m
 
 const CONTENT_TILE_FIELDS = [...COMMON_TILE_FIELDS, 'field_summary']
 
+export const CATEGORY_CONTENT_FIELDS = joinFields(CONTENT_TILE_FIELDS)
+
+export const CATEGORY_CONTENT_INCLUDE = 'field_moj_thumbnail_image'
+
 export const CATEGORY_MENU_FIELDS = MENU_FIELDS
 
 export const CATEGORY_PAGE_FIELDS = joinFields([

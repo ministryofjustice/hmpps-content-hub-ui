@@ -18,6 +18,7 @@ import {
 } from './cms/mappers'
 import {
   buildAudioContentQueryString,
+  buildCategoryContentQueryString,
   buildCategoryMenuQueryString,
   buildCategoryPageQueryString,
   buildContentLookupQueryString,
@@ -156,9 +157,10 @@ export default class CmsService {
 
     if (tagType !== 'category') return baseTag
 
-    const [categoryDetails, categoryMenu] = await Promise.all([
+    const [categoryDetails, categoryMenu, categoryContent] = await Promise.all([
       this.getCategoryDetails(establishmentName, match.id, language),
       this.getCategoryMenu(establishmentName, match.id, language),
+      this.getCategoryContent(establishmentName, match.id, language),
     ])
     return {
       ...baseTag,
@@ -167,6 +169,7 @@ export default class CmsService {
       breadcrumbs: categoryDetails?.breadcrumbs ?? baseTag.breadcrumbs,
       categoryFeaturedContent: categoryDetails?.categoryFeaturedContent ?? [],
       categoryMenu,
+      categoryContent,
     }
   }
 
@@ -191,6 +194,13 @@ export default class CmsService {
       `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/moj_categories/${categoryUuid}/sub_terms?${queryString}`,
     )
     return response.data.map(item => mapCategoryMenuItem(item, response.included))
+  }
+
+  private async getCategoryContent(establishmentName: string, categoryUuid: string, language: string) {
+    const queryString = buildCategoryContentQueryString(categoryUuid)
+    const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
+    const response = await this.jsonApiClient.getCollectionByPath<CmsSuggestionNodeAttributes>(path)
+    return mapSuggestedContent(response)
   }
 
   private async getSeriesHeader(establishmentName: string, seriesUuid: string, language: string) {

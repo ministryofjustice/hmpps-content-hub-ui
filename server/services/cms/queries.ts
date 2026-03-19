@@ -1,6 +1,8 @@
 import {
   AUDIO_CONTENT_FIELDS,
   AUDIO_CONTENT_INCLUDE,
+  CATEGORY_CONTENT_FIELDS,
+  CATEGORY_CONTENT_INCLUDE,
   CATEGORY_MENU_FIELDS,
   CATEGORY_PAGE_FIELDS,
   CATEGORY_PAGE_INCLUDE,
@@ -207,4 +209,17 @@ export const buildSuggestionsQueryString = (limit: number = 4) =>
     'fields[file--file]': FILE_FIELDS,
     include: SUGGESTION_TILE_INCLUDE,
     'page[limit]': `${limit}`,
+  }).toString()
+
+export const buildCategoryContentQueryString = (categoryUuid: string, page: number = 1, limit: number = 40) =>
+  new URLSearchParams({
+    'filter[field_moj_top_level_categories.id]': categoryUuid,
+    'fields[node--page]': CATEGORY_CONTENT_FIELDS,
+    'fields[node--moj_video_item]': CATEGORY_CONTENT_FIELDS,
+    'fields[node--moj_radio_item]': CATEGORY_CONTENT_FIELDS,
+    'fields[node--moj_pdf_item]': CATEGORY_CONTENT_FIELDS,
+    'fields[file--file]': FILE_FIELDS,
+    include: CATEGORY_CONTENT_INCLUDE,
+    sort: '-created',
+    ...buildPageParams(page, limit),
   }).toString()
