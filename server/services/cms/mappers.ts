@@ -218,8 +218,6 @@ export const mapCategoryFeaturedContent = (
     })
 }
 
-// Content page mappers
-
 const mapContentTopics = (
   relationships: JsonApiRelationships | undefined,
   included: JsonApiResource[] | undefined,
@@ -367,8 +365,6 @@ export const mapAudioContent = (
     excludeFeedback: data.attributes.field_exclude_feedback ?? false,
   }
 }
-
-// Next episodes / suggested content mappers
 
 export const mapEpisodeTile = (
   item: JsonApiResource<CmsEpisodeTileNodeAttributes>,

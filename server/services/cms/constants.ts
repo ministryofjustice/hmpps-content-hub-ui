@@ -69,7 +69,6 @@ export const TOPIC_TERM_LOOKUP_FIELDS = joinFields(['name', 'description', 'drup
 
 export const TOPICS_TERM_FIELDS = joinFields(['drupal_internal__tid', 'name'])
 
-// Content page fields
 const COMMON_CONTENT_FIELDS = [
   'drupal_internal__nid',
   'title',
@@ -115,8 +114,6 @@ export const AUDIO_CONTENT_FIELDS = joinFields([
 
 export const AUDIO_CONTENT_INCLUDE =
   'field_moj_thumbnail_image,field_moj_series,field_moj_audio,field_topics,field_moj_top_level_categories'
-
-// Next episodes / suggested content
 
 const EPISODE_TILE_FIELDS = [
   'drupal_internal__nid',
