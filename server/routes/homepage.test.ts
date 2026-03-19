@@ -43,7 +43,7 @@ describe('GET /', () => {
       .expect(200)
       .expect(res => {
         expect(res.text).toContain('Browse all topics')
-        expect(res.text).toContain('hmpps-home-section--dark')
+        expect(res.text).toContain('hmpps-section--dark')
         expect(res.text).toContain('Education')
         expect(res.text).toContain('Health')
         expect(auditService.logPageView).toHaveBeenCalledWith(Page.HOMEPAGE, {

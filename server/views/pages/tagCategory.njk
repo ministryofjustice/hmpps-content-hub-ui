@@ -1,4 +1,4 @@
-<section class="hmpps-home-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6 govuk-!-margin-top-6">
+<section class="hmpps-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6 govuk-!-margin-top-6">
 	<div class="govuk-width-container">
 		{% if tag.categoryFeaturedContent and tag.categoryFeaturedContent.length %}
 			<h2 class="govuk-heading-m govuk-!-margin-bottom-4">Featured</h2>
@@ -17,10 +17,9 @@
 			</div>
 		{% endif %}
 
-		<h2 class="govuk-heading-m govuk-!-margin-top-6 govuk-!-margin-bottom-4">In this section</h2>
-		<div class="govuk-grid-row hmpps-category-grid">
-
-			{% if tag.categoryMenu and tag.categoryMenu.length %}
+		{% if tag.categoryMenu and tag.categoryMenu.length %}
+			<h2 class="govuk-heading-m govuk-!-margin-top-6 govuk-!-margin-bottom-4">In this section</h2>
+			<div class="govuk-grid-row hmpps-category-grid">
 				{% for link in tag.categoryMenu %}
 					<div class="govuk-grid-column-one-quarter">
 						{% set cardItem = link %}
@@ -28,11 +27,21 @@
 						{% include "../partials/category-card.njk" %}
 					</div>
 				{% endfor %}
-			{% else %}
-				<div class="govuk-grid-column-full">
-					<p>No links are available for this category yet.</p>
-				</div>
-			{% endif %}
-		</div>
+			</div>
+		{% endif %}
+
+		{% if tag.categoryContent and tag.categoryContent.length %}
+			<h2 class="govuk-heading-m govuk-!-margin-top-6 govuk-!-margin-bottom-4">Content</h2>
+			<div class="govuk-grid-row hmpps-category-grid">
+				{% for item in tag.categoryContent %}
+					<div class="govuk-grid-column-one-quarter">
+						{% set cardItem = { href: item.contentUrl, title: item.title, thumbnailUrl: item.image.url if item.image else '', contentType: item.contentType } %}
+						{% set showContentTag = true %}
+						{% set showSeriesTag = false %}
+						{% include "../partials/category-card.njk" %}
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
 	</div>
 </section>

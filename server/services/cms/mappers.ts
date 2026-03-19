@@ -1,21 +1,36 @@
-import { JsonApiRelationships, JsonApiResource, JsonApiSingleResponse } from '../../data/jsonApiClient'
 import {
+  JsonApiCollectionResponse,
+  JsonApiRelationships,
+  JsonApiResource,
+  JsonApiSingleResponse,
+} from '../../data/jsonApiClient'
+import type { EpisodeTile, ContentTile } from '../../@types/content'
+import {
+  CmsAudioContent,
+  CmsAudioNodeAttributes,
   CmsCategoryFeaturedItem,
   CmsCategoryMenuAttributes,
   CmsCategoryMenuItem,
   CmsCategoryTermAttributes,
+  CmsEpisodeTileNodeAttributes,
   CmsFileAttributes,
   CmsNodeAttributes,
+  CmsPageContent,
+  CmsPageNodeAttributes,
+  CmsPath,
   CmsPrimaryNavigationAttributes,
   CmsPrimaryNavigationItem,
   CmsSeriesItem,
   CmsSeriesTermAttributes,
+  CmsSuggestionNodeAttributes,
   CmsTaxonomyAttributes,
-  CmsTopicContentItem,
   CmsTopicAttributes,
+  CmsTopicContentItem,
   CmsTopicHeaderAttributes,
   CmsTopicItem,
   CmsTopicPageItem,
+  CmsVideoContent,
+  CmsVideoNodeAttributes,
 } from './types'
 import {
   findIncluded,
@@ -202,3 +217,207 @@ export const mapCategoryFeaturedContent = (
       }
     })
 }
+
+const mapContentTopics = (
+  relationships: JsonApiRelationships | undefined,
+  included: JsonApiResource[] | undefined,
+): { id: number; name: string }[] => {
+  const identifiers = relationshipDataArray(relationships?.field_topics)
+  if (!identifiers.length || !included) return []
+
+  return identifiers
+    .map(identifier => findIncluded<CmsTopicAttributes>(included, identifier))
+    .filter((item): item is JsonApiResource<CmsTopicAttributes> => Boolean(item))
+    .map(item => ({
+      id: item.attributes.drupal_internal__tid,
+      name: item.attributes.name,
+    }))
+}
+
+const mapContentCategory = (
+  relationships: JsonApiRelationships | undefined,
+  included: JsonApiResource[] | undefined,
+): { id: number; name: string } | null => {
+  const identifiers = relationshipDataArray(relationships?.field_moj_top_level_categories)
+  if (!identifiers.length || !included) return null
+
+  const item = findIncluded<CmsTaxonomyAttributes>(included, identifiers[0])
+  if (!item?.attributes.drupal_internal__tid || !item.attributes.name) return null
+
+  return { id: item.attributes.drupal_internal__tid, name: item.attributes.name }
+}
+
+const mapSeriesInfo = (
+  relationships: JsonApiRelationships | undefined,
+  included: JsonApiResource[] | undefined,
+): { id: number | null; name: string | null; path: string | null } => {
+  const identifiers = relationshipDataArray(relationships?.field_moj_series)
+  if (!identifiers.length || !included) return { id: null, name: null, path: null }
+
+  const series = findIncluded<CmsTaxonomyAttributes & { path?: CmsPath }>(included, identifiers[0])
+  if (!series) return { id: null, name: null, path: null }
+
+  return {
+    id: series.attributes.drupal_internal__tid ?? null,
+    name: series.attributes.name ?? null,
+    path: series.attributes.path?.alias ?? null,
+  }
+}
+
+const mapMediaUrl = (
+  relationships: JsonApiRelationships | undefined,
+  included: JsonApiResource[] | undefined,
+  fieldName: string,
+): string | null => {
+  const identifiers = relationshipDataArray(relationships?.[fieldName])
+  if (!identifiers.length || !included) return null
+
+  const file = findIncluded<CmsFileAttributes>(included, identifiers[0])
+  return file?.attributes.uri?.url ?? null
+}
+
+const mapEpisodeId = (season: number | undefined, episode: number | undefined): number | null => {
+  if (season !== undefined && episode !== undefined) return season * 1000 + episode
+  return episode ?? null
+}
+
+export const mapPageContent = (
+  response: JsonApiSingleResponse<CmsPageNodeAttributes>,
+  language: string,
+): CmsPageContent => {
+  const { data } = response
+  return {
+    id: data.attributes.drupal_internal__nid!,
+    title: data.attributes.title,
+    contentType: 'page',
+    breadcrumbs: mapBreadcrumbs(data.attributes.breadcrumbs, language),
+    description: data.attributes.field_main_body_content?.processed ?? null,
+    standFirst: data.attributes.field_moj_stand_first ?? null,
+    categories: mapContentCategory(data.relationships, response.included),
+    topics: mapContentTopics(data.relationships, response.included),
+    excludeFeedback: data.attributes.field_exclude_feedback ?? false,
+  }
+}
+
+export const mapVideoContent = (
+  response: JsonApiSingleResponse<CmsVideoNodeAttributes>,
+  language: string,
+): CmsVideoContent => {
+  const { data } = response
+  const series = mapSeriesInfo(data.relationships, response.included)
+  const thumbnailIdentifier = relationshipDataArray(data.relationships?.field_moj_thumbnail_image)[0]
+  const thumbnail = thumbnailIdentifier
+    ? findIncluded<CmsFileAttributes>(response.included ?? [], thumbnailIdentifier)
+    : undefined
+
+  return {
+    id: data.attributes.drupal_internal__nid!,
+    uuid: data.id,
+    created: data.attributes.created ?? null,
+    title: data.attributes.title,
+    contentType: 'video',
+    breadcrumbs: mapBreadcrumbs(data.attributes.breadcrumbs, language),
+    description: data.attributes.field_description?.processed ?? null,
+    episodeId: mapEpisodeId(data.attributes.field_moj_season, data.attributes.field_moj_episode),
+    seasonId: data.attributes.field_moj_season ?? null,
+    seriesId: series.id,
+    seriesPath: series.path,
+    seriesName: series.name,
+    seriesSortValue: data.attributes.series_sort_value ?? null,
+    media: mapMediaUrl(data.relationships, response.included, 'field_video'),
+    categories: mapContentCategory(data.relationships, response.included),
+    topics: mapContentTopics(data.relationships, response.included),
+    image: resolveFileUrl(thumbnail) ?? null,
+    excludeFeedback: data.attributes.field_exclude_feedback ?? false,
+  }
+}
+
+export const mapAudioContent = (
+  response: JsonApiSingleResponse<CmsAudioNodeAttributes>,
+  language: string,
+): CmsAudioContent => {
+  const { data } = response
+  const series = mapSeriesInfo(data.relationships, response.included)
+  const thumbnailIdentifier = relationshipDataArray(data.relationships?.field_moj_thumbnail_image)[0]
+  const thumbnail = thumbnailIdentifier
+    ? findIncluded<CmsFileAttributes>(response.included ?? [], thumbnailIdentifier)
+    : undefined
+
+  return {
+    id: data.attributes.drupal_internal__nid!,
+    uuid: data.id,
+    created: data.attributes.created ?? null,
+    title: data.attributes.title,
+    contentType: 'radio',
+    breadcrumbs: mapBreadcrumbs(data.attributes.breadcrumbs, language),
+    description: data.attributes.field_description?.processed ?? null,
+    programmeCode: data.attributes.field_moj_programme_code ?? null,
+    episodeId: mapEpisodeId(data.attributes.field_moj_season, data.attributes.field_moj_episode),
+    seasonId: data.attributes.field_moj_season ?? null,
+    seriesId: series.id,
+    seriesPath: series.path,
+    seriesName: series.name,
+    seriesSortValue: data.attributes.series_sort_value ?? null,
+    media: mapMediaUrl(data.relationships, response.included, 'field_moj_audio'),
+    categories: mapContentCategory(data.relationships, response.included),
+    topics: mapContentTopics(data.relationships, response.included),
+    image: resolveFileUrl(thumbnail) ?? null,
+    excludeFeedback: data.attributes.field_exclude_feedback ?? false,
+  }
+}
+
+export const mapEpisodeTile = (
+  item: JsonApiResource<CmsEpisodeTileNodeAttributes>,
+  included: JsonApiResource[] | undefined,
+): EpisodeTile => {
+  const thumbnailIdentifier = relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
+  const thumbnail =
+    thumbnailIdentifier && included ? findIncluded<CmsFileAttributes>(included, thumbnailIdentifier) : undefined
+
+  return {
+    id: item.attributes.drupal_internal__nid!,
+    episodeId: mapEpisodeId(item.attributes.field_moj_season, item.attributes.field_moj_episode),
+    title: item.attributes.title,
+    seasonId: item.attributes.field_moj_season ?? null,
+    seriesSortValue: item.attributes.series_sort_value ?? null,
+    image: resolveFileUrl(thumbnail) ? { url: resolveFileUrl(thumbnail)!, alt: '' } : null,
+  }
+}
+
+export const mapNextEpisodes = (response: JsonApiCollectionResponse<CmsEpisodeTileNodeAttributes>): EpisodeTile[] =>
+  response.data.map(item => mapEpisodeTile(item, response.included))
+
+const EXTERNAL_CONTENT_TYPES = new Set(['moj_pdf_item', 'link'])
+
+const mapNodeTypeToContentType = (type: string): string => {
+  const match = type.match(/(?<=--)(.*)/)?.[0] ?? ''
+  if (match === 'moj_radio_item') return 'radio'
+  if (match === 'moj_video_item') return 'video'
+  return match
+}
+
+export const mapContentTile = (
+  item: JsonApiResource<CmsSuggestionNodeAttributes>,
+  included: JsonApiResource[] | undefined,
+): ContentTile => {
+  const thumbnailIdentifier = relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
+  const thumbnail =
+    thumbnailIdentifier && included ? findIncluded<CmsFileAttributes>(included, thumbnailIdentifier) : undefined
+  const contentType = mapNodeTypeToContentType(item.type)
+  const publishedAt = item.attributes.published_at
+
+  return {
+    id: (item.attributes.drupal_internal__nid ?? item.attributes.drupal_internal__tid)!,
+    contentType,
+    externalContent: EXTERNAL_CONTENT_TYPES.has(contentType),
+    title: (item.attributes.title ?? item.attributes.name)!,
+    summary: item.attributes.field_summary ?? '',
+    contentUrl: resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
+    displayUrl: item.attributes.field_display_url ?? '',
+    image: resolveFileUrl(thumbnail) ? { url: resolveFileUrl(thumbnail)!, alt: '' } : null,
+    isNew: publishedAt ? (Date.now() - new Date(publishedAt).getTime()) / 86_400_000 <= 2 : false,
+  }
+}
+
+export const mapSuggestedContent = (response: JsonApiCollectionResponse<CmsSuggestionNodeAttributes>): ContentTile[] =>
+  response.data.map(item => mapContentTile(item, response.included))

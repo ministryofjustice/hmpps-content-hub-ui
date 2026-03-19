@@ -1,0 +1,37 @@
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbBackForward %}
+
+{% set pageTitle = data.title or applicationName %}
+{% set mainClasses = "govuk-body" %}
+
+{% block content %}
+  {{ breadcrumbBackForward() }}
+  {% if data.breadcrumbs and data.breadcrumbs.length %}
+    {{ breadcrumb(data.breadcrumbs) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-xl">{{ data.title }}</h1>
+
+  {% if data.standFirst %}
+    <p class="govuk-body-l">{{ data.standFirst }}</p>
+  {% endif %}
+
+  {% if data.description %}
+    <div class="govuk-body">
+      {{ data.description | safe }}
+    </div>
+  {% endif %}
+
+  {% if data.topics and data.topics.length %}
+    <div class="hmpps-related-topics govuk-!-margin-top-6 govuk-!-padding-5">
+      <h2 class="govuk-heading-m">{{ "features:relatedTopics.heading" | t }}</h2>
+      <ul class="govuk-list">
+        {% for topic in data.topics %}
+          <li>
+            <a class="govuk-link" href="/tags/{{ topic.id }}">{{ topic.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endblock %}

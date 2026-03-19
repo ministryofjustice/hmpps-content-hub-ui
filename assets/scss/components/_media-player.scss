@@ -1,0 +1,56 @@
+@import "video.js/dist/video-js.css";
+
+.video-js {
+  @include govuk-font(16);
+  margin-bottom: govuk-spacing(6);
+
+  &.vjs-fluid {
+    padding-top: 56.25%;
+  }
+
+  .vjs-poster,
+  .vjs-tech,
+  .vjs-slider,
+  .vjs-control {
+    &:focus {
+      outline-color: govuk-colour("yellow");
+      opacity: 1;
+    }
+  }
+
+  .vjs-current-time,
+  .vjs-duration {
+    display: block;
+  }
+
+  .vjs-picture-in-picture-control,
+  .vjs-remaining-time {
+    display: none;
+  }
+
+  &:hover {
+    .vjs-big-play-button {
+      background-color: transparent;
+      opacity: 1;
+    }
+  }
+
+  .vjs-big-play-button {
+    width: 104px;
+    height: 103px;
+    border: 0;
+    background-color: transparent;
+    background-position: 50% 50%;
+
+    &:focus {
+      outline-color: govuk-colour("yellow");
+      background-color: transparent;
+      opacity: 1;
+    }
+
+    &:hover {
+      background-color: transparent;
+      opacity: 0.6;
+    }
+  }
+}

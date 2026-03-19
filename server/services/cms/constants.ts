@@ -16,6 +16,10 @@ const MENU_FIELDS = joinFields(['drupal_internal__tid', 'name', 'path', 'field_m
 
 const CONTENT_TILE_FIELDS = [...COMMON_TILE_FIELDS, 'field_summary']
 
+export const CATEGORY_CONTENT_FIELDS = joinFields(CONTENT_TILE_FIELDS)
+
+export const CATEGORY_CONTENT_INCLUDE = 'field_moj_thumbnail_image'
+
 export const CATEGORY_MENU_FIELDS = MENU_FIELDS
 
 export const CATEGORY_PAGE_FIELDS = joinFields([
@@ -68,3 +72,67 @@ export const TOPIC_PAGE_NODE_FIELDS = joinFields([
 export const TOPIC_TERM_LOOKUP_FIELDS = joinFields(['name', 'description', 'drupal_internal__tid'])
 
 export const TOPICS_TERM_FIELDS = joinFields(['drupal_internal__tid', 'name'])
+
+const COMMON_CONTENT_FIELDS = [
+  'drupal_internal__nid',
+  'title',
+  'created',
+  'field_topics',
+  'field_moj_series',
+  'field_moj_top_level_categories',
+  'field_exclude_feedback',
+  'breadcrumbs',
+]
+
+export const PAGE_CONTENT_FIELDS = joinFields([
+  ...COMMON_CONTENT_FIELDS,
+  'field_main_body_content',
+  'field_moj_stand_first',
+])
+
+export const PAGE_CONTENT_INCLUDE = 'field_topics,field_moj_top_level_categories'
+
+export const VIDEO_CONTENT_FIELDS = joinFields([
+  ...COMMON_CONTENT_FIELDS,
+  'field_video',
+  'field_description',
+  'field_moj_season',
+  'field_moj_episode',
+  'field_moj_thumbnail_image',
+  'series_sort_value',
+])
+
+export const VIDEO_CONTENT_INCLUDE =
+  'field_moj_thumbnail_image,field_moj_series,field_video,field_topics,field_moj_top_level_categories'
+
+export const AUDIO_CONTENT_FIELDS = joinFields([
+  ...COMMON_CONTENT_FIELDS,
+  'field_moj_audio',
+  'field_description',
+  'field_moj_season',
+  'field_moj_episode',
+  'field_moj_thumbnail_image',
+  'field_moj_programme_code',
+  'series_sort_value',
+])
+
+export const AUDIO_CONTENT_INCLUDE =
+  'field_moj_thumbnail_image,field_moj_series,field_moj_audio,field_topics,field_moj_top_level_categories'
+
+const EPISODE_TILE_FIELDS = [
+  'drupal_internal__nid',
+  'title',
+  'field_moj_episode',
+  'field_moj_season',
+  'field_moj_series',
+  'series_sort_value',
+  'field_moj_thumbnail_image',
+]
+
+export const EPISODE_TILE_NODE_FIELDS = joinFields(EPISODE_TILE_FIELDS)
+
+export const EPISODE_TILE_INCLUDE = 'field_moj_thumbnail_image'
+
+export const SUGGESTION_TILE_FIELDS = joinFields([...COMMON_TILE_FIELDS, 'field_summary', 'field_display_url'])
+
+export const SUGGESTION_TILE_INCLUDE = 'field_moj_thumbnail_image'
