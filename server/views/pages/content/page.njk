@@ -23,8 +23,8 @@
   {% endif %}
 
   {% if data.topics and data.topics.length %}
-    <div class="govuk-!-margin-top-6">
-      <h2 class="govuk-heading-m">{{ "features:content.topics" | t }}</h2>
+    <div class="hmpps-related-topics govuk-!-margin-top-6 govuk-!-padding-5">
+      <h2 class="govuk-heading-m">{{ "features:relatedTopics.heading" | t }}</h2>
       <ul class="govuk-list">
         {% for topic in data.topics %}
           <li>

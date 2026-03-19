@@ -218,3 +218,11 @@ $hmpps-read-colour: govuk-colour('blue');
     margin-bottom: 0;
   }
 }
+
+.hmpps-related-topics {
+  background-color: govuk-colour('light-grey');
+
+  .hmpps-section--dark & {
+    background-color: #232425;
+  }
+}
