@@ -29,6 +29,8 @@ import {
   CmsTopicHeaderAttributes,
   CmsTopicItem,
   CmsTopicPageItem,
+  CmsUrgentBanner,
+  CmsUrgentBannerAttributes,
   CmsVideoContent,
   CmsVideoNodeAttributes,
 } from './types'
@@ -421,3 +423,19 @@ export const mapContentTile = (
 
 export const mapSuggestedContent = (response: JsonApiCollectionResponse<CmsSuggestionNodeAttributes>): ContentTile[] =>
   response.data.map(item => mapContentTile(item, response.included))
+
+export const mapUrgentBanner = (
+  item: JsonApiResource<CmsUrgentBannerAttributes>,
+  included: JsonApiResource[] | undefined,
+): CmsUrgentBanner => {
+  const moreInfoIdentifier = relationshipDataArray(item.relationships?.field_more_info_page)[0]
+  const moreInfoPage = included && moreInfoIdentifier
+    ? findIncluded<{ path?: CmsPath }>(included, moreInfoIdentifier)
+    : undefined
+
+  return {
+    title: item.attributes.title,
+    moreInfoLink: moreInfoPage?.attributes.path?.alias ?? null,
+    unpublishOn: item.attributes.unpublish_on ? new Date(item.attributes.unpublish_on).getTime() : null,
+  }
+}

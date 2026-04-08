@@ -17,5 +17,9 @@
     "crownCopyright": "© Crown copyright",
     "licence": "All content is available under the Open Government Licence v3.0, except where otherwise stated",
     "privacy": "Privacy"
+  },
+  "urgentBanner": {
+    "title": "URGENT",
+    "moreInfo": "More info"
   }
 }

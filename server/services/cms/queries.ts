@@ -20,6 +20,8 @@ import {
   SUGGESTION_TILE_FIELDS,
   SUGGESTION_TILE_INCLUDE,
   TAG_LOOKUP_FIELDS,
+  URGENT_BANNER_FIELDS,
+  URGENT_BANNER_INCLUDE,
   TOPIC_HEADER_FIELDS,
   TOPIC_ITEMS_INCLUDE,
   TOPIC_ITEMS_TILE_FIELDS,
@@ -222,4 +224,11 @@ export const buildCategoryContentQueryString = (categoryUuid: string, page: numb
     include: CATEGORY_CONTENT_INCLUDE,
     sort: '-created',
     ...buildPageParams(page, limit),
+  }).toString()
+
+export const buildUrgentBannerQueryString = () =>
+  new URLSearchParams({
+    'fields[node--urgent_banner]': URGENT_BANNER_FIELDS,
+    'fields[node--page]': 'path',
+    include: URGENT_BANNER_INCLUDE,
   }).toString()

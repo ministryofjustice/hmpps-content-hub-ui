@@ -136,3 +136,14 @@ export const EPISODE_TILE_INCLUDE = 'field_moj_thumbnail_image'
 export const SUGGESTION_TILE_FIELDS = joinFields([...COMMON_TILE_FIELDS, 'field_summary', 'field_display_url'])
 
 export const SUGGESTION_TILE_INCLUDE = 'field_moj_thumbnail_image'
+
+export const URGENT_BANNER_FIELDS = joinFields([
+  'drupal_internal__nid',
+  'title',
+  'created',
+  'changed',
+  'field_more_info_page',
+  'unpublish_on',
+])
+
+export const URGENT_BANNER_INCLUDE = 'field_more_info_page'
