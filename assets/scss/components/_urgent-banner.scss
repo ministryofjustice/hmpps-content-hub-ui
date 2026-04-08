@@ -1,10 +1,9 @@
 .govuk-notification-banner--urgent {
   @extend .govuk-notification-banner;
 
-  border-color: #d4351c;
-  background-color: #d4351c;
-  color: #fff;
-  margin-bottom: 0;
+  border-color: govuk-colour("red");
+  background-color: govuk-colour("red");
+  color: govuk-colour("white");
 
   .govuk-notification-banner__heading {
     min-width: 100%;
@@ -12,16 +11,16 @@
 
   .govuk-notification-banner__link:link,
   .govuk-notification-banner__link:visited {
-    color: #d4351c;
+    color: govuk-colour("red");
   }
 
   .govuk-notification-banner__link:hover {
-    color: #922615;
+    color: govuk-colour("red-dark");
   }
 
   .govuk-notification-banner__link:active,
   .govuk-notification-banner__link:focus {
-    color: #000000;
+    color: govuk-colour("black");
   }
 
   @include govuk-media-query($until: tablet) {
