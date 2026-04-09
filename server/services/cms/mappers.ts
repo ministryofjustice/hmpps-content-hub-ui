@@ -429,9 +429,8 @@ export const mapUrgentBanner = (
   included: JsonApiResource[] | undefined,
 ): CmsUrgentBanner => {
   const moreInfoIdentifier = relationshipDataArray(item.relationships?.field_more_info_page)[0]
-  const moreInfoPage = included && moreInfoIdentifier
-    ? findIncluded<{ path?: CmsPath }>(included, moreInfoIdentifier)
-    : undefined
+  const moreInfoPage =
+    included && moreInfoIdentifier ? findIncluded<{ path?: CmsPath }>(included, moreInfoIdentifier) : undefined
 
   return {
     title: item.attributes.title,
