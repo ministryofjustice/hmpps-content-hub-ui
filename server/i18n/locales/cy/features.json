@@ -17,10 +17,6 @@
     "enabled": "Dangos mwy",
     "disabled": "Wrthi’n llwytho"
   },
-  "urgentBanner": {
-    "moreInfo": "Mwy o wybodaeth",
-    "title": "BRYS"
-  },
   "interstitial": {
     "1": "Rydych chi’n cael eich tywys i {{ url }}. Rydych chi’n <strong>cael</strong> ymweld â’r wefan hon.",
     "2": "Mae mynediad i’r rhyngrwyd wedi’i gyfyngu mewn carchardai felly mae dolenni i wefannau eraill wedi’u rhwystro.",

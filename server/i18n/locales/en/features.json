@@ -17,10 +17,6 @@
     "enabled": "Show more",
     "disabled": "Loading"
   },
-  "urgentBanner": {
-    "moreInfo": "More info",
-    "title": "URGENT"
-  },
   "interstitial": {
     "heading": "You're leaving the Hub",
     "message": "You are being taken to {{url}}. You are <strong>allowed</strong> to visit this website.",
