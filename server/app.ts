@@ -18,6 +18,7 @@ import setUpContentHubHeader from './middleware/setUpContentHubHeader'
 import setUpFeedback from './middleware/setUpFeedback'
 import setUpFooterTopics from './middleware/setUpFooterTopics'
 import setUpPrimaryNavigation from './middleware/setUpPrimaryNavigation'
+import setUpUrgentBanner from './middleware/setUpUrgentBanner'
 import setupEstablishments from './middleware/setUpEstablishments'
 import setupPortals from './middleware/setUpPortals'
 
@@ -60,6 +61,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setupEstablishments())
   app.use(setUpPrimaryNavigation(services.cmsService))
   app.use(setUpFooterTopics(services.cmsService))
+  app.use(setUpUrgentBanner(services.cmsService))
 
   app.use(routes(services))
 

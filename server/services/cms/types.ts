@@ -288,3 +288,17 @@ export interface CmsAudioContent extends CmsContentBase {
 export type CmsContent = CmsPageContent | CmsVideoContent | CmsAudioContent
 
 export type CmsMediaContent = CmsVideoContent | CmsAudioContent
+
+export type CmsUrgentBannerAttributes = {
+  drupal_internal__nid: number
+  title: string
+  created: string
+  changed: string
+  unpublish_on: string | null
+}
+
+export interface CmsUrgentBanner {
+  title: string
+  moreInfoLink: string | null
+  unpublishOn: number | null
+}

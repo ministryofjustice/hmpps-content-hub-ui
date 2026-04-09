@@ -1,0 +1,36 @@
+.govuk-notification-banner--urgent {
+  @extend .govuk-notification-banner;
+
+  border-color: govuk-colour("red");
+  background-color: govuk-colour("red");
+  color: govuk-colour("white");
+  margin-bottom: govuk-spacing(4);
+
+  .govuk-notification-banner__heading {
+    min-width: 100%;
+  }
+
+  .govuk-notification-banner__link:link,
+  .govuk-notification-banner__link:visited {
+    color: govuk-colour("red");
+  }
+
+  .govuk-notification-banner__link:hover {
+    color: #922615;
+  }
+
+  .govuk-notification-banner__link:active,
+  .govuk-notification-banner__link:focus {
+    color: govuk-colour("black");
+  }
+
+  @include govuk-media-query($until: tablet) {
+    h2 {
+      padding: 0.2em 0;
+    }
+
+    svg {
+      transform: scale(0.9);
+    }
+  }
+}

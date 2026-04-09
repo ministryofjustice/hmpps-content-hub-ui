@@ -17,5 +17,9 @@
     "crownCopyright": "© Hawlfraint y goron",
     "licence": "Mae’r holl gynnwys ar gael o dan Drwydded Llywodraeth Agored f3.0, ac eithrio lle nodir fel arall",
     "privacy": "Preifatrwydd"
+  },
+  "urgentBanner": {
+    "title": "BRYS",
+    "moreInfo": "Mwy o wybodaeth"
   }
 }

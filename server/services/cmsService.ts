@@ -15,6 +15,7 @@ import {
   mapAudioContent,
   mapNextEpisodes,
   mapSuggestedContent,
+  mapUrgentBanner,
 } from './cms/mappers'
 import {
   buildAudioContentQueryString,
@@ -34,6 +35,7 @@ import {
   buildTopicPageQueryString,
   buildTopicTermByTidQueryString,
   buildTopicsQueryString,
+  buildUrgentBannerQueryString,
   buildVideoContentQueryString,
 } from './cms/queries'
 import { mapTagType } from './cms/utils'
@@ -59,6 +61,8 @@ import {
   CmsTopicPage,
   CmsTopicTermAttributes,
   CmsTopicTermItem,
+  CmsUrgentBanner,
+  CmsUrgentBannerAttributes,
   CmsVideoNodeAttributes,
 } from './cms/types'
 
@@ -299,5 +303,15 @@ export default class CmsService {
     const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_radio_item/${uuid}/suggestions?${qs}`
     const response = await this.jsonApiClient.getCollectionByPath<CmsSuggestionNodeAttributes>(path)
     return mapSuggestedContent(response)
+  }
+
+  async getUrgentBanners(establishmentName: string, language: string): Promise<CmsUrgentBanner[]> {
+    const queryString = buildUrgentBannerQueryString()
+    const path = `/${language}/jsonapi/prison/${establishmentName}/node/urgent_banner?${queryString}`
+    const response = await this.jsonApiClient.getCollectionByPath<CmsUrgentBannerAttributes>(path)
+    const now = Date.now()
+    return response.data
+      .map(item => mapUrgentBanner(item, response.included))
+      .filter(banner => banner.unpublishOn === null || banner.unpublishOn >= now)
   }
 }
