@@ -3,7 +3,7 @@
 
 generic-service:
   ingress:
-    hosts: 
+    hosts:
       - content-hub.hmpps.service.justice.gov.uk
       - staff.content-hub.hmpps.service.justice.gov.uk
 
@@ -14,6 +14,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: PRODUCTION
     AUDIT_ENABLED: "false"
+    NPR_STREAM_URL: "https://proxy.content-hub.prisoner.service.justice.gov.uk/npr-live/stream.ogg"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-launchpad

@@ -1,11 +1,11 @@
 {% extends "../partials/layout.njk" %}
-{% from "../partials/breadcrumb.njk" import breadcrumb, breadcrumbBackForward %}
+{% from "../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
 {% set pageTitle = applicationName + " - " + title %}
 {% set mainClasses = "govuk-body" %}
 
 {% block content %}
-  {{ breadcrumbBackForward(true) }}
+  {{ breadcrumbNavigation(true) }}
 
   <h1 class="govuk-heading-xl govuk-!-padding-top-3"> {{ title }} </h1>
 

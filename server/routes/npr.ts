@@ -16,7 +16,7 @@ export default function nprRoutes({ auditServiceSource }: Services): Router {
       })
 
       res.render('pages/npr', {
-        title: 'NPR Listen Live',
+        title: req.t('pages:npr.title'),
         media: config.nprStream,
         topics,
       })

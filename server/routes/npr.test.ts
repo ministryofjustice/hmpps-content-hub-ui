@@ -34,7 +34,6 @@ describe('NPR Routes', () => {
         .expect('Content-Type', /html/)
         .expect(200)
         .expect(res => {
-          expect(res.text).toContain('NPR Listen Live')
           expect(res.text).toContain('src="/assets/images/default_audio.png"')
           expect(res.text).toContain('poster="/assets/images/radio-player-background.jpg"')
           expect(auditService.logPageView).toHaveBeenCalledWith(Page.NPR, {

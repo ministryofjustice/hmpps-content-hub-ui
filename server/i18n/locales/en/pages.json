@@ -13,5 +13,8 @@
   "recentlyAdded": {
     "summary": "The latest uploads on the Hub.",
     "title": "Recently added"
+  },
+  "npr": {
+    "title": "NPR Listen Live"
   }
 }

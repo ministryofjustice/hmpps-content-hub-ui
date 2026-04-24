@@ -16,6 +16,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: STAGING
     AUDIT_ENABLED: "false"
+    NPR_STREAM_URL: "https://proxy-prisoner-content-hub-staging.apps.live.cloud-platform.service.justice.gov.uk/npr-live/stream.oggs"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-launchpad-nonprod
