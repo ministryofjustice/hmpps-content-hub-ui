@@ -1,0 +1,56 @@
+{% extends "../partials/layout.njk" %}
+{% from "../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
+
+{% set pageTitle = applicationName + " - " + title %}
+{% set mainClasses = "govuk-body" %}
+
+{% block content %}
+  {{ breadcrumbNavigation(true) }}
+
+  <h1 class="govuk-heading-xl govuk-!-padding-top-3"> {{ title }} </h1>
+
+  <section class="hmpps-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6">
+    <div class="govuk-width-container">
+      <div class="hmpps-content-main">
+        <header class="hmpps-content-header">
+            <div class="hmpps-content-header__thumbnail">
+              <img src="/assets/images/default_audio.png" alt="" class="hmpps-content-header__image">
+            </div>
+          <div class="hmpps-content-header__title">
+            <h1 class="govuk-heading-xl govuk-!-font-size-36">{{ title }}</h1>
+          </div>
+        </header>
+
+        {% if media %}
+          <div class="govuk-!-margin-bottom-6">
+            <audio
+              id="hub-audio"
+              class="video-js vjs-default-skin vjs-big-play-centered vjs-show-big-play-button-on-pause"
+              controls
+              height="226"
+              width="900"
+              preload="auto"
+              poster="/assets/images/radio-player-background.jpg"
+              data-setup='{
+                "fluid": true,
+                "controlBar": {
+                  "children": [
+                    "playToggle",
+                    "volumePanel",
+                    "currentTimeDisplay",
+                    "progressControl",
+                    "durationDisplay",
+                    "fullscreenToggle"
+                  ]
+                }
+              }'
+              data-title="{{ title }}"
+            >
+              <source src="{{ media }}" type="audio/ogg"/>
+            </audio>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

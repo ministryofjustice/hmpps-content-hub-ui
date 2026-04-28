@@ -150,4 +150,5 @@ export default {
     },
   },
   environmentName: get('ENVIRONMENT_NAME', ''),
+  nprStream: get('NPR_STREAM_URL', '/npr-stream', requiredInProduction),
 }

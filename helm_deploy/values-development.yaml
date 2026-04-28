@@ -17,6 +17,7 @@ generic-service:
     CMS_API_URL: "https://jsonapi-cms-prisoner-content-hub-development.apps.live.cloud-platform.service.justice.gov.uk"
     ENVIRONMENT_NAME: DEVELOPMENT
     AUDIT_ENABLED: "true"
+    NPR_STREAM_URL: "https://proxy-prisoner-content-hub-development.apps.live.cloud-platform.service.justice.gov.uk/npr-live/stream.oggs"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-launchpad-nonprod
