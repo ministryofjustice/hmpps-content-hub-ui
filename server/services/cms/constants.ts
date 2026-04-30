@@ -147,3 +147,5 @@ export const URGENT_BANNER_FIELDS = joinFields([
 ])
 
 export const URGENT_BANNER_INCLUDE = 'field_more_info_page'
+
+export const EXTERNAL_LINK_FIELDS = joinFields(['field_show_interstitial_page', 'field_url'])

@@ -70,4 +70,26 @@ describe('JsonApiClient', () => {
       expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
+
+  describe('getLookupByPath', () => {
+    it('should request the provided path and return the response body', async () => {
+      nock(config.apis.cmsApi.url)
+        .get('/router/prison/bullingdon/translate-path?path=link/42')
+        .matchHeader('authorization', 'Bearer test-system-token')
+        .reply(200, {
+          entity: {
+            canonical: 'json-api-url',
+            type: 'node',
+            bundle: 'link',
+            id: '42',
+            uuid: 'test-uuid',
+          },
+        })
+
+      const response = await jsonApiClient.getLookupByPath('/router/prison/bullingdon/translate-path?path=link/42')
+
+      expect(response.entity.uuid).toEqual('test-uuid')
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
+    })
+  })
 })

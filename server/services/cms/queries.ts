@@ -30,6 +30,7 @@ import {
   TOPICS_TERM_FIELDS,
   VIDEO_CONTENT_FIELDS,
   VIDEO_CONTENT_INCLUDE,
+  EXTERNAL_LINK_FIELDS,
 } from './constants'
 
 const buildPageParams = (page: number, pageSize: number = PAGE_SIZE) => ({
@@ -231,4 +232,9 @@ export const buildUrgentBannerQueryString = () =>
     'fields[node--urgent_banner]': URGENT_BANNER_FIELDS,
     'fields[node--page]': 'path',
     include: URGENT_BANNER_INCLUDE,
+  }).toString()
+
+export const buildExternalLinkQueryString = () =>
+  new URLSearchParams({
+    'fields[node--link]': EXTERNAL_LINK_FIELDS,
   }).toString()

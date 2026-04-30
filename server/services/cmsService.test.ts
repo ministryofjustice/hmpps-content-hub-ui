@@ -1,6 +1,16 @@
-import JsonApiClient, { JsonApiCollectionResponse, JsonApiSingleResponse } from '../data/jsonApiClient'
+import JsonApiClient, {
+  JsonApiCollectionResponse,
+  JsonApiLookupResponse,
+  JsonApiSingleResponse,
+} from '../data/jsonApiClient'
 import CmsService from './cmsService'
-import { CmsPrimaryNavigationAttributes, CmsTag, CmsTopicAttributes, CmsTopicPage } from './cms/types'
+import {
+  CmsLinkAttributes,
+  CmsPrimaryNavigationAttributes,
+  CmsTag,
+  CmsTopicAttributes,
+  CmsTopicPage,
+} from './cms/types'
 
 jest.mock('../data/jsonApiClient')
 
@@ -10,6 +20,10 @@ describe('CmsService', () => {
 
   beforeEach(() => {
     cmsService = new CmsService(jsonApiClient)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   it('should fetch topics and map them into topic items', async () => {
@@ -193,5 +207,56 @@ describe('CmsService', () => {
       seriesHeaderImageUrl: undefined,
       seriesItems: [],
     })
+  })
+
+  it('getLink should fetch external links by id', async () => {
+    const TEST_UUID = 'uuid-1'
+
+    const lookupResponse: JsonApiLookupResponse = {
+      entity: {
+        canonical: 'json-api-url',
+        type: 'node',
+        bundle: 'link',
+        id: '42',
+        uuid: TEST_UUID,
+      },
+    }
+
+    const nodeResponse: JsonApiSingleResponse<CmsLinkAttributes> = {
+      data: {
+        type: 'node--link',
+        id: TEST_UUID,
+        attributes: {
+          field_url: 'test-url',
+          field_show_interstitial_page: true,
+        },
+      },
+    }
+
+    jsonApiClient.getLookupByPath.mockResolvedValueOnce(lookupResponse)
+    jsonApiClient.getSingleByPath.mockResolvedValueOnce(nodeResponse)
+
+    const result = await cmsService.getLink('bullingdon', '42', 'en')
+
+    expect(jsonApiClient.getLookupByPath).toHaveBeenCalledWith('/router/prison/bullingdon/translate-path?path=link/42')
+
+    expect(jsonApiClient.getSingleByPath).toHaveBeenCalledWith(
+      `/en/jsonapi/prison/bullingdon/node/link/${TEST_UUID}?fields%5Bnode--link%5D=field_show_interstitial_page%2Cfield_url`,
+    )
+
+    expect(result.url).toEqual('test-url')
+    expect(result.intercept).toEqual(true)
+  })
+
+  it('getLink should return null when the link resource can not be located', async () => {
+    jsonApiClient.getLookupByPath.mockResolvedValueOnce(undefined)
+
+    const result = await cmsService.getLink('bullingdon', '42', 'en')
+
+    expect(jsonApiClient.getLookupByPath).toHaveBeenCalledWith('/router/prison/bullingdon/translate-path?path=link/42')
+
+    expect(jsonApiClient.getSingleByPath).not.toHaveBeenCalled()
+
+    expect(result).toBeNull()
   })
 })

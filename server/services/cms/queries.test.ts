@@ -1,5 +1,6 @@
 import {
   buildCategoryPageQueryString,
+  buildExternalLinkQueryString,
   buildSeriesItemsQueryString,
   buildTagLookupQueryString,
   buildTopicPageQueryString,
@@ -55,5 +56,11 @@ describe('cms queries', () => {
     expect(params.get('fields[node--page]')).toContain('drupal_internal__nid')
     expect(params.get('include')).toContain('field_featured_tiles.field_moj_thumbnail_image')
     expect(params.get('fields[file--file]')).toBe('image_style_uri,uri,url')
+  })
+
+  it('builds the external link query string', () => {
+    const params = new URLSearchParams(buildExternalLinkQueryString())
+
+    expect(params.get('fields[node--link]')).toEqual('field_show_interstitial_page,field_url')
   })
 })

@@ -302,3 +302,15 @@ export interface CmsUrgentBanner {
   moreInfoLink: string | null
   unpublishOn: number | null
 }
+
+export interface CmsLinkAttributes {
+  field_show_interstitial_page: boolean
+  field_url: string
+}
+
+export interface CmsLink {
+  url: string
+  intercept: boolean
+}
+
+export type LookupType = 'content' | 'tags' | 'link'
