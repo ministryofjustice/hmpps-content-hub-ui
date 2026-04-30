@@ -92,6 +92,8 @@ The template app is, by default, configured not to use REDIS when running locall
 
 The easiest way to run the app is to use docker compose to create the service and all dependencies.
 
+The production image now uses the `hmpps-node:24-alpine-runtime` base image and starts with `node dist/server.js` directly, so npm is not present in the final runtime stage.
+
 `docker compose pull`
 
 `docker compose up`
