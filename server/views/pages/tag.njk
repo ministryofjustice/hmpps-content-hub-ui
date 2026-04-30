@@ -1,5 +1,5 @@
 {% extends "../partials/layout.njk" %}
-{% from "../partials/breadcrumb.njk" import breadcrumb, breadcrumbBackForward %}
+{% from "../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
 {% set pageTitle = applicationName + " - Tag" %}
 {% set mainClasses = "govuk-body" %}
@@ -18,7 +18,7 @@
 
 {% block content %}
   {% if tag %}
-    {{ breadcrumbBackForward() }}
+    {{ breadcrumbNavigation() }}
     {% if tag.breadcrumbs and tag.breadcrumbs.length %}
       {{ breadcrumb(tag.breadcrumbs) }}
     {% endif %}

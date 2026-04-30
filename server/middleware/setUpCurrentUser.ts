@@ -31,7 +31,7 @@ export default function setUpCurrentUser() {
       }
 
       if (res.locals.user.authSource === 'nomis') {
-        res.locals.user.staffId = parseInt(userId, 10) || undefined
+        res.locals.user.staffId = userId !== undefined ? parseInt(userId, 10) : undefined
       }
 
       return next()

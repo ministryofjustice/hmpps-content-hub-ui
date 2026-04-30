@@ -1,13 +1,17 @@
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 
-{% macro breadcrumbBackForward(hideHomePage=false) %}
+{% macro breadcrumbNavigation(showHomeLink=false) %}
 <div class="page-navigation govuk-!-display-none-print">
   <nav class="page-navigation__links" aria-label="Page navigation">
+    {% if showHomeLink %}
+      <a href="/" class="page-navigation__link" ata-page-nav-action="home">Home</a>
+    {% endif %}
     <a href="#" class="govuk-link page-navigation__link page-navigation__link--back" data-page-nav-action="back">Back</a>
     <a href="#" class="govuk-link page-navigation__link page-navigation__link--forward" data-page-nav-action="forward">Forward</a>
   </nav>
 </div>
 
+<hr class="govuk-width-container govuk-section-break govuk-section-break--visible">
 {% endmacro %}
 
 {% macro breadcrumb(breadcrumbs) %}

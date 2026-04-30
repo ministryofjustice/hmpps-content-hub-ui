@@ -15,7 +15,7 @@ export const hmppsAuthPassportStrategy = new Strategy(
     state: true,
     customHeaders: { Authorization: generateOauthClientToken() },
   },
-  (token, refreshToken, params, profile, done) => {
+  (token, _refreshToken, params, _profile, done) => {
     return done(null, { token, username: params.user_name, authSource: params.auth_source })
   },
 )

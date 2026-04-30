@@ -50,11 +50,17 @@ function appSetup(
       user: { ...req.user } as HmppsUser,
       isPrisonerPortal: !isStaffPortal,
       isStaffPortal,
+      cspNonce: '',
+      csrfToken: '',
+      asset_path: '',
+      applicationName: '',
+      environmentName: '',
+      environmentNameColour: '',
     }
     req.portalType = isStaffPortal ? 'staff' : 'prisoner'
     next()
   })
-  app.use((req, res, next) => {
+  app.use((req, _res, next) => {
     req.id = randomUUID()
     next()
   })
@@ -63,8 +69,8 @@ function appSetup(
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes(mergedServices))
-  app.use((req, res, next) => i18next.on('initialized', next))
-  app.use((req, res, next) => next(new NotFound()))
+  app.use((_req, _res, next) => i18next.on('initialized', next))
+  app.use((_req, _res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 
   return app

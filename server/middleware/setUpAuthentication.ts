@@ -31,7 +31,7 @@ export default function setupAuthentication() {
     next()
   })
 
-  router.get('/autherror', (req, res) => {
+  router.get('/autherror', (_req, res) => {
     res.status(401)
     return res.render('autherror')
   })

@@ -21,5 +21,8 @@
     "doNotShowMessage": "Don't show me this message again",
     "heading": "You're leaving the Hub",
     "title": "External Link"
+  },
+  "npr": {
+    "title": "NPR Listen Live"
   }
 }

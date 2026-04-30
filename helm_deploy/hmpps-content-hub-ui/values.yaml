@@ -68,7 +68,7 @@ generic-service:
       FEEDBACK_DATABASE_NAME: "database_name"
     pfs-opensearch-proxy-url:
       FEEDBACK_SEARCH_ENDPOINT: "proxy_url"
-      
+
   allowlist:
     groups:
       - internal

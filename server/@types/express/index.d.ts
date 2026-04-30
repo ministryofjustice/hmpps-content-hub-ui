@@ -38,6 +38,15 @@ export declare global {
       isStaffPortal: boolean
       isPrisonerPortal: boolean
       establishment?: Establishment
+      cspNonce: string
+      csrfToken: string
+      asset_path: string
+      applicationName: string
+      environmentName: string
+      environmentNameColour: string
+      appInsightsConnectionString?: string
+      appInsightsApplicationName?: string
+      buildNumber?: string
     }
   }
 }
