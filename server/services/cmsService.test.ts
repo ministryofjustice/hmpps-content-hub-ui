@@ -15,7 +15,7 @@ import {
 jest.mock('../data/jsonApiClient')
 
 describe('CmsService', () => {
-  const jsonApiClient = new JsonApiClient(null) as jest.Mocked<JsonApiClient>
+  const jsonApiClient = new JsonApiClient(null, null) as jest.Mocked<JsonApiClient>
   let cmsService: CmsService
 
   beforeEach(() => {
