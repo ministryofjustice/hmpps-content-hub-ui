@@ -23,6 +23,7 @@ import {
   buildCategoryMenuQueryString,
   buildCategoryPageQueryString,
   buildContentLookupQueryString,
+  buildExternalLinkQueryString,
   buildNextEpisodesQueryString,
   buildPageContentQueryString,
   buildPrimaryNavigationQueryString,
@@ -45,6 +46,8 @@ import {
   CmsCategoryTermAttributes,
   CmsContent,
   CmsEpisodeTileNodeAttributes,
+  CmsLink,
+  CmsLinkAttributes,
   CmsMediaContent,
   CmsNodeAttributes,
   CmsPageNodeAttributes,
@@ -64,6 +67,7 @@ import {
   CmsUrgentBanner,
   CmsUrgentBannerAttributes,
   CmsVideoNodeAttributes,
+  LookupType,
 } from './cms/types'
 
 export default class CmsService {
@@ -313,5 +317,25 @@ export default class CmsService {
     return response.data
       .map(item => mapUrgentBanner(item, response.included))
       .filter(banner => banner.unpublishOn === null || banner.unpublishOn >= now)
+  }
+
+  async getLink(establishmentName: string, linkId: string, language: string): Promise<CmsLink> {
+    const lookupResponse = await this.lookup(establishmentName, linkId, 'link')
+    if (!lookupResponse) return null
+
+    const queryString = buildExternalLinkQueryString()
+    const path = `/${language}/jsonapi/prison/${establishmentName}/node/link/${lookupResponse}?${queryString}`
+    const response = await this.jsonApiClient.getSingleByPath<CmsLinkAttributes>(path)
+
+    return {
+      url: response.data.attributes.field_url,
+      intercept: response.data.attributes.field_show_interstitial_page === true,
+    }
+  }
+
+  private async lookup(establishmentName: string, id: string, lookupType: LookupType) {
+    const lookupPath = `/router/prison/${establishmentName}/translate-path?path=${lookupType}/${id}`
+    const lookupResponse = await this.jsonApiClient.getLookupByPath(lookupPath)
+    return lookupResponse?.entity?.uuid
   }
 }

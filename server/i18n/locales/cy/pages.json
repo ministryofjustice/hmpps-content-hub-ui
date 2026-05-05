@@ -14,6 +14,14 @@
     "summary": "Y lanlwythiadau diweddaraf ar yr Hwb.",
     "title": "Ychwanegwyd yn ddiweddar"
   },
+  "externalLink": {
+    "redirectNotice": "Rydych chi’n cael eich tywys i {{ url }}. Rydych chi’n <strong>cael</strong> ymweld â’r wefan hon.",
+    "restrictionNotice": "Mae mynediad i’r rhyngrwyd wedi’i gyfyngu mewn carchardai felly mae dolenni i wefannau eraill wedi’u rhwystro.",
+    "continue": "Parhau",
+    "doNotShowMessage": "Peidio â dangos y neges hon eto",
+    "heading": "Rydych chi’n gadael yr Hyb",
+    "title": "Dolen Allanol"
+  },
   "npr": {
     "title": "NPR Gwrando Byw"
   }

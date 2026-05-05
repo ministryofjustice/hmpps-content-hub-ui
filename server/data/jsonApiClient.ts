@@ -59,6 +59,24 @@ export interface JsonApiSingleResponse<
   included?: Array<JsonApiResource>
 }
 
+export interface JsonApiLookupResponse {
+  resolved?: string
+  isExternal?: boolean
+  isHomePath?: boolean
+  entity: JsonApiLookupEntity
+  label?: string
+  jsonapi?: Record<string, string>
+  meta?: JsonApiMeta
+}
+
+interface JsonApiLookupEntity {
+  canonical: string
+  type: string
+  bundle: string
+  id: string
+  uuid: string
+}
+
 export default class JsonApiClient extends RestClient {
   private readonly basePath = '/jsonapi'
 
@@ -98,5 +116,9 @@ export default class JsonApiClient extends RestClient {
 
   getSingleByPath<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(path: string) {
     return this.get<JsonApiSingleResponse<TAttributes, TRelationships>>({ path: this.normalizePath(path) }, asSystem())
+  }
+
+  getLookupByPath(path: string) {
+    return this.get<JsonApiLookupResponse>({ path: this.normalizePath(path) }, asSystem())
   }
 }

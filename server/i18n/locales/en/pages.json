@@ -14,6 +14,14 @@
     "summary": "The latest uploads on the Hub.",
     "title": "Recently added"
   },
+  "externalLink": {
+    "redirectNotice": "You are being taken to {{ url }}. You are <strong>allowed</strong> to visit this website.",
+    "restrictionNotice": "Internet access is restricted in prisons so links to other websites are blocked.",
+    "continue": "Continue",
+    "doNotShowMessage": "Don't show me this message again",
+    "heading": "You're leaving the Hub",
+    "title": "External Link"
+  },
   "npr": {
     "title": "NPR Listen Live"
   }
