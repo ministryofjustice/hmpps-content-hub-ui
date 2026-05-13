@@ -9,6 +9,9 @@ $govuk-page-width: $moj-page-width;
 
 @import './mixins/tile-hover';
 
+@import './components/external-link';
+@import './components/header-bar';
+@import './components/page-navigation';
 @import './components/feedback-widget';
 @import './components/header-bar';
 @import './components/home-page';

@@ -34,6 +34,7 @@ import {
   HOMEPAGE_CONTENT_INCLUDE,
   HOMEPAGE_FILE_FIELDS,
   CONTENT_TILE_INCLUDE,
+  EXTERNAL_LINK_FIELDS,
 } from './constants'
 
 const buildPageParams = (page: number, pageSize: number = PAGE_SIZE) => ({
@@ -303,3 +304,8 @@ export const buildUpdatesContentQueryString = (page = 1, limit = 5) =>
 export const unixTimestamp = (offset: number, date = Date.now()) => {
   return Math.floor((date - 24 * 60 * 60 * 1000 * offset) / 1000).toString()
 }
+
+export const buildExternalLinkQueryString = () =>
+  new URLSearchParams({
+    'fields[node--link]': EXTERNAL_LINK_FIELDS,
+  }).toString()

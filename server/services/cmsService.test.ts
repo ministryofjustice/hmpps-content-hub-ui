@@ -16,7 +16,7 @@ import { ContentTile } from '../@types/content'
 jest.mock('../data/jsonApiClient')
 
 describe('CmsService', () => {
-  const jsonApiClient = new JsonApiClient(null) as jest.Mocked<JsonApiClient>
+  const jsonApiClient = new JsonApiClient(null, null) as jest.Mocked<JsonApiClient>
   let cmsService: CmsService
 
   beforeEach(() => {
@@ -208,7 +208,7 @@ describe('CmsService', () => {
 })
 
 describe('homepage content queries', () => {
-  const jsonApiClient = new JsonApiClient(null) as jest.Mocked<JsonApiClient>
+  const jsonApiClient = new JsonApiClient(null, null) as jest.Mocked<JsonApiClient>
   let cmsService: CmsService
 
   const mockContent: JsonApiCollectionResponse<CMSContentNodeAttributes> = {

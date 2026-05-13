@@ -171,3 +171,5 @@ export const HOMEPAGE_CONTENT_INCLUDE = joinFields([
 export const HOMEPAGE_FILE_FIELDS = joinFields(['drupal_internal__fid', 'id', 'image_style_uri'])
 
 export const CONTENT_TILE_INCLUDE = 'field_moj_thumbnail_image'
+
+export const EXTERNAL_LINK_FIELDS = joinFields(['field_show_interstitial_page', 'field_url'])

@@ -1,0 +1,52 @@
+{% extends "govuk/template.njk" %}
+
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% block htmlLang %}{{ language or 'en' }}{% endblock %}
+
+{% block head %}
+  <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block pageTitle %}{{ t("pages:externalLink.title") }}{% endblock %}
+{% block header %}{% endblock %}
+
+{% block main %}
+  <body class="govuk-body">
+    {% block beforeContent %}{% endblock %}
+    <div class="govuk-width-container govuk-!-padding-top-9">
+      <main class="govuk-main-wrapper">
+        <div class="govuk-!-padding-top-9 govuk-!-padding-bottom-9 external-link-content">
+          <img class="hub-logo" src="/assets/images/content-hub-invert.png" alt="logo">
+          <h1 class="govuk-heading-xl govuk-!-margin-0 govuk-!-padding-left-4">{{ t("header.title") }}</h1>
+        </div>
+        <section class="govuk-!-text-align-centre" data-test="external-link-content">
+          <h2 class="govuk-heading-l">{{ t("pages:externalLink.heading") }}</h2>
+          <p>{{ t("pages:externalLink.redirectNotice", { url:url }) | safe }}</p>
+          <p>{{ t("pages:externalLink.restrictionNotice") }}</p>
+          <a class="govuk-button" href={{ url }}>{{ t("pages:externalLink.continue") }}</a>
+          <div class="external-link-content" id='test-id'>
+            {{ govukCheckboxes({
+              idPrefix: "doNotShowMessage",
+              items: [
+                {
+                  text: t("pages:externalLink.doNotShowMessage")
+                }
+              ]
+            }) }}
+          </div>
+        </section>
+
+        <script nonce="{{ cspNonce }}" src="/assets/jquery.min.js"></script>
+        <script nonce="{{ cspNonce }}">
+          $('#doNotShowMessage').on('change',
+            function(){
+                document.cookie = `externalLink_{{ url }}=${$(this).is(':checked') ? 'true; Max-Age=315600000000' : 'false; Max-Age=0'}; SameSite=Lax; Secure; path=/;`;
+            });
+        </script>
+      </main>
+    </div>
+  </body>
+{% endblock %}
+
+{% block footer %}{% endblock %}
