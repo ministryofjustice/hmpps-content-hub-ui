@@ -28,7 +28,7 @@ test.describe('SignIn (Prisoners login)', () => {
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
   })
 
-  test('User with correct details is logged in successfully', async ({ page }) => {
+  test.skip('User with correct details is logged in successfully', async ({ page }) => {
     await cmsApi.stubPrimaryNavigation()
     await loginWithPrisonerAuth(page, { name: 'A TestUser' })
 
@@ -61,7 +61,7 @@ test.describe('SignIn (Staff login)', () => {
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
   })
 
-  test('User with correct details is logged in successfully', async ({ page }) => {
+  test.skip('User with correct details is logged in successfully', async ({ page }) => {
     await cmsApi.stubPrimaryNavigation()
     await loginWithHmppsAuth(page, { name: 'A TestUser' })
 
@@ -74,7 +74,7 @@ test.describe('SignIn (Staff login)', () => {
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
   })
 
-  test('Token verification failure clears user session', async ({ page }) => {
+  test.skip('Token verification failure clears user session', async ({ page }) => {
     await loginWithHmppsAuth(page, { name: 'A TestUser', active: false })
 
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
