@@ -8,7 +8,7 @@
 					<div class="govuk-grid-column-one-quarter">
 						{% set cardItem = item %}
 						{% set showSeriesTag = true %}
-						{% include "../partials/category-card.njk" %}
+						{% include "../partials/category/category-card.njk" %}
 						{% if item.summary %}
 							<p class="govuk-!-margin-top-2">{{ item.summary }}</p>
 						{% endif %}
@@ -24,7 +24,7 @@
 					<div class="govuk-grid-column-one-quarter">
 						{% set cardItem = link %}
 						{% set showSeriesTag = true %}
-						{% include "../partials/category-card.njk" %}
+						{% include "../partials/category/category-card.njk" %}
 					</div>
 				{% endfor %}
 			</div>
@@ -38,7 +38,7 @@
 						{% set cardItem = { href: item.contentUrl, title: item.title, thumbnailUrl: item.image.url if item.image else '', contentType: item.contentType } %}
 						{% set showContentTag = true %}
 						{% set showSeriesTag = false %}
-						{% include "../partials/category-card.njk" %}
+						{% include "../partials/category/category-card.njk" %}
 					</div>
 				{% endfor %}
 			</div>

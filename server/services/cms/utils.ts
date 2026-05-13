@@ -1,5 +1,6 @@
+import { ContentTile } from '../../@types/content'
 import { JsonApiResource, JsonApiResourceIdentifier } from '../../data/jsonApiClient'
-import { CmsBreadcrumbItem, CmsFileAttributes, CmsPath, CmsRawBreadcrumb, CmsTagType } from './types'
+import { CmsBreadcrumbItem, CmsFileAttributes, CmsPath, CmsRawBreadcrumb, CmsTagType, ImageSize } from './types'
 
 export const resolveLink = (value: { uri?: string; url?: string } | string): string => {
   if (typeof value === 'string') return value
@@ -74,12 +75,15 @@ export const findIncluded = <TAttributes>(
     | JsonApiResource<TAttributes>
     | undefined
 
-export const resolveFileUrl = (file?: JsonApiResource<CmsFileAttributes>): string | undefined => {
+export const resolveFileUrl = (
+  file?: JsonApiResource<CmsFileAttributes>,
+  size: ImageSize = 'small',
+): string | undefined => {
   if (!file) return undefined
   const styles = file.attributes.image_style_uri
   if (styles) {
-    if (styles.tile_small) return styles.tile_small
-    if (styles.tile_large) return styles.tile_large
+    if (styles.tile_small && size === 'small') return styles.tile_small
+    if (styles.tile_large && size === 'large') return styles.tile_large
     const styleUrl = Object.values(styles).find(value => typeof value === 'string')
     if (styleUrl) return styleUrl
   }
@@ -101,4 +105,17 @@ export const mapTagType = (resourceType: string): CmsTagType | null => {
     default:
       return null
   }
+}
+
+export const cropTextWithEllipsis = (item: ContentTile, maxNumberOfChars = 30) => {
+  if (item.title.length <= maxNumberOfChars) {
+    return item
+  }
+
+  const title = `${item.title
+    .substring(0, maxNumberOfChars - 2) // - 2: identifies a space after the last character
+    .match(/^.*[\w\d]+(?=[^\w\d]+[\w\d]*)/g)[0] // matches all characters ending with a whole word, that come before incomplete words or none alphanumeric characters
+    .substring(0, maxNumberOfChars - 3)}...` // - 3: accommodates the ... ellipse
+
+  return { ...item, title }
 }

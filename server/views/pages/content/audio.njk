@@ -102,7 +102,7 @@
                   {% set cardItem = { href: '/content/' + episode.id, title: episode.title, thumbnailUrl: episode.image.url if episode.image else '', contentType: data.contentType } %}
                   {% set showContentTag = true %}
                   {% set showSeriesTag = false %}
-                  {% include "../../partials/category-card.njk" %}
+                  {% include "../../partials/category/category-card.njk" %}
                 </div>
               {% endfor %}
             </div>
@@ -120,7 +120,7 @@
               {% set cardItem = { href: item.contentUrl, title: item.title, thumbnailUrl: item.image.url if item.image else '', contentType: item.contentType } %}
               {% set showContentTag = true %}
               {% set showSeriesTag = false %}
-              {% include "../../partials/category-card.njk" %}
+              {% include "../../partials/category/category-card.njk" %}
             </div>
           {% endfor %}
         </div>

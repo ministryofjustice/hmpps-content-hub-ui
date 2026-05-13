@@ -1,0 +1,10 @@
+<div class="govuk-grid-row hmpps-category-grid">
+	{% for item in gridItems %}
+		<div class="govuk-grid-column-one-quarter">
+			{% set cardItem = { href: item.contentUrl, title: item.title, thumbnailUrl: item.image.url if item.image else '', contentType: item.contentType } %}
+			{% set showSeriesTag = true %}
+			{% set showContentTag = true %}
+			{% include "./category-card.njk" %}
+		</div>
+	{% endfor %}
+</div>

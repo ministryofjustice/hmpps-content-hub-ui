@@ -90,6 +90,7 @@ export interface ContentTile {
   displayUrl: string
   image: ContentImage | null
   isNew: boolean
+  publishedAt?: string
 }
 
 export type Content = PageContent | AudioContent | VideoContent | PdfContent

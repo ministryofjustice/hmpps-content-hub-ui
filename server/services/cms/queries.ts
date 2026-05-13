@@ -30,11 +30,15 @@ import {
   TOPICS_TERM_FIELDS,
   VIDEO_CONTENT_FIELDS,
   VIDEO_CONTENT_INCLUDE,
+  HOMEPAGE_CONTENT_TILE,
+  HOMEPAGE_CONTENT_INCLUDE,
+  HOMEPAGE_FILE_FIELDS,
+  CONTENT_TILE_INCLUDE,
 } from './constants'
 
 const buildPageParams = (page: number, pageSize: number = PAGE_SIZE) => ({
-  'page[limit]': `${pageSize}`,
   'page[offset]': `${Math.max(page - 1, 0) * pageSize}`,
+  'page[limit]': `${pageSize}`,
 })
 
 export const buildTopicsQueryString = () =>
@@ -232,3 +236,70 @@ export const buildUrgentBannerQueryString = () =>
     'fields[node--page]': 'path',
     include: URGENT_BANNER_INCLUDE,
   }).toString()
+
+export const buildHomePageContentQueryString = (limit = 4) =>
+  new URLSearchParams({
+    include: HOMEPAGE_CONTENT_INCLUDE,
+    'page[limit]': `${limit}`,
+    'fields[node--field_featured_tiles]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--field_key_info_tiles]': HOMEPAGE_CONTENT_TILE,
+    'fields[file--file]': HOMEPAGE_FILE_FIELDS,
+  }).toString()
+
+export const buildRecentlyAddedHomepageContentQueryString = (page = 1, limit = 8) =>
+  new URLSearchParams({
+    include: CONTENT_TILE_INCLUDE,
+    sort: '-published_at,created',
+    'fields[node--page]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--moj_video_item]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--moj_radio_item]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--moj_pdf_item]': HOMEPAGE_CONTENT_TILE,
+    'fields[file--file]': HOMEPAGE_FILE_FIELDS,
+    ...buildPageParams(page, limit),
+  }).toString()
+
+export const buildExploreContentQueryString = (limit = 4) =>
+  new URLSearchParams({
+    include: CONTENT_TILE_INCLUDE,
+    'page[limit]': `${limit}`,
+    'fields[node--page]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--moj_video_item]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--moj_radio_item]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--moj_pdf_item]': HOMEPAGE_CONTENT_TILE,
+  }).toString()
+
+export const buildUpdatesContentQueryString = (page = 1, limit = 5) =>
+  new URLSearchParams({
+    'filter[6][condition][path]': 'published_at',
+    'filter[6][condition][value]': unixTimestamp(90, new Date().setHours(0, 0, 0, 0)),
+    'filter[6][condition][operator]': '>=',
+    'filter[6][condition][memberOf]': 'series_group',
+    'filter[parent_or_group][group][conjunction]': 'OR',
+    'filter[categories_group][group][conjunction]': 'AND',
+    'filter[categories_group][group][memberOf]': 'parent_or_group',
+    'filter[series_group][group][conjunction]': 'AND',
+    'filter[series_group][group][memberOf]': 'parent_or_group',
+    'filter[field_moj_top_level_categories.field_is_homepage_updates][condition][path]':
+      'field_moj_top_level_categories.field_is_homepage_updates',
+    'filter[field_moj_top_level_categories.field_is_homepage_updates][condition][value]': '1',
+    'filter[field_moj_top_level_categories.field_is_homepage_updates][condition][memberOf]': 'categories_group',
+    'filter[published_at][condition][path]': 'published_at',
+    'filter[published_at][condition][value]': unixTimestamp(90, new Date().setHours(0, 0, 0, 0)),
+    'filter[published_at][condition][operator]': '>=',
+    'filter[published_at][condition][memberOf]': 'categories_group',
+    'filter[field_moj_series.field_is_homepage_updates][condition][path]': 'field_moj_series.field_is_homepage_updates',
+    'filter[field_moj_series.field_is_homepage_updates][condition][value]': '1',
+    'filter[field_moj_series.field_is_homepage_updates][condition][memberOf]': 'series_group',
+    include: CONTENT_TILE_INCLUDE,
+    sort: '-published_at,created',
+    'fields[node--page]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--moj_video_item]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--moj_radio_item]': HOMEPAGE_CONTENT_TILE,
+    'fields[node--moj_pdf_item]': HOMEPAGE_CONTENT_TILE,
+    'fields[file--file]': HOMEPAGE_FILE_FIELDS,
+    ...buildPageParams(page, limit),
+  }).toString()
+
+export const unixTimestamp = (offset: number, date = Date.now()) => {
+  return Math.floor((date - 24 * 60 * 60 * 1000 * offset) / 1000).toString()
+}

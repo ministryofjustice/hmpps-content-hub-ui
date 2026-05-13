@@ -11,6 +11,7 @@ import setUpWebSession from '../../middleware/setUpWebSession'
 import setUpI18n from '../../middleware/setUpI18n'
 import setUpFooterTopics from '../../middleware/setUpFooterTopics'
 import setUpPrimaryNavigation from '../../middleware/setUpPrimaryNavigation'
+import config from '../../config'
 
 export const user: HmppsUser = {
   name: 'FIRST LAST',
@@ -48,6 +49,7 @@ function appSetup(
     res.locals = {
       ...res.locals,
       user: { ...req.user } as HmppsUser,
+      establishment: config.establishments[0],
       isPrisonerPortal: !isStaffPortal,
       isStaffPortal,
       cspNonce: '',

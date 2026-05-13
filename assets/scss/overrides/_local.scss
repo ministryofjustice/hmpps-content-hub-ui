@@ -11,6 +11,10 @@ $hmpps-category-grid-gap: 5px;
   padding: 0;
 }
 
+.govuk-width-container {
+  max-width: 1200px;
+}
+
 .hmpps-section--dark {
   background-color: govuk-colour('black');
   margin-left: calc(50% - 50vw);
@@ -45,9 +49,25 @@ $hmpps-category-grid-gap: 5px;
 .hmpps-category__thumbnail {
   display: block;
   height: 11rem;
-  margin-bottom: govuk-spacing(2);
   object-fit: cover;
   width: 100%;
+}
+
+.hmpps-category__featured-thumbnail {
+  display: block;
+  height: 210px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.hmpps_category__featured-text {
+  padding: govuk-spacing(2) govuk-spacing(3) govuk-spacing(1) govuk-spacing(3);
+}
+
+.hmpps-category-block__title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .hmpps-category-card {
@@ -69,23 +89,7 @@ $hmpps-category-grid-gap: 5px;
     color: govuk-colour('black');
   }
 
-  &:hover,
-  &:focus {
-    background-color: $hmpps-category-card-hover-bg;
-    box-shadow: $hmpps-category-card-shadow;
-    outline: none;
-    transform: scale(1.1);
-    z-index: 100;
-
-    .govuk-heading-s,
-    .govuk-tag {
-      color: govuk-colour('black');
-    }
-
-    .hmpps-category-card__title {
-      background-color: transparent;
-    }
-  }
+  @include tile-hover;
 }
 
 .hmpps-category-card__title {
@@ -178,6 +182,27 @@ $hmpps-read-colour: govuk-colour('blue');
     padding-right: calc($hmpps-category-grid-gap / 2);
     width: 33.3333%;
   }
+
+  .govuk-grid-column-one-half {
+    box-sizing: border-box;
+    display: flex;
+    float: none;
+    margin-bottom: $hmpps-category-grid-gap;
+    padding-left: calc($hmpps-category-grid-gap / 2);
+    padding-right: calc($hmpps-category-grid-gap / 2);
+    width: 50%;
+  }
+
+  > .govuk-grid-column-three-quarters {
+    box-sizing: border-box;
+    display: flex;
+    float: none;
+    margin-bottom: $hmpps-category-grid-gap;
+    padding-left: calc($hmpps-category-grid-gap / 2);
+    padding-right: calc($hmpps-category-grid-gap / 2);
+    width: 75%;
+  }
+
 }
 
 .hmpps-series-header__image {

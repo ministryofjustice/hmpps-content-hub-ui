@@ -1,4 +1,5 @@
 import type { ContentTile } from '../../@types/content'
+import { JsonApiRelationships, JsonApiResourceIdentifier } from '../../data/jsonApiClient'
 
 export interface CmsTopicAttributes {
   drupal_internal__tid: number
@@ -152,6 +153,8 @@ export type CmsFileAttributes = {
   url?: string
 }
 
+export type ImageSize = 'small' | 'large'
+
 export type CmsCategoryTermAttributes = {
   name?: string
   description?: { processed?: string }
@@ -225,7 +228,7 @@ export type CmsEpisodeTileNodeAttributes = {
   series_sort_value?: number
 }
 
-export type CmsSuggestionNodeAttributes = {
+export type CMSContentNodeAttributes = {
   drupal_internal__nid?: number
   drupal_internal__tid?: number
   title?: string
@@ -301,4 +304,27 @@ export interface CmsUrgentBanner {
   title: string
   moreInfoLink: string | null
   unpublishOn: number | null
+}
+
+export interface CmsHomePageRelationships extends JsonApiRelationships {
+  field_featured_tiles: { data: JsonApiResourceIdentifier[] }
+  field_key_info_tiles: { data: JsonApiResourceIdentifier[] }
+  field_large_update_tile: { data: JsonApiResourceIdentifier }
+}
+
+export interface HomePageContent {
+  featuredContent: { data: ContentTile[] }
+  keyInfo: { data: ContentTile[] }
+  largeUpdateTile?: ContentTile
+}
+
+export interface ExploreContent {
+  data: ContentTile[]
+  isLastPage: boolean
+}
+
+export interface UpdatesContent {
+  largeUpdateTileDefault: ContentTile
+  updatesContent: ContentTile[]
+  isLastPage: boolean
 }
