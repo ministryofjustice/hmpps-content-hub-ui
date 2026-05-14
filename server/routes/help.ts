@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
+import config from '../config'
 
 export default function helpRoutes({ auditServiceSource }: Services): Router {
   const router = Router()
@@ -12,7 +13,7 @@ export default function helpRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Help route is functional - pending implementation')
+      res.redirect(config.knownPages.help)
     } catch (error) {
       next(error)
     }
