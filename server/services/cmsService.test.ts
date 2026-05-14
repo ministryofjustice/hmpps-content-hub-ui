@@ -1,16 +1,17 @@
-import JsonApiClient, {
-  JsonApiCollectionResponse,
-  JsonApiLookupResponse,
-  JsonApiSingleResponse,
-} from '../data/jsonApiClient'
+import JsonApiClient, { JsonApiCollectionResponse, JsonApiSingleResponse } from '../data/jsonApiClient'
 import CmsService from './cmsService'
 import {
-  CmsLinkAttributes,
+  CMSContentNodeAttributes,
+  CmsHomePageRelationships,
   CmsPrimaryNavigationAttributes,
   CmsTag,
   CmsTopicAttributes,
   CmsTopicPage,
+  ExploreContent,
+  UpdatesContent,
 } from './cms/types'
+import { unixTimestamp } from './cms/queries'
+import { ContentTile } from '../@types/content'
 
 jest.mock('../data/jsonApiClient')
 
@@ -20,10 +21,6 @@ describe('CmsService', () => {
 
   beforeEach(() => {
     cmsService = new CmsService(jsonApiClient)
-  })
-
-  afterEach(() => {
-    jest.resetAllMocks()
   })
 
   it('should fetch topics and map them into topic items', async () => {
@@ -208,55 +205,184 @@ describe('CmsService', () => {
       seriesItems: [],
     })
   })
+})
 
-  it('getLink should fetch external links by id', async () => {
-    const TEST_UUID = 'uuid-1'
+describe('homepage content queries', () => {
+  const jsonApiClient = new JsonApiClient(null, null) as jest.Mocked<JsonApiClient>
+  let cmsService: CmsService
 
-    const lookupResponse: JsonApiLookupResponse = {
-      entity: {
-        canonical: 'json-api-url',
-        type: 'node',
-        bundle: 'link',
-        id: '42',
-        uuid: TEST_UUID,
-      },
-    }
-
-    const nodeResponse: JsonApiSingleResponse<CmsLinkAttributes> = {
-      data: {
-        type: 'node--link',
-        id: TEST_UUID,
+  const mockContent: JsonApiCollectionResponse<CMSContentNodeAttributes> = {
+    data: [
+      {
+        type: 'taxonomy_term--topics',
+        id: 'topic-1',
         attributes: {
-          field_url: 'test-url',
-          field_show_interstitial_page: true,
+          drupal_internal__nid: 42,
+          drupal_internal__tid: 42,
+          title: 'test-title',
+          field_summary: 'test-field-summary',
+          field_display_url: 'test-field-display-url',
+        },
+        relationships: {
+          field_moj_thumbnail_image: { data: { type: 'file--file', id: 'thumbnail-1' } },
         },
       },
-    }
+    ],
+    included: [
+      {
+        id: 'thumbnail-1',
+        type: 'file--file',
+        attributes: {
+          image_style_uri: {
+            tile_large: 'test-large-image',
+            tile_small: 'test-small-image',
+          },
+        },
+      },
+    ],
+    links: { self: { href: 'test-href' }, next: { href: 'next-href' } },
+  }
 
-    jsonApiClient.getLookupByPath.mockResolvedValueOnce(lookupResponse)
-    jsonApiClient.getSingleByPath.mockResolvedValueOnce(nodeResponse)
+  const expectedContentTile: ContentTile[] = [
+    {
+      id: 42,
+      contentType: 'topics',
+      externalContent: false,
+      title: 'test-title',
+      summary: 'test-field-summary',
+      contentUrl: '/content/42',
+      displayUrl: 'test-field-display-url',
+      image: { url: 'test-small-image', alt: '' },
+      isNew: false,
+      publishedAt: undefined,
+    },
+  ]
 
-    const result = await cmsService.getLink('bullingdon', '42', 'en')
+  const mockHomePageNode: JsonApiCollectionResponse<CMSContentNodeAttributes, CmsHomePageRelationships> = {
+    data: [
+      {
+        type: 'node--homepage',
+        id: 'topic-1',
+        attributes: {
+          drupal_internal__nid: 42,
+          drupal_internal__tid: 42,
+          title: 'test-homepage',
+          field_summary: '',
+          field_display_url: '',
+        },
+        relationships: {
+          field_featured_tiles: { data: [{ type: 'type--featured-tiles', id: 'featured-tiles-id' }] },
+          field_key_info_tiles: { data: [{ type: 'type--key-info', id: 'key-info-id' }] },
+          field_large_update_tile: { data: { type: 'type--large-update', id: 'large-update-id' } },
+        },
+      },
+    ],
+    included: [
+      {
+        type: 'type--featured-tiles',
+        id: 'featured-tiles-id',
+        attributes: {
+          drupal_internal__nid: 1,
+          drupal_internal__tid: 1,
+          title: 'featured-tiles-title',
+          field_summary: 'featured-tiles-summary',
+          field_display_url: 'featured-tiles-display-url',
+        },
+      },
+      {
+        type: 'type--key-info',
+        id: 'key-info-id',
+        attributes: {
+          drupal_internal__tid: 2,
+          title: 'key-info-title',
+          field_summary: 'key-info-summary',
+          field_display_url: 'key-info-display-url',
+        },
+      },
+      {
+        type: 'type--large-update',
+        id: 'large-update-id',
+        attributes: {
+          drupal_internal__nid: 3,
+          title: 'large-update-title',
+          field_summary: 'large-update-summary',
+          field_display_url: 'large-update-display-url',
+        },
+      },
+    ],
+  }
 
-    expect(jsonApiClient.getLookupByPath).toHaveBeenCalledWith('/router/prison/bullingdon/translate-path?path=link/42')
-
-    expect(jsonApiClient.getSingleByPath).toHaveBeenCalledWith(
-      `/en/jsonapi/prison/bullingdon/node/link/${TEST_UUID}?fields%5Bnode--link%5D=field_show_interstitial_page%2Cfield_url`,
-    )
-
-    expect(result.url).toEqual('test-url')
-    expect(result.intercept).toEqual(true)
+  beforeEach(() => {
+    cmsService = new CmsService(jsonApiClient)
   })
 
-  it('getLink should return null when the link resource can not be located', async () => {
-    jsonApiClient.getLookupByPath.mockResolvedValueOnce(undefined)
+  it('should fetch homepage content', async () => {
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockHomePageNode)
 
-    const result = await cmsService.getLink('bullingdon', '42', 'en')
+    const response = await cmsService.getHomepageContent('bullingdon', 'en')
 
-    expect(jsonApiClient.getLookupByPath).toHaveBeenCalledWith('/router/prison/bullingdon/translate-path?path=link/42')
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      '/en/jsonapi/prison/bullingdon/node/homepage?include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--field_featured_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--field_key_info_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri',
+    )
 
-    expect(jsonApiClient.getSingleByPath).not.toHaveBeenCalled()
+    // Expect relationships to be mapped to the element in the included array with corresponding type and id
+    expect(response.featuredContent.data.length).toBe(1)
+    expect(response.featuredContent.data[0].contentType).toBe('featured-tiles')
+    expect(response.featuredContent.data[0].id).toBe(1)
 
-    expect(result).toBeNull()
+    expect(response.keyInfo.data.length).toBe(1)
+    expect(response.keyInfo.data[0].contentType).toBe('key-info')
+    expect(response.keyInfo.data[0].id).toBe(2)
+
+    expect(response.largeUpdateTile.contentType).toBe('large-update')
+    expect(response.largeUpdateTile.id).toBe(3)
+  })
+
+  it('should fetch recently added homepage content', async () => {
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockContent)
+
+    const response = await cmsService.getRecentlyAddedHomepageContent('bullingdon', 'en')
+
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      '/en/jsonapi/prison/bullingdon/recently-added?include=field_moj_thumbnail_image&sort=-published_at%2Ccreated&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri&page%5Boffset%5D=0&page%5Blimit%5D=8',
+    )
+
+    expect(response).toStrictEqual(expectedContentTile)
+  })
+
+  it('should fetch explore content', async () => {
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockContent)
+
+    const response = await cmsService.getExploreContent('bullingdon', 'en')
+
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      '/en/jsonapi/prison/bullingdon/explore/node?include=field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at',
+    )
+
+    const expectedExploreContent: ExploreContent = {
+      data: expectedContentTile,
+      isLastPage: false,
+    }
+
+    expect(response).toStrictEqual(expectedExploreContent)
+  })
+
+  it('should fetch updates content', async () => {
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockContent)
+
+    const response = await cmsService.getUpdatesContent('bullingdon', 'en')
+
+    const expectedUnixTimeStamp = unixTimestamp(90, new Date().setHours(0, 0, 0, 0))
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      `/en/jsonapi/prison/bullingdon/node?filter%5B6%5D%5Bcondition%5D%5Bpath%5D=published_at&filter%5B6%5D%5Bcondition%5D%5Bvalue%5D=${expectedUnixTimeStamp}&filter%5B6%5D%5Bcondition%5D%5Boperator%5D=%3E%3D&filter%5B6%5D%5Bcondition%5D%5BmemberOf%5D=series_group&filter%5Bparent_or_group%5D%5Bgroup%5D%5Bconjunction%5D=OR&filter%5Bcategories_group%5D%5Bgroup%5D%5Bconjunction%5D=AND&filter%5Bcategories_group%5D%5Bgroup%5D%5BmemberOf%5D=parent_or_group&filter%5Bseries_group%5D%5Bgroup%5D%5Bconjunction%5D=AND&filter%5Bseries_group%5D%5Bgroup%5D%5BmemberOf%5D=parent_or_group&filter%5Bfield_moj_top_level_categories.field_is_homepage_updates%5D%5Bcondition%5D%5Bpath%5D=field_moj_top_level_categories.field_is_homepage_updates&filter%5Bfield_moj_top_level_categories.field_is_homepage_updates%5D%5Bcondition%5D%5Bvalue%5D=1&filter%5Bfield_moj_top_level_categories.field_is_homepage_updates%5D%5Bcondition%5D%5BmemberOf%5D=categories_group&filter%5Bpublished_at%5D%5Bcondition%5D%5Bpath%5D=published_at&filter%5Bpublished_at%5D%5Bcondition%5D%5Bvalue%5D=${expectedUnixTimeStamp}&filter%5Bpublished_at%5D%5Bcondition%5D%5Boperator%5D=%3E%3D&filter%5Bpublished_at%5D%5Bcondition%5D%5BmemberOf%5D=categories_group&filter%5Bfield_moj_series.field_is_homepage_updates%5D%5Bcondition%5D%5Bpath%5D=field_moj_series.field_is_homepage_updates&filter%5Bfield_moj_series.field_is_homepage_updates%5D%5Bcondition%5D%5Bvalue%5D=1&filter%5Bfield_moj_series.field_is_homepage_updates%5D%5Bcondition%5D%5BmemberOf%5D=series_group&include=field_moj_thumbnail_image&sort=-published_at%2Ccreated&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri&page%5Boffset%5D=0&page%5Blimit%5D=5`,
+    )
+
+    const expectedUpdatesContent: UpdatesContent = {
+      largeUpdateTileDefault: { ...expectedContentTile[0], image: { url: 'test-large-image', alt: '' } },
+      updatesContent: expectedContentTile,
+      isLastPage: false,
+    }
+
+    expect(response).toStrictEqual(expectedUpdatesContent)
   })
 })

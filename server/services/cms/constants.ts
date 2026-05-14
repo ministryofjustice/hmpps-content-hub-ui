@@ -148,4 +148,28 @@ export const URGENT_BANNER_FIELDS = joinFields([
 
 export const URGENT_BANNER_INCLUDE = 'field_more_info_page'
 
+export const HOMEPAGE_CONTENT_TILE = joinFields([
+  'drupal_internal__nid',
+  'title',
+  'field_moj_thumbnail_image',
+  'field_summary',
+  'field_moj_series',
+  'path',
+  'type.meta.drupal_internal__target_id',
+  'published_at',
+])
+
+export const HOMEPAGE_CONTENT_INCLUDE = joinFields([
+  'field_featured_tiles.field_moj_thumbnail_image',
+  'field_featured_tiles',
+  'field_large_update_tile',
+  'field_key_info_tiles',
+  'field_key_info_tiles.field_moj_thumbnail_image',
+  'field_large_update_tile.field_moj_thumbnail_image',
+])
+
+export const HOMEPAGE_FILE_FIELDS = joinFields(['drupal_internal__fid', 'id', 'image_style_uri'])
+
+export const CONTENT_TILE_INCLUDE = 'field_moj_thumbnail_image'
+
 export const EXTERNAL_LINK_FIELDS = joinFields(['field_show_interstitial_page', 'field_url'])

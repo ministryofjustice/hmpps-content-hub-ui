@@ -1,5 +1,6 @@
 import { JsonApiResource } from '../../data/jsonApiClient'
 import {
+  cropTextWithEllipsis,
   findIncluded,
   mapBreadcrumbHref,
   mapBreadcrumbs,
@@ -12,6 +13,7 @@ import {
   stripLanguagePrefix,
 } from './utils'
 import { CmsFileAttributes } from './types'
+import { ContentTile } from '../../@types/content'
 
 describe('cms utils', () => {
   it('resolves links from strings and objects', () => {
@@ -58,7 +60,7 @@ describe('cms utils', () => {
       type: 'file--file',
       id: 'file-1',
       attributes: {
-        image_style_uri: { tile_small: '/small' },
+        image_style_uri: { tile_large: '/large', tile_small: '/small' },
       },
     }
     const fileWithUri: JsonApiResource<CmsFileAttributes> = {
@@ -70,6 +72,7 @@ describe('cms utils', () => {
     }
 
     expect(resolveFileUrl(fileWithStyles)).toBe('/small')
+    expect(resolveFileUrl(fileWithStyles, 'large')).toBe('/large')
     expect(resolveFileUrl(fileWithUri)).toBe('/uri-url')
     expect(resolveFileUrl(undefined)).toBeUndefined()
   })
@@ -97,5 +100,34 @@ describe('cms utils', () => {
     ).toEqual([{ text: 'Home', href: '/' }, { text: 'Topics', href: '/taxonomy/term/10' }, { text: 'Current page' }])
 
     expect(mapBreadcrumbs(undefined, 'en')).toEqual([])
+  })
+})
+
+describe('crop text with ellipsis', () => {
+  const testTileWithTitle = (title: string): ContentTile => {
+    return {
+      id: 42,
+      contentType: 'topics',
+      externalContent: false,
+      title,
+      summary: 'test-field-summary',
+      contentUrl: '/content/42',
+      displayUrl: 'test-field-display-url',
+      image: { url: 'test-small-image', alt: '' },
+      isNew: false,
+      publishedAt: undefined,
+    }
+  }
+
+  const titleShort = 'a'
+  const titleLong = 'This string contains more than thirty characters'
+  const titleLongCropped = 'This string contains more...'
+
+  it('Does not modify strings with too few characters', () => {
+    expect(cropTextWithEllipsis(testTileWithTitle(titleShort)).title).toBe(titleShort)
+  })
+
+  it('Crops text over 30 characters and appends an ellipsis', () => {
+    expect(cropTextWithEllipsis(testTileWithTitle(titleLong)).title).toBe(titleLongCropped)
   })
 })

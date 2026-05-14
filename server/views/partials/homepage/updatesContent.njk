@@ -1,0 +1,24 @@
+<div class="hmpps-update-items govuk-body govuk-!-margin-0">
+  <div>
+    {% for item in updatesContent %}
+      <a class="hmpps-update-items-link govuk-link govuk-!-margin-bottom-3" data-featured-tile-id="{{ item.id }}" data-featured-id="{{item.id}}" data-featured-title="{{ item.title }}" href="{{item.contentUrl}}" {% if item.externalContent %}target="_blank"{% endif %}>
+        <div class="hmpps-update-items-link_content">
+          {% if item.image.url %}
+            <img src="{{item.image.url}}" alt="{{item.image.alt}}" class="tile-image" loading="lazy">
+          {% else %}
+            <img src="/assets/images/content_image_placeholder_logo.png" alt="logo" class="tile-image" loading="lazy">
+          {% endif %}
+          <div class="hmpps-update-items-link_text govuk-!-margin-0">
+            <h3 class="govuk-heading-s">{{item.publishedAt}}</h3>
+            <p class="govuk-body">{{item.title | safe}}</p>
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+  {% if not updatesContentHideViewAll %}
+    <a class="govuk-link" href="/updates">
+      {{ t("features:hubContentBlock.viewAll") }}
+    </a>
+  {% endif %}
+</div>
