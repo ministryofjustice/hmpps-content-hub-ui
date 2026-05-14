@@ -45,7 +45,7 @@ describe('CmsService', () => {
     const result = await cmsService.getTopics('bullingdon', 'en')
 
     expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
-      '/en/jsonapi/prison/bullingdon/taxonomy_term?fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname&filter%5Bvid.meta.drupal_internal__target_id%5D=topics&sort=name&page%5Blimit%5D=100',
+      '/en/jsonapi/prison/bullingdon/taxonomy_term?filter%5Bvid.meta.drupal_internal__target_id%5D=topics&page%5Blimit%5D=100&sort=name&fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname',
     )
     expect(result).toEqual([
       {
@@ -153,7 +153,7 @@ describe('CmsService', () => {
     const result = (await cmsService.getTopicPage('bullingdon', '42', 'en')) as CmsTopicPage
 
     expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
-      '/en/jsonapi/prison/bullingdon/taxonomy_term?fields%5Btaxonomy_term--topics%5D=name%2Cdescription%2Cdrupal_internal__tid&filter%5Bvid.meta.drupal_internal__target_id%5D=topics&filter%5Bdrupal_internal__tid%5D=42&page%5Blimit%5D=1',
+      '/en/jsonapi/prison/bullingdon/taxonomy_term?filter%5Bvid.meta.drupal_internal__target_id%5D=topics&filter%5Bdrupal_internal__tid%5D=42&page%5Blimit%5D=1&fields%5Btaxonomy_term--topics%5D=name%2Cdescription%2Cdrupal_internal__tid',
     )
     expect(result.topic.title).toEqual('Education')
     expect(result.items[0].title).toEqual('Learning skills')
@@ -195,7 +195,7 @@ describe('CmsService', () => {
     const result = (await cmsService.getTag('bullingdon', '99', 'en')) as CmsTag
 
     expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
-      '/en/jsonapi/prison/bullingdon/taxonomy_term?fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--series%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--moj_categories%5D=drupal_internal__tid%2Cname%2Cdescription&filter%5Bdrupal_internal__tid%5D=99&page%5Blimit%5D=1',
+      '/en/jsonapi/prison/bullingdon/taxonomy_term?filter%5Bdrupal_internal__tid%5D=99&page%5Blimit%5D=1&fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--series%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--moj_categories%5D=drupal_internal__tid%2Cname%2Cdescription',
     )
     expect(result).toEqual({
       id: '99',
