@@ -26,7 +26,6 @@ import {
   HOMEPAGE_CONTENT_TILE,
   HOMEPAGE_CONTENT_INCLUDE,
   HOMEPAGE_FILE_FIELDS,
-  CONTENT_TILE_INCLUDE,
   EXTERNAL_LINK_FIELDS,
   MENU_FIELDS,
   HEADER_FIELDS,
@@ -36,11 +35,6 @@ import {
 } from './constants'
 
 const calculatePageOffset = (page: number, pageSize: number = PAGE_SIZE) => Math.max(page - 1, 0) * pageSize
-// to be removed
-const buildPageParams = (page: number, pageSize: number = PAGE_SIZE) => ({
-  'page[offset]': `${Math.max(page - 1, 0) * pageSize}`,
-  'page[limit]': `${pageSize}`,
-})
 
 export const buildTopicsQueryString = () =>
   new DrupalJsonApiParams()
@@ -236,69 +230,59 @@ export const buildUrgentBannerQueryString = () =>
     .addInclude(URGENT_BANNER_INCLUDE)
     .getQueryString()
 
-// to be implemented
 export const buildHomePageContentQueryString = (limit = 4) =>
-  new URLSearchParams({
-    include: HOMEPAGE_CONTENT_INCLUDE,
-    'page[limit]': `${limit}`,
-    'fields[node--field_featured_tiles]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--field_key_info_tiles]': HOMEPAGE_CONTENT_TILE,
-    'fields[file--file]': HOMEPAGE_FILE_FIELDS,
-  }).toString()
+  new DrupalJsonApiParams()
+    .addFields('node--field_featured_tiles', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--field_key_info_tiles', HOMEPAGE_CONTENT_TILE)
+    .addFields('file--file', HOMEPAGE_FILE_FIELDS)
+    .addInclude(HOMEPAGE_CONTENT_INCLUDE)
+    .addPageLimit(limit)
+    .getQueryString()
 
 export const buildRecentlyAddedHomepageContentQueryString = (page = 1, limit = 8) =>
-  new URLSearchParams({
-    include: CONTENT_TILE_INCLUDE,
-    sort: '-published_at,created',
-    'fields[node--page]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--moj_video_item]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--moj_radio_item]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--moj_pdf_item]': HOMEPAGE_CONTENT_TILE,
-    'fields[file--file]': HOMEPAGE_FILE_FIELDS,
-    ...buildPageParams(page, limit),
-  }).toString()
+  new DrupalJsonApiParams()
+    .addFields('node--page', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--moj_video_item', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--moj_radio_item', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--moj_pdf_item', HOMEPAGE_CONTENT_TILE)
+    .addFields('file--file', HOMEPAGE_FILE_FIELDS)
+    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
+    .addSort('published_at', 'DESC')
+    .addSort('created')
+    .addPageLimit(limit)
+    .addPageOffset(calculatePageOffset(page, limit))
+    .getQueryString()
 
 export const buildExploreContentQueryString = (limit = 4) =>
-  new URLSearchParams({
-    include: CONTENT_TILE_INCLUDE,
-    'page[limit]': `${limit}`,
-    'fields[node--page]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--moj_video_item]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--moj_radio_item]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--moj_pdf_item]': HOMEPAGE_CONTENT_TILE,
-  }).toString()
+  new DrupalJsonApiParams()
+    .addFields('node--page', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--moj_video_item', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--moj_radio_item', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--moj_pdf_item', HOMEPAGE_CONTENT_TILE)
+    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
+    .addPageLimit(limit)
+    .getQueryString()
 
 export const buildUpdatesContentQueryString = (page = 1, limit = 5) =>
-  new URLSearchParams({
-    'filter[6][condition][path]': 'published_at',
-    'filter[6][condition][value]': unixTimestamp(90, new Date().setHours(0, 0, 0, 0)),
-    'filter[6][condition][operator]': '>=',
-    'filter[6][condition][memberOf]': 'series_group',
-    'filter[parent_or_group][group][conjunction]': 'OR',
-    'filter[categories_group][group][conjunction]': 'AND',
-    'filter[categories_group][group][memberOf]': 'parent_or_group',
-    'filter[series_group][group][conjunction]': 'AND',
-    'filter[series_group][group][memberOf]': 'parent_or_group',
-    'filter[field_moj_top_level_categories.field_is_homepage_updates][condition][path]':
-      'field_moj_top_level_categories.field_is_homepage_updates',
-    'filter[field_moj_top_level_categories.field_is_homepage_updates][condition][value]': '1',
-    'filter[field_moj_top_level_categories.field_is_homepage_updates][condition][memberOf]': 'categories_group',
-    'filter[published_at][condition][path]': 'published_at',
-    'filter[published_at][condition][value]': unixTimestamp(90, new Date().setHours(0, 0, 0, 0)),
-    'filter[published_at][condition][operator]': '>=',
-    'filter[published_at][condition][memberOf]': 'categories_group',
-    'filter[field_moj_series.field_is_homepage_updates][condition][path]': 'field_moj_series.field_is_homepage_updates',
-    'filter[field_moj_series.field_is_homepage_updates][condition][value]': '1',
-    'filter[field_moj_series.field_is_homepage_updates][condition][memberOf]': 'series_group',
-    include: CONTENT_TILE_INCLUDE,
-    sort: '-published_at,created',
-    'fields[node--page]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--moj_video_item]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--moj_radio_item]': HOMEPAGE_CONTENT_TILE,
-    'fields[node--moj_pdf_item]': HOMEPAGE_CONTENT_TILE,
-    'fields[file--file]': HOMEPAGE_FILE_FIELDS,
-    ...buildPageParams(page, limit),
-  }).toString()
+  new DrupalJsonApiParams()
+    .addFields('node--page', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--moj_video_item', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--moj_radio_item', HOMEPAGE_CONTENT_TILE)
+    .addFields('node--moj_pdf_item', HOMEPAGE_CONTENT_TILE)
+    .addFields('file--file', HOMEPAGE_FILE_FIELDS)
+    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
+    .addGroup('parent_or_group', 'OR')
+    .addGroup('categories_group', 'AND', 'parent_or_group')
+    .addGroup('series_group', 'AND', 'parent_or_group')
+    .addFilter('field_moj_top_level_categories.field_is_homepage_updates', '1', '=', 'categories_group')
+    .addFilter('published_at', unixTimestamp(90, new Date().setHours(0, 0, 0, 0)), '>=', 'categories_group')
+    .addFilter('field_moj_series.field_is_homepage_updates', '1', '=', 'series_group')
+    .addFilter('published_at', unixTimestamp(90, new Date().setHours(0, 0, 0, 0)), '>=', 'series_group')
+    .addSort('published_at', 'DESC')
+    .addSort('created')
+    .addPageLimit(limit)
+    .addPageOffset(calculatePageOffset(page, limit))
+    .getQueryString()
 
 export const unixTimestamp = (offset: number, date = Date.now()) => {
   return Math.floor((date - 24 * 60 * 60 * 1000 * offset) / 1000).toString()
