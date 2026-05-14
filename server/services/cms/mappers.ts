@@ -2,6 +2,7 @@ import {
   JsonApiCollectionResponse,
   JsonApiRelationships,
   JsonApiResource,
+  JsonApiResourceIdentifier,
   JsonApiSingleResponse,
 } from '../../data/jsonApiClient'
 import type { EpisodeTile, ContentTile } from '../../@types/content'
@@ -22,7 +23,7 @@ import {
   CmsPrimaryNavigationItem,
   CmsSeriesItem,
   CmsSeriesTermAttributes,
-  CmsSuggestionNodeAttributes,
+  CMSContentNodeAttributes,
   CmsTaxonomyAttributes,
   CmsTopicAttributes,
   CmsTopicContentItem,
@@ -33,6 +34,10 @@ import {
   CmsUrgentBannerAttributes,
   CmsVideoContent,
   CmsVideoNodeAttributes,
+  ExploreContent,
+  UpdatesContent,
+  CmsHomePageRelationships,
+  ImageSize,
 } from './types'
 import {
   findIncluded,
@@ -43,6 +48,7 @@ import {
   resolvePath,
   resolveTagHref,
   stripLanguagePrefix,
+  cropTextWithEllipsis,
 } from './utils'
 
 export const mapTopic = (item: JsonApiResource<CmsTopicAttributes>): CmsTopicItem => ({
@@ -398,9 +404,10 @@ const mapNodeTypeToContentType = (type: string): string => {
   return match
 }
 
-export const mapContentTile = (
-  item: JsonApiResource<CmsSuggestionNodeAttributes>,
+const mapContentTile = (
+  item: JsonApiResource<CMSContentNodeAttributes>,
   included: JsonApiResource[] | undefined,
+  size?: ImageSize,
 ): ContentTile => {
   const thumbnailIdentifier = relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
   const thumbnail =
@@ -416,13 +423,46 @@ export const mapContentTile = (
     summary: item.attributes.field_summary ?? '',
     contentUrl: resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
     displayUrl: item.attributes.field_display_url ?? '',
-    image: resolveFileUrl(thumbnail) ? { url: resolveFileUrl(thumbnail)!, alt: '' } : null,
+    image: resolveFileUrl(thumbnail, size) ? { url: resolveFileUrl(thumbnail, size)!, alt: '' } : null,
     isNew: publishedAt ? (Date.now() - new Date(publishedAt).getTime()) / 86_400_000 <= 2 : false,
+    publishedAt: publishedAt
+      ? Intl.DateTimeFormat('en-GB', {
+          weekday: 'long',
+          day: '2-digit',
+          month: 'long',
+        }).format(new Date(publishedAt))
+      : undefined,
   }
 }
 
-export const mapSuggestedContent = (response: JsonApiCollectionResponse<CmsSuggestionNodeAttributes>): ContentTile[] =>
+export const mapContentToTiles = (response: JsonApiCollectionResponse<CMSContentNodeAttributes>): ContentTile[] =>
   response.data.map(item => mapContentTile(item, response.included))
+
+const mapResourceIdentifierToTiles = (
+  resourceIdentifier: JsonApiResourceIdentifier[],
+  included: JsonApiResource[],
+  size?: ImageSize,
+): ContentTile[] => {
+  const resourceIds = resourceIdentifier.map(item => item.id)
+  const includedItems = included.filter(item => resourceIds.includes(item.id))
+
+  return includedItems.map(item => mapContentTile(item, included, size))
+}
+
+export const mapExploreContent = (response: JsonApiCollectionResponse<CMSContentNodeAttributes>): ExploreContent => {
+  return {
+    data: response.data.map(item => mapContentTile(item, response.included)),
+    isLastPage: !response.links.next,
+  }
+}
+
+export const mapUpdatesContent = (response: JsonApiCollectionResponse<CMSContentNodeAttributes>): UpdatesContent => {
+  return {
+    largeUpdateTileDefault: mapContentTile(response.data[0], response.included, 'large'),
+    updatesContent: response.data.map(item => mapContentTile(item, response.included)),
+    isLastPage: !response.links.next,
+  }
+}
 
 export const mapUrgentBanner = (
   item: JsonApiResource<CmsUrgentBannerAttributes>,
@@ -436,5 +476,21 @@ export const mapUrgentBanner = (
     title: item.attributes.title,
     moreInfoLink: moreInfoPage?.attributes.path?.alias ?? null,
     unpublishOn: item.attributes.unpublish_on ? new Date(item.attributes.unpublish_on).getTime() : null,
+  }
+}
+
+export const mapHomePageContent = (relationships: CmsHomePageRelationships, included: JsonApiResource[]) => {
+  return {
+    featuredContent: {
+      data: mapResourceIdentifierToTiles(relationships.field_featured_tiles.data, included),
+    },
+    keyInfo: {
+      data: mapResourceIdentifierToTiles(relationships.field_key_info_tiles.data, included).map(keyInfoItem =>
+        cropTextWithEllipsis(keyInfoItem, 30),
+      ),
+    },
+    largeUpdateTile: relationships.field_large_update_tile
+      ? mapResourceIdentifierToTiles([relationships.field_large_update_tile.data], included, 'large')[0]
+      : null,
   }
 }

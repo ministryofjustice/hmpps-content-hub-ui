@@ -1,3 +1,5 @@
+{% from "../partials/category/category-block.njk" import categoryBlock %}
+
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - Home" %}
@@ -7,6 +9,30 @@
 {% block content %}
   <a class="govuk-button" href="/topics">Browse all topics</a>
   <section class="hmpps-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6">
-    <div class="govuk-width-container"></div>
+    <div class="govuk-width-container">
+      {% if largeUpdateTile or (updatesContent | length) or (keyInfo.data | length) %}
+        {% include '../partials/homepage/updates-grid.njk' %}
+      {% endif %}
+
+      {{ categoryBlock({
+        title: t("pages:home.featured"),
+        id: 'featuredContent',
+        data: featuredContent
+      }, t) }}
+
+      {{ categoryBlock({
+        title: t("pages:home.recentlyAdded"),
+        viewAllUrl: '/recently-added',
+        id: 'recentlyAdded',
+        data: recentlyAddedHomepageContent
+      }, t) }}
+
+      {{ categoryBlock({
+        title: t("pages:home.exploreTheHub"),
+        id: 'exploreContent',
+        data: exploreContent,
+        hideHorizontalRule: true
+      }, t) }}
+    </div>
   </section>
 {% endblock %}

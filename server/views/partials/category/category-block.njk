@@ -1,0 +1,19 @@
+{% macro categoryBlock(params, t) %}
+  {% if params.data.data|length %}
+  <section id="{{ params.id }}" class="govuk-!-margin-bottom-5">
+    <div class="hmpps-category-block__title govuk-!-margin-bottom-3">
+      <h2 class="govuk-heading-l govuk-!-margin-bottom-0">{{ params.title }}</h2>
+      {% if params.viewAllUrl %}
+        <a class="govuk-body govuk-link govuk-!-font-size-24 govuk-link--no-visited-state govuk-!-margin-left-4 govuk-!-margin-bottom-0 " href="{{ params.viewAllUrl }}">
+          {{ t("features:hubContentBlock.viewAll") }}
+        </a>
+      {% endif %}
+    </div>
+    {% set gridItems = params.data.data %}
+    {% include "./category-grid.njk" %}
+    {% if not params.hideHorizontalRule %}
+      <hr class="govuk-!-margin-top-5">
+    {% endif %}
+  </section>
+  {% endif %}
+{% endmacro %}

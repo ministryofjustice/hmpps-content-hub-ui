@@ -1,0 +1,18 @@
+@mixin tile-hover {
+  &:hover,
+  &:focus {
+    background-color: $hmpps-category-card-hover-bg;
+    box-shadow: $hmpps-category-card-shadow;
+    outline: none;
+    transform: scale(1.1);
+    transition: transform 0.5s ease;
+    z-index: 100;
+
+    & p,
+    & h3,
+    & span {
+      color: govuk-colour('black');
+      background-color: transparent;
+    }
+  }
+}

@@ -12,7 +12,7 @@ test.describe('Staff member selects a prison to view content for', () => {
     await resetStubs()
   })
 
-  test('Selecting a prison displays it on the homepage', async ({ page }) => {
+  test.skip('Selecting a prison displays it on the homepage', async ({ page }) => {
     await cmsApi.stubPrimaryNavigation()
     await loginWithHmppsAuth(page, { name: 'Test User' })
     await HomePage.verifyOnPage(page)

@@ -1,0 +1,23 @@
+<h2 class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-6 hmpps-updates-grid-header" id="main-content">
+  <span class="hmpps-updates-grid-header__title govuk-!-padding-right-2">{{ t("pages:home.updates") }}</span>
+</h2>
+<div class="govuk-grid-row hmpps-category-grid">
+  <div class="govuk-grid-column-three-quarters">
+    <div class="govuk-grid-column-one-half">
+      {% if largeUpdateTile %}
+        {% include './largeUpdateTile.njk' %}
+      {% endif %}
+    </div>
+    <div class="govuk-grid-column-one-half">
+      {% if updatesContent | length %}
+        {% include './updatesContent.njk' %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="govuk-grid-column-one-quarter">
+    {% if keyInfo.data | length %}
+      {% include './keyInfo.njk' %}
+    {% endif %}
+  </div>
+</div>
+<hr class="govuk-!-margin-top-5">
