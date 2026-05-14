@@ -151,4 +151,7 @@ export default {
   },
   environmentName: get('ENVIRONMENT_NAME', ''),
   nprStream: get('NPR_STREAM_URL', '/npr-stream', requiredInProduction),
+  knownPages: {
+    help: get('HELP_CONTENT_URL', '/tags/1503'),
+  },
 }
