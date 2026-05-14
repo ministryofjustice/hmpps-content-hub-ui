@@ -45,6 +45,7 @@
     "cookies": "0.9.1",
     "csrf-sync": "^4.2.1",
     "dompurify": "3.4.0",
+    "drupal-jsonapi-params": "3.0.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "govuk-frontend": "^6.1.0",
