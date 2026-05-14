@@ -10,8 +10,9 @@
 
     & p,
     & h3,
-    & .hmpps-category-card__title {
+    & span {
       color: govuk-colour('black');
+      background-color: transparent;
     }
   }
 }
