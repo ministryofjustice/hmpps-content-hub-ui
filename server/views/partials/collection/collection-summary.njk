@@ -1,0 +1,13 @@
+<div class="govuk-grid-row govuk-!-margin-bottom-6">
+	<div class="govuk-grid-column-one-half">
+		<h1>{{ summaryHeader }}</h1>
+		{% if summaryDescription %}
+			<p>{{ summaryDescription | safe }}</p>
+		{% endif %}
+	</div>
+	<div class="govuk-grid-column-one-half">
+		{% if summaryImageUrl %}
+			<img class="hmpps-series-header__image" src="{{ summaryImageUrl }}" alt="{{ summaryHeader }}">
+		{% endif %}
+	</div>
+</div>

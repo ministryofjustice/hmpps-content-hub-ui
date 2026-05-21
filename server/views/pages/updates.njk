@@ -1,0 +1,18 @@
+{% extends "../partials/layout.njk" %}
+{% from "../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
+
+{% set pageTitle = applicationName + " - Updates" %}
+{% set mainClasses = "govuk-body" %}
+
+{% block content %}
+  {{ breadcrumbNavigation() }}
+  {{ breadcrumb([ { href: '/', text: 'Home' }, { href: '', text: 'Updates' } ]) }}
+
+  {% set summaryHeader = t("pages:home.updates") %}
+  {% set summaryDescription = t("pages:updates.summary") %}
+  {% include '../partials/collection/collection-summary.njk' %}
+
+  {% set noContentMessage = 'There are no updates available' %}
+  {% include '../partials/collection/collection-content.njk' %}
+
+{% endblock %}

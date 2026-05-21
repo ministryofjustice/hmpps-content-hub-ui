@@ -353,8 +353,13 @@ export default class CmsService {
     return mapExploreContent(response)
   }
 
-  async getUpdatesContent(establishmentName: string, language: string): Promise<UpdatesContent> {
-    const queryString = buildUpdatesContentQueryString()
+  async getUpdatesContent(
+    establishmentName: string,
+    language: string,
+    page?: number,
+    limit?: number,
+  ): Promise<UpdatesContent> {
+    const queryString = buildUpdatesContentQueryString(page, limit)
     const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
     const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
     return mapUpdatesContent(response)
