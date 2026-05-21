@@ -1,0 +1,16 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set buttonText = {enabled: t("features:showMore.enabled"), disabled: t("features:showMore.disabled")} %}
+
+<div class="hmpps-show-more govuk-!-margin-top-9">
+  {{ govukButton({
+    text: buttonText.enabled,
+    classes: 'show-more-tiles govuk-button--secondary'
+  }) }}
+</div>
+
+<script nonce="{{ cspNonce }}" src="/assets/jquery.min.js"></script>
+<script nonce="{{ cspNonce }}" src="/assets/showMoreButton.js"></script>
+<script nonce="{{ cspNonce }}">
+  showMore($('.show-more-tiles'), $('.show-more-content-container'), {{ buttonText | dump | safe }})
+</script>

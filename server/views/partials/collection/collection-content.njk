@@ -1,0 +1,14 @@
+<section class="hmpps-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6">
+	<div class="govuk-width-container show-more-content-container">
+		{% if content.length %}
+      {% set gridItems = content %}
+			{% include "../category/category-grid.njk" %}
+		{% else %}
+			<p>{{ noContentMessage }}</p>
+		{% endif %}
+	</div>
+
+	{% if not isLastPage %}
+		{% include './collection-show-more.njk' %}
+	{% endif %}
+</section>

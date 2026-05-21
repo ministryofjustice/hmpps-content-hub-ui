@@ -14,6 +14,9 @@
     "summary": "The latest uploads on the Hub.",
     "title": "Recently added"
   },
+  "updates": {
+    "summary": "The latest updates on the Hub."
+  },
   "externalLink": {
     "redirectNotice": "You are being taken to {{ url }}. You are <strong>allowed</strong> to visit this website.",
     "restrictionNotice": "Internet access is restricted in prisons so links to other websites are blocked.",
