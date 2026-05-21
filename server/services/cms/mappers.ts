@@ -38,6 +38,7 @@ import {
   UpdatesContent,
   CmsHomePageRelationships,
   ImageSize,
+  RecentlyAddedContent,
 } from './types'
 import {
   findIncluded,
@@ -449,9 +450,13 @@ const mapResourceIdentifierToTiles = (
   return includedItems.map(item => mapContentTile(item, included, size))
 }
 
+export const mapRecentlyAddedContent = (
+  response: JsonApiCollectionResponse<CMSContentNodeAttributes>,
+): RecentlyAddedContent => mapExploreContent(response)
+
 export const mapExploreContent = (response: JsonApiCollectionResponse<CMSContentNodeAttributes>): ExploreContent => {
   return {
-    data: response.data.map(item => mapContentTile(item, response.included)),
+    data: mapContentToTiles(response),
     isLastPage: !response.links.next,
   }
 }
@@ -459,7 +464,7 @@ export const mapExploreContent = (response: JsonApiCollectionResponse<CMSContent
 export const mapUpdatesContent = (response: JsonApiCollectionResponse<CMSContentNodeAttributes>): UpdatesContent => {
   return {
     largeUpdateTileDefault: mapContentTile(response.data[0], response.included, 'large'),
-    updatesContent: response.data.map(item => mapContentTile(item, response.included)),
+    updatesContent: mapContentToTiles(response),
     isLastPage: !response.links.next,
   }
 }

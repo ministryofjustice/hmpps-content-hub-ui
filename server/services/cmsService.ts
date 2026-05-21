@@ -19,6 +19,7 @@ import {
   mapExploreContent,
   mapUpdatesContent,
   mapHomePageContent,
+  mapRecentlyAddedContent,
 } from './cms/mappers'
 import {
   buildAudioContentQueryString,
@@ -45,6 +46,7 @@ import {
   buildUpdatesContentQueryString,
   buildUrgentBannerQueryString,
   buildVideoContentQueryString,
+  buildRecentlyAddedQueryString,
 } from './cms/queries'
 import { mapTagType } from './cms/utils'
 import {
@@ -79,6 +81,7 @@ import {
   HomePageContent,
   CmsHomePageRelationships,
   LookupType,
+  RecentlyAddedContent,
 } from './cms/types'
 
 export default class CmsService {
@@ -344,6 +347,18 @@ export default class CmsService {
     const path = `/${language}/jsonapi/prison/${establishmentName}/recently-added?${queryString}`
     const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
     return mapContentToTiles(response)
+  }
+
+  async getRecentlyAddedContent(
+    establishmentName: string,
+    language: string,
+    page?: number,
+    limit?: number,
+  ): Promise<RecentlyAddedContent> {
+    const queryString = buildRecentlyAddedQueryString(page, limit)
+    const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
+    const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
+    return mapRecentlyAddedContent(response)
   }
 
   async getExploreContent(establishmentName: string, language: string): Promise<ExploreContent> {

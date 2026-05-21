@@ -6,7 +6,7 @@
 
 {% block content %}
   {{ breadcrumbNavigation() }}
-  {{ breadcrumb([ { href: '/', text: 'Home' }, { href: '', text: 'Updates' } ]) }}
+  {{ breadcrumb([ { href: '/', text: t("common:pageNavigation.home") }, { href: '', text: t("pages:home.updates") } ]) }}
 
   {% set summaryHeader = t("pages:home.updates") %}
   {% set summaryDescription = t("pages:updates.summary") %}
