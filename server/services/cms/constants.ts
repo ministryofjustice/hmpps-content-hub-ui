@@ -157,3 +157,5 @@ export const HOMEPAGE_CONTENT_INCLUDE = [
 ]
 
 export const HOMEPAGE_FILE_FIELDS = ['drupal_internal__fid', 'id', 'image_style_uri']
+
+export const CONTENT_FILTERS = ['page', 'moj_video_item', 'moj_radio_item', 'moj_pdf_item']

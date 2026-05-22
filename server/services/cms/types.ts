@@ -318,6 +318,8 @@ export interface HomePageContent {
   largeUpdateTile?: ContentTile
 }
 
+export type RecentlyAddedContent = ExploreContent
+
 export interface ExploreContent {
   data: ContentTile[]
   isLastPage: boolean
