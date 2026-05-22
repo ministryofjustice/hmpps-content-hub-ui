@@ -11,6 +11,11 @@ export default function createErrorHandler(production: boolean) {
       return res.redirect('/sign-out')
     }
 
+    if (error.status === 404) {
+      res.status(404)
+      return res.render('pages/error/not-found')
+    }
+
     res.locals.message = production
       ? 'Something went wrong. The error has been logged. Please try again'
       : error.message
@@ -19,6 +24,6 @@ export default function createErrorHandler(production: boolean) {
 
     res.status(error.status || 500)
 
-    return res.render('pages/error')
+    return res.render('pages/error/unhandled')
   }
 }
