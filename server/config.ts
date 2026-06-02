@@ -97,20 +97,20 @@ export default {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
       healthPath: '/health/ping',
       timeout: {
-        response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
-        deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
+        response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 20000)),
+        deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 20000)),
       },
-      agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
+      agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 20000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
     cmsApi: {
       url: get('CMS_API_URL', 'http://localhost:8888', requiredInProduction),
       healthPath: '/jsonapi',
       timeout: {
-        response: Number(get('CMS_API_TIMEOUT_RESPONSE', 5000)),
-        deadline: Number(get('CMS_API_TIMEOUT_DEADLINE', 5000)),
+        response: Number(get('CMS_API_TIMEOUT_RESPONSE', 20000)),
+        deadline: Number(get('CMS_API_TIMEOUT_DEADLINE', 20000)),
       },
-      agent: new AgentConfig(Number(get('CMS_API_TIMEOUT_RESPONSE', 5000))),
+      agent: new AgentConfig(Number(get('CMS_API_TIMEOUT_RESPONSE', 20000))),
     },
   },
   establishments: [
@@ -153,5 +153,8 @@ export default {
   nprStream: get('NPR_STREAM_URL', '/npr-stream', requiredInProduction),
   knownPages: {
     help: get('HELP_CONTENT_URL', '/tags/1503'),
+    inspireAndEntertain: get('INSPIRE_AND_ENTERTAIN_URL', '/tags/1282'),
+    games: get('GAMES_URL', '/tags/647'),
+    chessGuide: get('CHESS_GUIDE_URL', '/content/10180'),
   },
 }

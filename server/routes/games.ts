@@ -2,6 +2,16 @@ import { Router, Request, Response, NextFunction } from 'express'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
 
+import config from '../config'
+// import toAlpha from '../..assets/js/games/anagramica/lib/helpers.js'
+// import Finder from '../../assets/js/games/anagramica/lib/finder.js'
+
+const GAMES_BREADCRUMBS = [
+  { href: '/', text: 'Home' },
+  { href: config.knownPages.inspireAndEntertain, text: 'Inspire and entertain' },
+  { href: config.knownPages.games, text: 'Games' },
+]
+
 export default function gamesRoutes({ auditServiceSource }: Services): Router {
   const router = Router()
 
@@ -12,7 +22,9 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('2048 game route is functional - pending implementation')
+      res.render('pages/games/2048', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+      })
     } catch (error) {
       next(error)
     }
@@ -25,7 +37,9 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Fading Snake game route is functional - pending implementation')
+      res.render('pages/games/fading-snake', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+      })
     } catch (error) {
       next(error)
     }
@@ -38,7 +52,9 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Sn4ke game route is functional - pending implementation')
+      res.render('pages/games/sn4ke', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+      })
     } catch (error) {
       next(error)
     }
@@ -51,24 +67,41 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Anagramica game route is functional - pending implementation')
-    } catch (error) {
-      next(error)
-    }
-  })
-
-  router.post('/games/anagramica', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await auditServiceSource.get(req.portalType).logPageView(Page.GAME_ANAGRAMICA_SCORE, {
-        who: res.locals.user?.username,
-        correlationId: req.id,
+      res.render('pages/games/anagramica', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+        cspNonce: res.locals.cspNonce,
       })
-
-      throw new Error('Anagramica scoring route is functional - pending implementation')
     } catch (error) {
       next(error)
     }
   })
+  // TODO: Fix scoring
+
+  // router.post('/games/anagramica', async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     await auditServiceSource.get(req.portalType).logPageView(Page.GAME_ANAGRAMICA_SCORE, {
+  //       who: res.locals.user?.username,
+  //       correlationId: req.id,
+  //     })
+
+  //     const { letters, words = [] } = req.body
+  //     console.log(letters, words)
+  //     const best = Finder.best(toAlpha(letters))
+  //     const scores = Array.isArray(words)
+  //       ? words.reduce((total, rawWord) => {
+  //           const word = toAlpha(rawWord)
+  //           return Object.assign(total, { [word]: Finder.find(word) })
+  //         }, {})
+  //       : {}
+  //     return res.send({
+  //       best,
+  //       scores,
+  //       letters,
+  //     })
+  //   } catch (error) {
+  //     next(error)
+  //   }
+  // })
 
   router.get('/games/chess', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -77,7 +110,11 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Chess game route is functional - pending implementation')
+      res.render('pages/games/chess', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+        chessGuideHref: config.knownPages.chessGuide,
+        cspNonce: res.locals.cspNonce,
+      })
     } catch (error) {
       next(error)
     }
@@ -90,7 +127,10 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Sudoku game route is functional - pending implementation')
+      res.render('pages/games/sudoku', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+        cspNonce: res.locals.cspNonce,
+      })
     } catch (error) {
       next(error)
     }
@@ -103,7 +143,9 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Neontroids game route is functional - pending implementation')
+      res.render('pages/games/neontroids', {
+        cspNonce: res.locals.cspNonce,
+      })
     } catch (error) {
       next(error)
     }
@@ -116,7 +158,10 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Mimstris game route is functional - pending implementation')
+      res.render('pages/games/mimstris', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+        cspNonce: res.locals.cspNonce,
+      })
     } catch (error) {
       next(error)
     }
@@ -129,7 +174,9 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Invaders from Space game route is functional - pending implementation')
+      res.render('pages/games/invaders-from-space', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+      })
     } catch (error) {
       next(error)
     }
@@ -142,7 +189,10 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Crossword game route is functional - pending implementation')
+      res.render('pages/games/crossword', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+        cspNonce: res.locals.cspNonce,
+      })
     } catch (error) {
       next(error)
     }
@@ -155,7 +205,10 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Christmas Crossword game route is functional - pending implementation')
+      res.render('pages/games/christmas-crossword', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+        cspNonce: res.locals.cspNonce,
+      })
     } catch (error) {
       next(error)
     }
@@ -168,7 +221,10 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Solitaire game route is functional - pending implementation')
+      res.render('pages/games/solitaire', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+        cspNonce: res.locals.cspNonce,
+      })
     } catch (error) {
       next(error)
     }
@@ -181,7 +237,10 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
         correlationId: req.id,
       })
 
-      throw new Error('Smashout game route is functional - pending implementation')
+      res.render('pages/games/smashout', {
+        breadcrumbs: GAMES_BREADCRUMBS,
+        cspNonce: res.locals.cspNonce,
+      })
     } catch (error) {
       next(error)
     }

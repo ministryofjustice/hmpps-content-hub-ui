@@ -1,0 +1,41 @@
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
+
+{% block head %}
+  <style once="{{ cspNonce }}"  type="text/css">
+  canvas {
+    background-color: #f3f2f1;
+  }
+  </style>
+  {{ super() }}
+{% endblock %}
+
+{% set pageTitle = applicationName + " - Smashout" %}
+
+{% block content %}
+  {{ breadcrumbNavigation() }}
+  {{ breadcrumb(breadcrumbs) }}
+
+  <main class="govuk-main-wrapper" id="main-content">
+
+    <h1 id="title" class="govuk-heading-l">Smashout</h1>
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-6">
+    </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-6">
+      <div class="govuk-grid-column-two-thirds" id="game">
+        <canvas id="gameCanvas" width="780" height="620"></canvas>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <p class="govuk-body"><b>How to play:</b></p>
+        <p class="govuk-body">
+          Arrow keys = Move left and right
+          <br>Spacebar = Release ball</p>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/smashout/index.js"></script>
+{% endblock %}

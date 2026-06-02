@@ -1,0 +1,51 @@
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
+
+
+{% block head %}
+  <link href="/assets/mimstris/main.css" rel="stylesheet" type="text/css"/>
+  {{ super() }}
+{% endblock %}
+
+{% set pageTitle = applicationName + " - Neontroids" %}
+
+{% block content %}
+  {{ breadcrumbNavigation() }}
+  {{ breadcrumb(breadcrumbs) }}
+
+  <main class="govuk-main-wrapper">
+
+    <h1 class="govuk-heading-l">Mimstris</h1>
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-6">
+      <div class="govuk-grid-column-one-half">
+        <div id="app" class="govuk-body"></div>
+      </div>
+
+      <div class="govuk-grid-column-one-half">
+        <p class="govuk-body">
+          <b>{{ t("features:games.mimstris.howToPlay") }}</b>
+        </p>
+        <p class="govuk-body">
+          {{ t("features:games.mimstris.instructions1") }}
+          <br>{{ t("features:games.mimstris.instructions2") }}
+          <br>{{ t("features:games.mimstris.instructions3") }}
+          <br>{{ t("features:games.mimstris.instructions4") }}
+          <br>{{ t("features:games.mimstris.instructions5") }}
+          <br>{{ t("features:games.mimstris.instructions6") }}
+        </p>
+      </div>
+    </div>
+
+  </main>
+{% endblock %}
+
+{% block bodyEnd %}
+
+  <script nonce="{{ cspNonce }}">const i18n = {
+    'level': '{{ t("features:games.mimstris.level") }}',
+    'lines': '{{ t("features:games.mimstris.lines") }}',
+    'score': '{{ t("features:games.mimstris.score") }}'
+  };</script>
+  <script nonce="{{ cspNonce }}" src="/assets/mimstris/main.js"></script>
+{% endblock %}
