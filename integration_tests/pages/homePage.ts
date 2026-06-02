@@ -3,17 +3,29 @@ import AbstractPage from './abstractPage'
 
 export default class HomePage extends AbstractPage {
   readonly header: Locator
+
   readonly updatesHeading: Locator
+
   readonly featuredHeading: Locator
+
   readonly recentlyAddedHeading: Locator
+
   readonly exploreHeading: Locator
+
   readonly browseAllTopicsButton: Locator
+
   readonly searchBox: Locator
+
   readonly updatesItems: Locator
+
   readonly keyInfoItems: Locator
+
   readonly featuredCards: Locator
+
   readonly recentlyAddedCards: Locator
+
   readonly exploreCards: Locator
+
   readonly primaryNavigationLinks: Locator
 
   private constructor(page: Page) {
@@ -42,9 +54,13 @@ export default class HomePage extends AbstractPage {
   async verifyPrimaryNavigationLabels(labels: string[]): Promise<void> {
     const firstLabel = labels[0]
     if (firstLabel && (await this.page.getByRole('link', { name: firstLabel }).count()) > 0) {
-      for (const label of labels) {
-        await expect(this.page.locator('.moj-primary-navigation__item a', { hasText: new RegExp(`^${label}$`) })).toBeVisible()
-      }
+      await Promise.all(
+        labels.map(label =>
+          expect(
+            this.page.locator('.moj-primary-navigation__item a', { hasText: new RegExp(`^${label}$`) }),
+          ).toBeVisible(),
+        ),
+      )
       return
     }
 

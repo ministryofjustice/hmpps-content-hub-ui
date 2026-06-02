@@ -27,7 +27,9 @@ test.describe('Staff member selects a prison to view content for', () => {
     await loginWithHmppsAuth(page, { name: 'Test User' })
     await HomePage.verifyOnPage(page)
 
-    for (const { displayName } of config.establishments) {
+    await config.establishments.reduce(async (chain, { displayName }) => {
+      await chain
+
       await page.getByRole('link', { name: 'Change prison' }).click()
       await expect(page.getByRole('heading', { name: 'Change prison', level: 1 })).toBeVisible()
       await page.getByRole('radio', { name: displayName }).check()
@@ -36,6 +38,6 @@ test.describe('Staff member selects a prison to view content for', () => {
       await HomePage.verifyOnPage(page)
       await expect(page.getByLabel('Organisation switcher')).toContainText(displayName)
       await expect(page).toHaveURL('/')
-    }
+    }, Promise.resolve())
   })
 })
