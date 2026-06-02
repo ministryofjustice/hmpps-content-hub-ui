@@ -6,7 +6,7 @@ import prisonerAuth from './mockApis/prisonerAuth'
 
 export { resetStubs }
 
-const DEFAULT_ROLES = ['ROLE_SOME_REQUIRED_ROLE']
+const DEFAULT_ROLES = ['ROLE_PRISON']
 
 export const attemptHmppsAuthLogin = async (page: Page) => {
   await page.goto('/')

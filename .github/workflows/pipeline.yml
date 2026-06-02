@@ -49,6 +49,74 @@ jobs:
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_integration_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
     secrets: inherit
+  playwright_integration_tests:
+    name: playwright integration tests
+    needs: [node_build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm run setup
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Start WireMock
+        run: docker compose -f docker-compose-test.yml up -d wiremock
+
+      - name: Ensure staff localhost host mapping
+        run: echo '127.0.0.1 staff.localhost' | sudo tee -a /etc/hosts
+
+      - name: Build app
+        run: npm run build
+
+      - name: Start app in background
+        run: |
+          mkdir -p test_results/playwright
+          node --env-file=feature.env dist/server.js > test_results/playwright/app.log 2>&1 &
+          echo $! > /tmp/app.pid
+
+      - name: Wait for app health endpoint
+        run: |
+          for i in {1..30}; do
+            if curl --silent --fail http://localhost:3007/health > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "App failed to start within timeout"
+          exit 1
+
+      - name: Run Playwright tests
+        env:
+          CI: true
+        run: npm run int-test
+
+      - name: Stop app and test dependencies
+        if: always()
+        run: |
+          if [ -f /tmp/app.pid ]; then
+            kill "$(cat /tmp/app.pid)" || true
+          fi
+          docker compose -f docker-compose-test.yml down || true
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: |
+            test_results/playwright
+            test_results/playwright/app.log
+          if-no-files-found: warn
   helm_lint:
     strategy:
       matrix:
@@ -64,6 +132,7 @@ jobs:
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
     needs:
       - node_integration_tests
+      - playwright_integration_tests
       - node_unit_tests
     with:
       docker_registry: 'ghcr.io'

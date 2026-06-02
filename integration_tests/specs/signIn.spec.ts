@@ -28,8 +28,16 @@ test.describe('SignIn (Prisoners login)', () => {
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
   })
 
-  test.skip('User with correct details is logged in successfully', async ({ page }) => {
-    await cmsApi.stubPrimaryNavigation()
+  test('User with correct details is logged in successfully', async ({ page }) => {
+    await Promise.all([
+      cmsApi.stubPrimaryNavigation(),
+      cmsApi.stubTopics(),
+      cmsApi.stubUrgentBanner(),
+      cmsApi.stubHomepageContent(),
+      cmsApi.stubHomepageCollectionQueries(),
+      cmsApi.stubRecentlyAddedHomepageContent(),
+      cmsApi.stubExploreHomepageContent(),
+    ])
     await loginWithPrisonerAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
@@ -61,8 +69,16 @@ test.describe('SignIn (Staff login)', () => {
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
   })
 
-  test.skip('User with correct details is logged in successfully', async ({ page }) => {
-    await cmsApi.stubPrimaryNavigation()
+  test('User with correct details is logged in successfully', async ({ page }) => {
+    await Promise.all([
+      cmsApi.stubPrimaryNavigation(),
+      cmsApi.stubTopics(),
+      cmsApi.stubUrgentBanner(),
+      cmsApi.stubHomepageContent(),
+      cmsApi.stubHomepageCollectionQueries(),
+      cmsApi.stubRecentlyAddedHomepageContent(),
+      cmsApi.stubExploreHomepageContent(),
+    ])
     await loginWithHmppsAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
