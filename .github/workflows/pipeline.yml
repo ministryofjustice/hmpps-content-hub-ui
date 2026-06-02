@@ -84,15 +84,23 @@ jobs:
           node --env-file=feature.env dist/server.js > test_results/playwright/app.log 2>&1 &
           echo $! > /tmp/app.pid
 
-      - name: Wait for app health endpoint
+      - name: Wait for app readiness endpoint
         run: |
           for i in {1..30}; do
-            if curl --silent --fail http://localhost:3007/health > /dev/null; then
+            if curl --silent --fail http://localhost:3007/ping > /dev/null; then
               exit 0
             fi
+
+            if [ -f /tmp/app.pid ] && ! kill -0 "$(cat /tmp/app.pid)" 2>/dev/null; then
+              echo "App process exited before readiness check passed"
+              tail -n 200 test_results/playwright/app.log || true
+              exit 1
+            fi
+
             sleep 2
           done
-          echo "App failed to start within timeout"
+          echo "App failed to become ready within timeout"
+          tail -n 200 test_results/playwright/app.log || true
           exit 1
 
       - name: Run Playwright tests
