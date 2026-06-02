@@ -1,15 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
-{% block head %}
-  <style once="{{ cspNonce }}"  type="text/css">
-  canvas {
-    background-color: #f3f2f1;
-  }
-  </style>
-  {{ super() }}
-{% endblock %}
-
 {% set pageTitle = applicationName + " - Smashout" %}
 
 {% block content %}
@@ -24,7 +15,7 @@
     </div>
     <div class="govuk-grid-row govuk-!-margin-bottom-6">
       <div class="govuk-grid-column-two-thirds" id="game">
-        <canvas id="gameCanvas" width="780" height="620"></canvas>
+        <canvas class="smashout-canvas" id="gameCanvas" width="780" height="620"></canvas>
       </div>
       <div class="govuk-grid-column-one-third">
         <p class="govuk-body"><b>How to play:</b></p>
