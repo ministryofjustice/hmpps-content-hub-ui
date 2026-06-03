@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test'
-import { loginWithHmppsAuth, resetStubs } from '../../testUtils'
+import { loginWithHmppsAuth, resetStubs, stubHomePageQueries } from '../../testUtils'
 import HomePage from '../../pages/homePage'
-import cmsApi from '../../mockApis/cmsApi'
 import config from '../../../server/config'
 
 test.describe('Staff member selects a prison to view content for', () => {
@@ -14,15 +13,7 @@ test.describe('Staff member selects a prison to view content for', () => {
   })
 
   test('Selecting each prison displays it on the homepage', async ({ page }) => {
-    await Promise.all([
-      cmsApi.stubPrimaryNavigation(),
-      cmsApi.stubTopics(),
-      cmsApi.stubUrgentBanner(),
-      cmsApi.stubHomepageContent(),
-      cmsApi.stubHomepageCollectionQueries(),
-      cmsApi.stubRecentlyAddedHomepageContent(),
-      cmsApi.stubExploreHomepageContent(),
-    ])
+    await stubHomePageQueries()
 
     await loginWithHmppsAuth(page, { name: 'Test User' })
     await HomePage.verifyOnPage(page)

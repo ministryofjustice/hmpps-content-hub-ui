@@ -1,6 +1,5 @@
 import { test } from '@playwright/test'
-import { loginWithHmppsAuth, resetStubs } from '../../testUtils'
-import cmsApi from '../../mockApis/cmsApi'
+import { loginWithHmppsAuth, resetStubs, stubHomePageQueries } from '../../testUtils'
 import HomePage from '../../pages/homePage'
 
 test.describe('Staff homepage UI', () => {
@@ -13,15 +12,7 @@ test.describe('Staff homepage UI', () => {
   })
 
   test('renders all key homepage components', async ({ page }) => {
-    await Promise.all([
-      cmsApi.stubPrimaryNavigation(),
-      cmsApi.stubTopics(),
-      cmsApi.stubUrgentBanner(),
-      cmsApi.stubHomepageContent(),
-      cmsApi.stubHomepageCollectionQueries(),
-      cmsApi.stubRecentlyAddedHomepageContent(),
-      cmsApi.stubExploreHomepageContent(),
-    ])
+    await stubHomePageQueries()
 
     await loginWithHmppsAuth(page, { name: 'A TestUser' })
 

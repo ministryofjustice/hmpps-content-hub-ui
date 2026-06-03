@@ -1,9 +1,8 @@
 import { expect, test } from '@playwright/test'
-import { loginWithHmppsAuth, loginWithPrisonerAuth, resetStubs } from '../testUtils'
+import { loginWithHmppsAuth, loginWithPrisonerAuth, resetStubs, stubHomePageQueries } from '../testUtils'
 import HomePage from '../pages/homePage'
 import prisonerAuth from '../mockApis/prisonerAuth'
 import hmppsAuth from '../mockApis/hmppsAuth'
-import cmsApi from '../mockApis/cmsApi'
 
 test.describe('SignIn (Prisoners login)', () => {
   test.use({
@@ -29,15 +28,7 @@ test.describe('SignIn (Prisoners login)', () => {
   })
 
   test('User with correct details is logged in successfully', async ({ page }) => {
-    await Promise.all([
-      cmsApi.stubPrimaryNavigation(),
-      cmsApi.stubTopics(),
-      cmsApi.stubUrgentBanner(),
-      cmsApi.stubHomepageContent(),
-      cmsApi.stubHomepageCollectionQueries(),
-      cmsApi.stubRecentlyAddedHomepageContent(),
-      cmsApi.stubExploreHomepageContent(),
-    ])
+    await stubHomePageQueries()
     await loginWithPrisonerAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
@@ -70,15 +61,7 @@ test.describe('SignIn (Staff login)', () => {
   })
 
   test('User with correct details is logged in successfully', async ({ page }) => {
-    await Promise.all([
-      cmsApi.stubPrimaryNavigation(),
-      cmsApi.stubTopics(),
-      cmsApi.stubUrgentBanner(),
-      cmsApi.stubHomepageContent(),
-      cmsApi.stubHomepageCollectionQueries(),
-      cmsApi.stubRecentlyAddedHomepageContent(),
-      cmsApi.stubExploreHomepageContent(),
-    ])
+    await stubHomePageQueries()
     await loginWithHmppsAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
