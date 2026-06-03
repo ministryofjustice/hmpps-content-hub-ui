@@ -7,21 +7,16 @@
  *
  ***************************************************/
 
-var fs = require('fs'),
-    util = require('util');
-
-var Finder = module.exports = {};
+var Finder = {};
 Finder.Words = [];
 Finder.Anagrams = [];
 Finder.AnaIndex = [];
 Finder.BinHash = [];
 
 //Loads files into memory, prepares hash/cache
-Finder.load = function() {
-    parseDictFile(`${__dirname}/dict/words.txt`,  Finder.Words);
-    parseAnagrams(`${__dirname}/dict/anagrams.txt`, Finder.Anagrams, Finder.AnaIndex);
-    cacheBinary(Finder.BinHash,10);
-};
+loadWords();
+loadAnagrams();
+cacheBinary(Finder.BinHash,10);
 
 //Returns 1/0 if a word is found in the dictionary
 Finder.find = function(word) {
@@ -139,39 +134,50 @@ function cacheBinary(hash,len) {
 
 }
 
-//Loads a dictionary file from disk into memory
-function parseDictFile(dict,set) {
+async function loadFromTextFile(fileName, errorMessage) {
+	try {
+		const file = await fetch(fileName);
+		const fileText = await file.text();
 
-    fs.readFile(dict,'utf8',function(err,raw){
-	    if (err) throw err;
-	    var rows = raw.split('\n');
-	    for(var i=0,l=rows.length;i<l;i++) {
-			if (rows[i][0]!=' ') {
-				var word = rows[i].replace(/\s.*$/gi,'');
-		    	set.push(word);
-			}
-	    }
-	});
-
+		return fileText
+	} catch (error) {
+		console.error(errorMessage, error);
+	}
 }
 
-//Loads an anagram file from disk into memory
+// parse statically served words text file into memory
+function parseWords(dict,set) {
+	var rows = dict.split('\n');
+	for(var i=0,l=rows.length;i<l;i++) {
+		if (rows[i][0]!=' ') {
+			var word = rows[i].replace(/\s.*$/gi,'');
+				set.push(word);
+		}
+	};
+}
+
+//parse statically served anagram file into memory
 function parseAnagrams(anagrams,set,index) {
-
-    fs.readFile(anagrams,'utf8',function(err,raw){
-	    if (err) throw err;
-	    var rows = raw.split('\n');
-	    for(var i=0,l=rows.length;i<l;i++) {
-			if (rows[i][0]!=' ') {
-				var hary = rows[i].split('\t');
-				var curr = set[hary[0]] = [];
-				index.push(hary[0]);
-				for(var h=1,hl=hary.length;h<hl;h++) {
-					curr.push(hary[h]);
-				}
+	var rows = anagrams.split('\n');
+	for(var i=0,l=rows.length;i<l;i++) {
+		if (rows[i][0]!=' ') {
+			var hary = rows[i].split('\t');
+			var curr = set[hary[0]] = [];
+			index.push(hary[0]);
+			for(var h=1,hl=hary.length;h<hl;h++) {
+				curr.push(hary[h]);
 			}
-	    }
-	    index = index.sort();
-	});
+		}
+	}
+	index = index.sort();
+}
 
+async function loadWords() {
+	const words = await loadFromTextFile('/assets/anagramica/lib/dict/words.txt', 'Parsing word file failed:')
+	parseWords(words, Finder.Words)
+}
+
+async function loadAnagrams() {
+	const anagrams = await loadFromTextFile('/assets/anagramica/lib/dict/anagrams.txt', 'Parsing anagrams file failed:')
+	parseAnagrams(anagrams, Finder.Anagrams, Finder.AnaIndex)
 }

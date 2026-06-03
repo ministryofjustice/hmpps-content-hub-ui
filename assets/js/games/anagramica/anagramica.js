@@ -39,12 +39,19 @@ if (!anagramica.core) {
 		};
 
     var postResults = function(letters, words=[]){
-      if(/^[a-z]{10}$/.test(letters))
-        $.post(
-          '/games/anagramica',
-          { letters, words },
-          anagramica.game.displayResults
-        )
+      if(!/^[a-z]{10}$/.test(letters)) {
+				return { error: 'Invalid letter selection' }
+			}
+
+			const best = Finder.best(toAlpha(letters))
+			const scores = Array.isArray(words)
+				? words.reduce((total, rawWord) => {
+						const word = toAlpha(rawWord)
+						return Object.assign(total, { [word]: Finder.find(word) })
+					}, {})
+				: {}
+
+			anagramica.game.displayResults({best, scores, letters})
     }
 
 		return {

@@ -90,24 +90,6 @@ describe('Games Routes', () => {
     })
   })
 
-  // TODO: Fix scoring
-
-  // describe('POST /games/anagramica', () => {
-  //   it('should throw error showing route is functional', () => {
-  //     return request(app)
-  //       .post('/games/anagramica')
-  //       .expect('Content-Type', /html/)
-  //       .expect(500)
-  //       .expect(res => {
-  //         expect(res.text).toContain('Anagramica scoring route is functional - pending implementation')
-  //         expect(auditService.logPageView).toHaveBeenCalledWith(Page.GAME_ANAGRAMICA_SCORE, {
-  //           who: user.username,
-  //           correlationId: expect.any(String),
-  //         })
-  //       })
-  //   })
-  // })
-
   describe('GET /games/chess', () => {
     it('should display chess', () => {
       return request(app)

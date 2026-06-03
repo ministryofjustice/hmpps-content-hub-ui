@@ -3,8 +3,6 @@ import type { Services } from '../services'
 import { Page } from '../services/auditService'
 
 import config from '../config'
-// import toAlpha from '../..assets/js/games/anagramica/lib/helpers.js'
-// import Finder from '../../assets/js/games/anagramica/lib/finder.js'
 
 const GAMES_BREADCRUMBS = [
   { href: '/', text: 'Home' },
@@ -75,33 +73,6 @@ export default function gamesRoutes({ auditServiceSource }: Services): Router {
       next(error)
     }
   })
-  // TODO: Fix scoring
-
-  // router.post('/games/anagramica', async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     await auditServiceSource.get(req.portalType).logPageView(Page.GAME_ANAGRAMICA_SCORE, {
-  //       who: res.locals.user?.username,
-  //       correlationId: req.id,
-  //     })
-
-  //     const { letters, words = [] } = req.body
-  //     console.log(letters, words)
-  //     const best = Finder.best(toAlpha(letters))
-  //     const scores = Array.isArray(words)
-  //       ? words.reduce((total, rawWord) => {
-  //           const word = toAlpha(rawWord)
-  //           return Object.assign(total, { [word]: Finder.find(word) })
-  //         }, {})
-  //       : {}
-  //     return res.send({
-  //       best,
-  //       scores,
-  //       letters,
-  //     })
-  //   } catch (error) {
-  //     next(error)
-  //   }
-  // })
 
   router.get('/games/chess', async (req: Request, res: Response, next: NextFunction) => {
     try {

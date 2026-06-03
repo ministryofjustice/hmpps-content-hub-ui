@@ -173,6 +173,8 @@
 
 {% block bodyEnd %}
   <script nonce="{{ cspNonce }}" src="/assets/jquery.min.js"></script>
+  <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/anagramica/lib/helpers.js"></script>
+  <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/anagramica/lib/finder.js"></script>
   <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/anagramica/anagramica.js"></script>
 	<script type="text/javascript" nonce="{{ cspNonce }}">
 		$(document).ready(function(){
