@@ -1,9 +1,8 @@
 import { expect, test } from '@playwright/test'
-import { loginWithHmppsAuth, loginWithPrisonerAuth, resetStubs } from '../testUtils'
+import { loginWithHmppsAuth, loginWithPrisonerAuth, resetStubs, stubHomePageQueries } from '../testUtils'
 import HomePage from '../pages/homePage'
 import prisonerAuth from '../mockApis/prisonerAuth'
 import hmppsAuth from '../mockApis/hmppsAuth'
-import cmsApi from '../mockApis/cmsApi'
 
 test.describe('SignIn (Prisoners login)', () => {
   test.use({
@@ -28,8 +27,8 @@ test.describe('SignIn (Prisoners login)', () => {
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
   })
 
-  test.skip('User with correct details is logged in successfully', async ({ page }) => {
-    await cmsApi.stubPrimaryNavigation()
+  test('User with correct details is logged in successfully', async ({ page }) => {
+    await stubHomePageQueries()
     await loginWithPrisonerAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
@@ -61,8 +60,8 @@ test.describe('SignIn (Staff login)', () => {
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).toBeVisible()
   })
 
-  test.skip('User with correct details is logged in successfully', async ({ page }) => {
-    await cmsApi.stubPrimaryNavigation()
+  test('User with correct details is logged in successfully', async ({ page }) => {
+    await stubHomePageQueries()
     await loginWithHmppsAuth(page, { name: 'A TestUser' })
 
     await HomePage.verifyOnPage(page)
