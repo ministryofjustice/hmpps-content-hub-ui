@@ -252,7 +252,8 @@ describe('homepage content queries', () => {
       summary: 'test-field-summary',
       contentUrl: '/content/42',
       displayUrl: 'test-field-display-url',
-      image: { url: 'test-small-image', alt: '' },
+      thumbnailUrl: 'test-small-image',
+      thumbnailAlt: '',
       isNew: false,
       publishedAt: undefined,
     },
@@ -395,7 +396,7 @@ describe('homepage content queries', () => {
     )
 
     const expectedUpdatesContent: UpdatesContent = {
-      largeUpdateTileDefault: { ...expectedContentTile[0], image: { url: 'test-large-image', alt: '' } },
+      largeUpdateTileDefault: { ...expectedContentTile[0], thumbnailUrl: 'test-large-image' },
       updatesContent: expectedContentTile,
       isLastPage: false,
     }

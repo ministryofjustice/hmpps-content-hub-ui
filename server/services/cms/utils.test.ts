@@ -113,7 +113,8 @@ describe('crop text with ellipsis', () => {
       summary: 'test-field-summary',
       contentUrl: '/content/42',
       displayUrl: 'test-field-display-url',
-      image: { url: 'test-small-image', alt: '' },
+      thumbnailUrl: 'test-small-image',
+      thumbnailAlt: '',
       isNew: false,
       publishedAt: undefined,
     }

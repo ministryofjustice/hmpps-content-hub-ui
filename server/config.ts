@@ -97,20 +97,20 @@ export default {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
       healthPath: '/health/ping',
       timeout: {
-        response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
-        deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
+        response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 20000)),
+        deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 20000)),
       },
-      agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
+      agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 20000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
     cmsApi: {
       url: get('CMS_API_URL', 'http://localhost:8888', requiredInProduction),
       healthPath: '/jsonapi',
       timeout: {
-        response: Number(get('CMS_API_TIMEOUT_RESPONSE', 5000)),
-        deadline: Number(get('CMS_API_TIMEOUT_DEADLINE', 5000)),
+        response: Number(get('CMS_API_TIMEOUT_RESPONSE', 20000)),
+        deadline: Number(get('CMS_API_TIMEOUT_DEADLINE', 20000)),
       },
-      agent: new AgentConfig(Number(get('CMS_API_TIMEOUT_RESPONSE', 5000))),
+      agent: new AgentConfig(Number(get('CMS_API_TIMEOUT_RESPONSE', 20000))),
     },
   },
   establishments: [

@@ -77,7 +77,8 @@ export interface EpisodeTile {
   title: string
   seasonId: number | null
   seriesSortValue: number | null
-  image: ContentImage | null
+  thumbnailUrl?: string
+  thumbnailAlt?: string
 }
 
 export interface ContentTile {
@@ -88,7 +89,8 @@ export interface ContentTile {
   summary: string
   contentUrl: string
   displayUrl: string
-  image: ContentImage | null
+  thumbnailUrl?: string
+  thumbnailAlt?: string
   isNew: boolean
   publishedAt?: string
 }

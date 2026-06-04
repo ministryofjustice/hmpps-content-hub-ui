@@ -9,9 +9,7 @@ import type { EpisodeTile, ContentTile } from '../../@types/content'
 import {
   CmsAudioContent,
   CmsAudioNodeAttributes,
-  CmsCategoryFeaturedItem,
   CmsCategoryMenuAttributes,
-  CmsCategoryMenuItem,
   CmsCategoryTermAttributes,
   CmsEpisodeTileNodeAttributes,
   CmsFileAttributes,
@@ -21,12 +19,10 @@ import {
   CmsPath,
   CmsPrimaryNavigationAttributes,
   CmsPrimaryNavigationItem,
-  CmsSeriesItem,
   CmsSeriesTermAttributes,
   CMSContentNodeAttributes,
   CmsTaxonomyAttributes,
   CmsTopicAttributes,
-  CmsTopicContentItem,
   CmsTopicHeaderAttributes,
   CmsTopicItem,
   CmsTopicPageItem,
@@ -39,6 +35,10 @@ import {
   CmsHomePageRelationships,
   ImageSize,
   RecentlyAddedContent,
+  CmsTagItem,
+  CategoryContent,
+  CategoryMenuContent,
+  MediaContent,
 } from './types'
 import {
   findIncluded,
@@ -93,15 +93,15 @@ export const mapCategoryDetails = (
 export const mapCategoryMenuItem = (
   item: JsonApiResource<CmsCategoryMenuAttributes>,
   included: JsonApiResource[] | undefined,
-): CmsCategoryMenuItem => {
+): CmsTagItem<CategoryMenuContent> => {
   const thumbnailIdentifier = relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
   const thumbnail =
     included && thumbnailIdentifier ? findIncluded<CmsFileAttributes>(included, thumbnailIdentifier) : undefined
 
   return {
     id: `${item.attributes.drupal_internal__tid ?? item.id}`,
-    linkText: item.attributes.name ?? (item as JsonApiResource<CmsTaxonomyAttributes>).attributes.name ?? 'Untitled',
-    href: resolveTagHref(item.attributes.path, item.attributes.drupal_internal__tid),
+    title: item.attributes.name ?? (item as JsonApiResource<CmsTaxonomyAttributes>).attributes.name ?? 'Untitled',
+    contentUrl: resolveTagHref(item.attributes.path, item.attributes.drupal_internal__tid),
     thumbnailUrl: resolveFileUrl(thumbnail),
     contentType: item.type === 'taxonomy_term--series' ? 'series' : 'category',
   }
@@ -140,24 +140,24 @@ export const mapTopicHeader = (response: JsonApiSingleResponse<CmsTopicHeaderAtt
 const mapContentItem = (
   item: JsonApiResource<CmsNodeAttributes>,
   included: JsonApiResource[] | undefined,
-): CmsSeriesItem | CmsTopicContentItem => {
+): CmsTagItem<MediaContent> => {
   const thumbnailIdentifier = relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
   const thumbnail =
     thumbnailIdentifier && included ? findIncluded<CmsFileAttributes>(included, thumbnailIdentifier) : undefined
-  const href = resolvePath(item.attributes.path, item.attributes.drupal_internal__nid)
+  const contentUrl = resolvePath(item.attributes.path, item.attributes.drupal_internal__nid)
 
   const contentTypeByNodeType: Record<string, 'video' | 'radio'> = {
     'node--moj_video_item': 'video',
     'node--moj_radio_item': 'radio',
   }
   const contentType: 'video' | 'radio' | 'page' | 'link' =
-    contentTypeByNodeType[item.type] ?? (href.startsWith('/link/') ? 'link' : 'page')
+    contentTypeByNodeType[item.type] ?? (contentUrl.startsWith('/link/') ? 'link' : 'page')
 
   return {
     id: item.id,
     title: item.attributes.title,
     summary: item.attributes.field_summary,
-    href,
+    contentUrl,
     thumbnailUrl: resolveFileUrl(thumbnail),
     contentType,
   }
@@ -166,17 +166,17 @@ const mapContentItem = (
 export const mapSeriesItem = (
   item: JsonApiResource<CmsNodeAttributes>,
   included: JsonApiResource[] | undefined,
-): CmsSeriesItem => mapContentItem(item, included)
+): CmsTagItem<MediaContent> => mapContentItem(item, included)
 
 export const mapTopicItem = (
   item: JsonApiResource<CmsNodeAttributes>,
   included: JsonApiResource[] | undefined,
-): CmsTopicContentItem => mapContentItem(item, included)
+): CmsTagItem<MediaContent> => mapContentItem(item, included)
 
 export const mapCategoryFeaturedContent = (
   relationships?: JsonApiRelationships,
   included?: JsonApiResource[],
-): CmsCategoryFeaturedItem[] => {
+): CmsTagItem<CategoryContent>[] => {
   const identifiers = relationshipDataArray(relationships?.field_featured_tiles)
   if (!identifiers.length || !included) return []
 
@@ -203,12 +203,12 @@ export const mapCategoryFeaturedContent = (
       const taxonomyItem = series ?? (item as JsonApiResource<CmsTaxonomyAttributes>)
       const title = isSeries || isCategory ? taxonomyItem.attributes.name : item.attributes.title
 
-      const href =
+      const contentUrl =
         isSeries || isCategory
           ? resolveTagHref(taxonomyItem.attributes.path, taxonomyItem.attributes.drupal_internal__tid)
           : resolvePath(item.attributes.path, item.attributes.drupal_internal__nid)
 
-      let contentType: CmsCategoryFeaturedItem['contentType'] = 'content'
+      let contentType: CategoryContent = 'content'
 
       if (isSeries) {
         contentType = 'series'
@@ -220,7 +220,7 @@ export const mapCategoryFeaturedContent = (
         id: item.id,
         title: title ?? 'Untitled',
         summary: isSeries || isCategory ? undefined : item.attributes.field_summary,
-        href,
+        contentUrl,
         thumbnailUrl: resolveFileUrl(thumbnail) ?? resolveFileUrl(seriesThumbnail),
         contentType,
       }
@@ -389,7 +389,8 @@ export const mapEpisodeTile = (
     title: item.attributes.title,
     seasonId: item.attributes.field_moj_season ?? null,
     seriesSortValue: item.attributes.series_sort_value ?? null,
-    image: resolveFileUrl(thumbnail) ? { url: resolveFileUrl(thumbnail)!, alt: '' } : null,
+    thumbnailUrl: resolveFileUrl(thumbnail) ?? '',
+    thumbnailAlt: '',
   }
 }
 
@@ -424,7 +425,8 @@ const mapContentTile = (
     summary: item.attributes.field_summary ?? '',
     contentUrl: resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
     displayUrl: item.attributes.field_display_url ?? '',
-    image: resolveFileUrl(thumbnail, size) ? { url: resolveFileUrl(thumbnail, size)!, alt: '' } : null,
+    thumbnailUrl: resolveFileUrl(thumbnail, size) ?? '',
+    thumbnailAlt: '',
     isNew: publishedAt ? (Date.now() - new Date(publishedAt).getTime()) / 86_400_000 <= 2 : false,
     publishedAt: publishedAt
       ? Intl.DateTimeFormat('en-GB', {
