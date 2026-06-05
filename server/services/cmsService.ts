@@ -82,6 +82,9 @@ import {
   CmsHomePageRelationships,
   LookupType,
   RecentlyAddedContent,
+  MediaContent,
+  CmsTagItem,
+  CmsPaginatedContent,
 } from './cms/types'
 
 export default class CmsService {
@@ -143,6 +146,7 @@ export default class CmsService {
       name: match.attributes.name,
       description: match.attributes.description,
       breadcrumbs: [],
+      isLastPage: true,
     }
 
     if (tagType === 'topic') {
@@ -157,7 +161,8 @@ export default class CmsService {
         description: topicHeader?.description ?? baseTag.description,
         breadcrumbs: topicHeader?.breadcrumbs ?? baseTag.breadcrumbs,
         topicHeaderImageUrl: topicHeader?.thumbnailUrl,
-        topicItems,
+        topicItems: topicItems.data,
+        isLastPage: topicItems.isLastPage,
       }
     }
 
@@ -173,7 +178,8 @@ export default class CmsService {
         description: seriesHeader?.description ?? baseTag.description,
         breadcrumbs: seriesHeader?.breadcrumbs ?? baseTag.breadcrumbs,
         seriesHeaderImageUrl: seriesHeader?.thumbnailUrl,
-        seriesItems,
+        seriesItems: seriesItems.data,
+        isLastPage: seriesItems.isLastPage,
       }
     }
 
@@ -191,8 +197,40 @@ export default class CmsService {
       breadcrumbs: categoryDetails?.breadcrumbs ?? baseTag.breadcrumbs,
       categoryFeaturedContent: categoryDetails?.categoryFeaturedContent ?? [],
       categoryMenu,
-      categoryContent,
+      categoryContent: categoryContent.data,
+      isLastPage: categoryContent.isLastPage,
     }
+  }
+
+  async getTagPage(
+    establishmentName: string,
+    tagId: string,
+    language: string,
+    page: number,
+  ): Promise<CmsPaginatedContent<CmsTagItem<MediaContent> | ContentTile>> {
+    const queryString = buildTagLookupQueryString(tagId)
+    const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term?${queryString}`
+    const response = await this.jsonApiClient.getCollectionByPath<CmsTagTermAttributes>(path)
+    const match = response.data[0] as CmsTagTermItem | undefined
+    if (!match) return null
+
+    const tagType = mapTagType(match.type)
+    if (!tagType) return null
+
+    if (tagType === 'topic') {
+      const topicItems = await this.getTopicItems(establishmentName, match.id, language, page)
+      return topicItems
+    }
+
+    if (tagType === 'series') {
+      const seriesItems = await this.getSeriesItems(establishmentName, match.id, language, page)
+      return seriesItems
+    }
+
+    if (tagType !== 'category') return null
+
+    const categoryContent = await this.getCategoryContent(establishmentName, match.id, language, page)
+    return categoryContent
   }
 
   private async getTopicTermByTid(establishmentName: string, topicId: string, language: string) {
@@ -218,11 +256,11 @@ export default class CmsService {
     return response.data.map(item => mapCategoryMenuItem(item, response.included))
   }
 
-  private async getCategoryContent(establishmentName: string, categoryUuid: string, language: string) {
-    const queryString = buildCategoryContentQueryString(categoryUuid)
+  private async getCategoryContent(establishmentName: string, categoryUuid: string, language: string, page?: number) {
+    const queryString = buildCategoryContentQueryString(categoryUuid, page)
     const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
     const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
-    return mapContentToTiles(response)
+    return { data: mapContentToTiles(response), isLastPage: !response.links?.next }
   }
 
   private async getSeriesHeader(establishmentName: string, seriesUuid: string, language: string) {
@@ -243,14 +281,17 @@ export default class CmsService {
     const queryString = buildSeriesItemsQueryString(seriesUuid, page)
     const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
     const response = await this.jsonApiClient.getCollectionByPath<CmsNodeAttributes>(path)
-    return response.data.map(item => mapSeriesItem(item, response.included))
+    return {
+      data: response.data.map(item => mapSeriesItem(item, response.included)),
+      isLastPage: !response.links?.next,
+    }
   }
 
   private async getTopicItems(establishmentName: string, topicUuid: string, language: string, page: number = 1) {
     const queryString = buildTopicItemsQueryString(topicUuid, page)
     const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
     const response = await this.jsonApiClient.getCollectionByPath<CmsNodeAttributes>(path)
-    return response.data.map(item => mapTopicItem(item, response.included))
+    return { data: response.data.map(item => mapTopicItem(item, response.included)), isLastPage: !response.links?.next }
   }
 
   async getContent(establishmentName: string, contentId: number, language: string): Promise<CmsContent | null> {

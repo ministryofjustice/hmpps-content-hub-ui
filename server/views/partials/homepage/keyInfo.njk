@@ -7,8 +7,8 @@
         href="{{item.contentUrl}}"
         {% if item.externalContent %}target="_blank"{% endif %}
         class="govuk-link govuk-link--no-visited-state govuk-link--no-underline govuk-!-margin-bottom-2">
-        {% if item.image.url %}
-          <img src="{{item.image.url}}" alt="" loading="lazy">
+        {% if item.thumbnailUrl %}
+          <img src="{{item.thumbnailUrl}}" alt="" loading="lazy">
         {% else %}
           <img src="/assets/images/content_image_placeholder_logo.png" alt="logo" loading="lazy">
         {% endif %}
