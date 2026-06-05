@@ -75,6 +75,7 @@ export interface CmsTag {
   categoryFeaturedContent?: CmsTagItem<CategoryContent>[]
   categoryMenu?: CmsTagItem<CategoryMenuContent>[]
   categoryContent?: ContentTile[]
+  isLastPage: boolean
 }
 
 export interface CmsTagItem<ContentType> {
@@ -84,6 +85,11 @@ export interface CmsTagItem<ContentType> {
   contentUrl: string
   thumbnailUrl?: string
   contentType?: ContentType
+}
+
+export interface CmsPaginatedContent<ContentType> {
+  data: ContentType[]
+  isLastPage: boolean
 }
 
 export type CmsPath = {
@@ -298,12 +304,9 @@ export interface HomePageContent {
   largeUpdateTile?: ContentTile
 }
 
-export type RecentlyAddedContent = ExploreContent
+export type RecentlyAddedContent = CmsPaginatedContent<ContentTile>
 
-export interface ExploreContent {
-  data: ContentTile[]
-  isLastPage: boolean
-}
+export type ExploreContent = CmsPaginatedContent<ContentTile>
 
 export interface UpdatesContent {
   largeUpdateTileDefault: ContentTile

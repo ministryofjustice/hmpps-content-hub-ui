@@ -17,6 +17,7 @@ let app: Express
 
 beforeEach(() => {
   auditServiceSource.get.mockReturnValue(auditService)
+  auditService.logPageView.mockResolvedValue(null)
 
   app = appWithAllRoutes({
     services: {
@@ -70,10 +71,12 @@ describe('Topics Routes', () => {
       name: 'Education',
       description: 'Topic description',
       breadcrumbs: [{ text: 'Home', href: '/' }, { text: 'Topics', href: '/topics' }, { text: 'Education' }],
+      isLastPage: true,
     }
 
+    const SHOW_MORE_BUTTON_CLASS = 'show-more-tiles'
+
     it('should render tag name, description, and breadcrumbs', () => {
-      auditService.logPageView.mockResolvedValue(null)
       cmsService.getTag.mockResolvedValue(BASE_TAG)
       return request(app)
         .get('/tags/123')
@@ -84,6 +87,7 @@ describe('Topics Routes', () => {
           expect(res.text).toContain('href="/topics"')
           expect(res.text).toContain('Education')
           expect(res.text).toContain('Topic description')
+          expect(res.text).not.toContain(SHOW_MORE_BUTTON_CLASS)
           expect(auditService.logPageView).toHaveBeenCalledWith(Page.TAG, {
             who: user.username,
             correlationId: expect.any(String),
@@ -93,8 +97,19 @@ describe('Topics Routes', () => {
         })
     })
 
+    it('should render show more button when there is additional content available', () => {
+      cmsService.getTag.mockResolvedValue({ ...BASE_TAG, isLastPage: false })
+
+      return request(app)
+        .get('/tags/123')
+        .expect('Content-Type', /html/)
+        .expect(200)
+        .expect(res => {
+          expect(res.text).toContain(SHOW_MORE_BUTTON_CLASS)
+        })
+    })
+
     it('should render topic tag-types', () => {
-      auditService.logPageView.mockResolvedValue(null)
       cmsService.getTag.mockResolvedValue({
         ...BASE_TAG,
         topicHeaderImageUrl: 'topic-header-url',
@@ -128,7 +143,6 @@ describe('Topics Routes', () => {
     })
 
     it('should render series tag-types', () => {
-      auditService.logPageView.mockResolvedValue(null)
       cmsService.getTag.mockResolvedValue({
         ...BASE_TAG,
         type: 'series',
@@ -163,7 +177,6 @@ describe('Topics Routes', () => {
     })
 
     it('should render category tag-types', () => {
-      auditService.logPageView.mockResolvedValue(null)
       cmsService.getTag.mockResolvedValue({
         ...BASE_TAG,
         type: 'category',
