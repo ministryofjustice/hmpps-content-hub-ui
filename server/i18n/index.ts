@@ -26,7 +26,7 @@ i18next
       process.env.NODE_ENV !== 'production' &&
       process.env.NODE_ENV !== 'test' &&
       process.env.INTEGRATION_TESTS !== 'true',
-    ns: ['common', 'pages', 'features'],
+    ns: ['common', 'pages', 'features', 'errors'],
     defaultNS: 'common',
     saveMissing: false,
     interpolation: {

@@ -12,6 +12,10 @@ type TopicColumn = {
   groups: TopicGroup[]
 }
 
+interface TagParams {
+  id: string
+}
+
 export default function topicsRoutes({ auditServiceSource, cmsService }: Services): Router {
   const router = Router()
 
@@ -46,16 +50,16 @@ export default function topicsRoutes({ auditServiceSource, cmsService }: Service
     }
   })
 
-  router.get('/tags/:id', async (req: Request, res: Response, next: NextFunction) => {
+  router.get('/tags/:id', async (req: Request<TagParams>, res: Response, next: NextFunction) => {
     try {
       await auditServiceSource.get(req.portalType).logPageView(Page.TAG, {
         who: res.locals.user?.username,
         correlationId: req.id,
-        subjectId: req.params.id?.toString(),
+        subjectId: req.params.id,
       })
       const establishmentName = res.locals.establishment?.name || config.establishments[0].name
       const language = res.locals.language || 'en'
-      const tag = await cmsService.getTag(establishmentName, req.params.id?.toString(), language)
+      const tag = await cmsService.getTag(establishmentName, req.params.id, language)
 
       if (!tag) {
         res.status(404)
@@ -64,6 +68,30 @@ export default function topicsRoutes({ auditServiceSource, cmsService }: Service
       }
 
       res.render('pages/tag', { tag })
+    } catch (error) {
+      next(error)
+    }
+  })
+
+  router.get('/tags/:id/show-more', async (req: Request<TagParams>, res: Response, next: NextFunction) => {
+    try {
+      const { user, establishment, language } = res.locals
+      await auditServiceSource.get(req.portalType).logPageView(Page.TAG_JSON, {
+        who: user?.username,
+        correlationId: req.id,
+      })
+
+      const { page } = req.query
+      const { data, isLastPage } = await cmsService.getTagPage(
+        establishment.name,
+        req.params.id,
+        language,
+        Number(page),
+      )
+
+      res.render('partials/category/category-grid', { gridItems: data }, (_, html) => {
+        res.json({ html, isLastPage })
+      })
     } catch (error) {
       next(error)
     }

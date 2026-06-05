@@ -55,6 +55,12 @@ export interface CmsBreadcrumbItem {
 
 export type CmsTagType = 'topic' | 'series' | 'category'
 
+export type MediaContent = 'video' | 'radio' | 'page' | 'link'
+
+export type CategoryContent = 'series' | 'category' | 'content'
+
+export type CategoryMenuContent = 'series' | 'category'
+
 export interface CmsTag {
   id: string
   uuid: string
@@ -63,47 +69,27 @@ export interface CmsTag {
   description?: string
   breadcrumbs?: CmsBreadcrumbItem[]
   seriesHeaderImageUrl?: string
-  seriesItems?: CmsSeriesItem[]
+  seriesItems?: CmsTagItem<MediaContent>[]
   topicHeaderImageUrl?: string
-  topicItems?: CmsTopicContentItem[]
-  categoryFeaturedContent?: CmsCategoryFeaturedItem[]
-  categoryMenu?: CmsCategoryMenuItem[]
+  topicItems?: CmsTagItem<MediaContent>[]
+  categoryFeaturedContent?: CmsTagItem<CategoryContent>[]
+  categoryMenu?: CmsTagItem<CategoryMenuContent>[]
   categoryContent?: ContentTile[]
+  isLastPage: boolean
 }
 
-export interface CmsSeriesItem {
+export interface CmsTagItem<ContentType> {
   id: string
   title?: string
   summary?: string
-  href: string
+  contentUrl: string
   thumbnailUrl?: string
-  contentType?: 'video' | 'radio' | 'page' | 'link'
+  contentType?: ContentType
 }
 
-export interface CmsTopicContentItem {
-  id: string
-  title?: string
-  summary?: string
-  href: string
-  thumbnailUrl?: string
-  contentType?: 'video' | 'radio' | 'page' | 'link'
-}
-
-export interface CmsCategoryFeaturedItem {
-  id: string
-  title?: string
-  summary?: string
-  href: string
-  thumbnailUrl?: string
-  contentType?: 'series' | 'category' | 'content'
-}
-
-export interface CmsCategoryMenuItem {
-  id: string
-  linkText: string
-  href: string
-  thumbnailUrl?: string
-  contentType?: 'series' | 'category'
+export interface CmsPaginatedContent<ContentType> {
+  data: ContentType[]
+  isLastPage: boolean
 }
 
 export type CmsPath = {
@@ -318,10 +304,9 @@ export interface HomePageContent {
   largeUpdateTile?: ContentTile
 }
 
-export interface ExploreContent {
-  data: ContentTile[]
-  isLastPage: boolean
-}
+export type RecentlyAddedContent = CmsPaginatedContent<ContentTile>
+
+export type ExploreContent = CmsPaginatedContent<ContentTile>
 
 export interface UpdatesContent {
   largeUpdateTileDefault: ContentTile

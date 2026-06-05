@@ -3,10 +3,23 @@ import tokenVerification from './mockApis/tokenVerification'
 import hmppsAuth, { type UserToken } from './mockApis/hmppsAuth'
 import { resetStubs } from './mockApis/wiremock'
 import prisonerAuth from './mockApis/prisonerAuth'
+import cmsApi from './mockApis/cmsApi'
 
 export { resetStubs }
 
-const DEFAULT_ROLES = ['ROLE_SOME_REQUIRED_ROLE']
+export const stubHomePageQueries = async () => {
+  await Promise.all([
+    cmsApi.stubPrimaryNavigation(),
+    cmsApi.stubTopics(),
+    cmsApi.stubUrgentBanner(),
+    cmsApi.stubHomepageContent(),
+    cmsApi.stubHomepageCollectionQueries(),
+    cmsApi.stubRecentlyAddedHomepageContent(),
+    cmsApi.stubExploreHomepageContent(),
+  ])
+}
+
+const DEFAULT_ROLES = ['ROLE_PRISON']
 
 export const attemptHmppsAuthLogin = async (page: Page) => {
   await page.goto('/')

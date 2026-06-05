@@ -82,8 +82,8 @@ describe('cms mappers', () => {
 
     expect(mapCategoryMenuItem(item, included)).toEqual({
       id: '10',
-      linkText: 'Series A',
-      href: '/tags/10',
+      title: 'Series A',
+      contentUrl: '/tags/10',
       thumbnailUrl: '/img/series.png',
       contentType: 'series',
     })
@@ -180,7 +180,7 @@ describe('cms mappers', () => {
       id: 'node-1',
       title: 'Content A',
       summary: 'Summary',
-      href: '/content/1',
+      contentUrl: '/content/1',
       thumbnailUrl: '/img/content.png',
       contentType: 'page',
     })
@@ -188,7 +188,7 @@ describe('cms mappers', () => {
       id: 'node-1',
       title: 'Content A',
       summary: 'Summary',
-      href: '/content/1',
+      contentUrl: '/content/1',
       thumbnailUrl: '/img/content.png',
       contentType: 'page',
     })
@@ -210,7 +210,7 @@ describe('cms mappers', () => {
       id: 'node-2',
       title: 'External link',
       summary: 'Summary',
-      href: '/link/123',
+      contentUrl: '/link/123',
       thumbnailUrl: undefined,
       contentType: 'link',
     })
@@ -271,7 +271,7 @@ describe('cms mappers', () => {
       id: 'series-1',
       title: 'Series A',
       summary: undefined,
-      href: '/tags/10',
+      contentUrl: '/tags/10',
       thumbnailUrl: '/img/series.png',
       contentType: 'series',
     })
@@ -279,7 +279,7 @@ describe('cms mappers', () => {
       id: 'node-1',
       title: 'Content A',
       summary: 'Summary',
-      href: '/content/1',
+      contentUrl: '/content/1',
       thumbnailUrl: '/img/content.png',
       contentType: 'content',
     })
@@ -332,7 +332,7 @@ describe('cms mappers', () => {
           id: 'node-1',
           title: 'Content A',
           summary: 'Summary',
-          href: '/content/1',
+          contentUrl: '/content/1',
           thumbnailUrl: undefined,
           contentType: 'content',
         },

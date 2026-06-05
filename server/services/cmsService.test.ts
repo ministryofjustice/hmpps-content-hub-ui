@@ -3,8 +3,8 @@ import CmsService from './cmsService'
 import {
   CMSContentNodeAttributes,
   CmsHomePageRelationships,
+  CmsNodeAttributes,
   CmsPrimaryNavigationAttributes,
-  CmsTag,
   CmsTopicAttributes,
   CmsTopicPage,
   ExploreContent,
@@ -155,6 +155,15 @@ describe('CmsService', () => {
     expect(result.topic.title).toEqual('Education')
     expect(result.items[0].title).toEqual('Learning skills')
   })
+})
+
+describe('tag queries', () => {
+  const jsonApiClient = new JsonApiClient(null, null) as jest.Mocked<JsonApiClient>
+  let cmsService: CmsService
+
+  beforeEach(() => {
+    cmsService = new CmsService(jsonApiClient)
+  })
 
   it('should resolve tag type by taxonomy term id', async () => {
     const termResponse: JsonApiCollectionResponse<{
@@ -189,7 +198,7 @@ describe('CmsService', () => {
     jsonApiClient.getCollectionByPath.mockResolvedValueOnce(termResponse).mockResolvedValueOnce({ data: [] })
     jsonApiClient.getSingleByPath.mockResolvedValueOnce(seriesHeaderResponse)
 
-    const result = (await cmsService.getTag('bullingdon', '99', 'en')) as CmsTag
+    const result = await cmsService.getTag('bullingdon', '99', 'en')
 
     expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
       '/en/jsonapi/prison/bullingdon/taxonomy_term?filter%5Bdrupal_internal__tid%5D=99&page%5Blimit%5D=1&fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--series%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--moj_categories%5D=drupal_internal__tid%2Cname%2Cdescription',
@@ -203,6 +212,83 @@ describe('CmsService', () => {
       breadcrumbs: [],
       seriesHeaderImageUrl: undefined,
       seriesItems: [],
+      isLastPage: true,
+    })
+  })
+
+  it('should resolve additional page request for tags', async () => {
+    const termResponse: JsonApiCollectionResponse<{
+      name: string
+      drupal_internal__tid: number
+      description?: string
+    }> = {
+      data: [
+        {
+          type: 'taxonomy_term--series',
+          id: 'uuid-1',
+          attributes: {
+            name: 'Induction',
+            drupal_internal__tid: 99,
+            description: 'Series description',
+          },
+        },
+      ],
+    }
+
+    const seriesContentResponse: JsonApiCollectionResponse<CmsNodeAttributes> = {
+      data: [
+        {
+          type: 'taxonomy_term--series',
+          id: 'series-id',
+          attributes: {
+            title: 'series-title',
+            drupal_internal__nid: 99,
+            field_summary: 'series-summary',
+          },
+          relationships: {
+            field_moj_thumbnail_image: { data: { type: 'file--file', id: 'thumbnail-1' } },
+          },
+        },
+      ],
+      included: [
+        {
+          id: 'thumbnail-1',
+          type: 'file--file',
+          attributes: {
+            image_style_uri: {
+              tile_large: 'series-large-image',
+              tile_small: 'series-small-image',
+            },
+          },
+        },
+      ],
+      links: { next: 'Indicates we are not the last page' },
+    }
+
+    jsonApiClient.getCollectionByPath.mockResolvedValueOnce(termResponse).mockResolvedValueOnce(seriesContentResponse)
+
+    const result = await cmsService.getTagPage('bullingdon', '99', 'en', 2)
+
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      '/en/jsonapi/prison/bullingdon/taxonomy_term?filter%5Bdrupal_internal__tid%5D=99&page%5Blimit%5D=1&fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--series%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--moj_categories%5D=drupal_internal__tid%2Cname%2Cdescription',
+    )
+
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      '/en/jsonapi/prison/bullingdon/node?filter%5Bfield_moj_series.id%5D=uuid-1&include=field_moj_thumbnail_image%2Cfield_moj_series.field_moj_thumbnail_image&page%5Blimit%5D=40&page%5Boffset%5D=40&sort=series_sort_value%2Ccreated&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_moj_series&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_moj_series&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_moj_series&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_moj_series&fields%5Bfile--file%5D=image_style_uri%2Curi%2Curl',
+    )
+
+    expect(result).toEqual({
+      data: [
+        {
+          contentType: 'page',
+          contentUrl: '/content/99',
+          id: 'series-id',
+          summary: 'series-summary',
+          thumbnailUrl: 'series-small-image',
+          title: 'series-title',
+        },
+      ],
+      isLastPage: false,
     })
   })
 })
@@ -252,7 +338,8 @@ describe('homepage content queries', () => {
       summary: 'test-field-summary',
       contentUrl: '/content/42',
       displayUrl: 'test-field-display-url',
-      image: { url: 'test-small-image', alt: '' },
+      thumbnailUrl: 'test-small-image',
+      thumbnailAlt: '',
       isNew: false,
       publishedAt: undefined,
     },
@@ -354,6 +441,19 @@ describe('homepage content queries', () => {
     expect(response).toStrictEqual(expectedContentTile)
   })
 
+  it('should fetch recently added content', async () => {
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockContent)
+
+    const response = await cmsService.getRecentlyAddedContent('bullingdon', 'en')
+    const expectedDate = unixTimestamp(14, new Date().setHours(0, 0, 0, 0))
+
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      `/en/jsonapi/prison/bullingdon/node?filter%5Btype.meta.drupal_internal__target_id%5D%5Bcondition%5D%5Bpath%5D=type.meta.drupal_internal__target_id&filter%5Btype.meta.drupal_internal__target_id%5D%5Bcondition%5D%5Bvalue%5D%5B0%5D=page&filter%5Btype.meta.drupal_internal__target_id%5D%5Bcondition%5D%5Bvalue%5D%5B1%5D=moj_video_item&filter%5Btype.meta.drupal_internal__target_id%5D%5Bcondition%5D%5Bvalue%5D%5B2%5D=moj_radio_item&filter%5Btype.meta.drupal_internal__target_id%5D%5Bcondition%5D%5Bvalue%5D%5B3%5D=moj_pdf_item&filter%5Btype.meta.drupal_internal__target_id%5D%5Bcondition%5D%5Boperator%5D=IN&filter%5Bcreated%5D%5Bvalue%5D=${expectedDate}&filter%5Bcreated%5D%5Boperator%5D=%3E%3D&include=field_moj_thumbnail_image&page%5Blimit%5D=8&page%5Boffset%5D=0&sort=-published_at%2Ccreated&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri`,
+    )
+
+    expect(response).toStrictEqual({ data: expectedContentTile, isLastPage: false })
+  })
+
   it('should fetch explore content', async () => {
     jsonApiClient.getCollectionByPath.mockResolvedValue(mockContent)
 
@@ -382,7 +482,7 @@ describe('homepage content queries', () => {
     )
 
     const expectedUpdatesContent: UpdatesContent = {
-      largeUpdateTileDefault: { ...expectedContentTile[0], image: { url: 'test-large-image', alt: '' } },
+      largeUpdateTileDefault: { ...expectedContentTile[0], thumbnailUrl: 'test-large-image' },
       updatesContent: expectedContentTile,
       isLastPage: false,
     }

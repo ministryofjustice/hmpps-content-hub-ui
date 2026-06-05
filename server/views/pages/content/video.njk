@@ -87,7 +87,7 @@
             <div class="govuk-grid-row hmpps-category-grid">
               {% for episode in data.nextEpisodes %}
                 <div class="govuk-grid-column-one-third">
-                  {% set cardItem = { href: '/content/' + episode.id, title: episode.title, thumbnailUrl: episode.image.url if episode.image else '', contentType: data.contentType } %}
+                  {% set cardItem = { href: '/content/' + episode.id, title: episode.title, thumbnailUrl: episode.thumbnailUrl, contentType: data.contentType } %}
                   {% set showContentTag = true %}
                   {% set showSeriesTag = false %}
                   {% include "../../partials/category/category-card.njk" %}
@@ -105,7 +105,7 @@
         <div class="govuk-grid-row hmpps-category-grid">
           {% for item in data.suggestedContent %}
             <div class="govuk-grid-column-one-quarter">
-              {% set cardItem = { href: item.contentUrl, title: item.title, thumbnailUrl: item.image.url if item.image else '', contentType: item.contentType } %}
+              {% set cardItem = { href: item.contentUrl, title: item.title, thumbnailUrl: item.thumbnailUrl, contentType: item.contentType } %}
               {% set showContentTag = true %}
               {% set showSeriesTag = false %}
               {% include "../../partials/category/category-card.njk" %}
