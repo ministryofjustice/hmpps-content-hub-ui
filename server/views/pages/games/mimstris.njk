@@ -3,7 +3,7 @@
 
 
 {% block head %}
-  <link href="/assets/mimstris/main.css" rel="stylesheet" type="text/css"/>
+  <link href="/assets/js/games/mimstris/main.css" rel="stylesheet" type="text/css"/>
   {{ super() }}
 {% endblock %}
 
@@ -47,5 +47,5 @@
     'lines': '{{ t("features:games.mimstris.lines") }}',
     'score': '{{ t("features:games.mimstris.score") }}'
   };</script>
-  <script nonce="{{ cspNonce }}" src="/assets/mimstris/main.js"></script>
+  <script nonce="{{ cspNonce }}" src="/assets/js/games/mimstris/main.js"></script>
 {% endblock %}

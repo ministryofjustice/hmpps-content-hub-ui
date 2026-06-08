@@ -1,4 +1,4 @@
-var game = engineGame({ book: '/assets/chess/book.bin' });
+var game = engineGame({ book: '/assets/js/games/chess/book.bin' });
 
 function newGame() {
   var baseTime = parseFloat($('#timeBase').val()) * 60;

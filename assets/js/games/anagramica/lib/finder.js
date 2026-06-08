@@ -173,11 +173,11 @@ function parseAnagrams(anagrams,set,index) {
 }
 
 async function loadWords() {
-	const words = await loadFromTextFile('/assets/anagramica/lib/dict/words.txt', 'Parsing word file failed:')
+	const words = await loadFromTextFile('/assets/js/games/anagramica/lib/dict/words.txt', 'Parsing word file failed:')
 	parseWords(words, Finder.Words)
 }
 
 async function loadAnagrams() {
-	const anagrams = await loadFromTextFile('/assets/anagramica/lib/dict/anagrams.txt', 'Parsing anagrams file failed:')
+	const anagrams = await loadFromTextFile('/assets/js/games/anagramica/lib/dict/anagrams.txt', 'Parsing anagrams file failed:')
 	parseAnagrams(anagrams, Finder.Anagrams, Finder.AnaIndex)
 }

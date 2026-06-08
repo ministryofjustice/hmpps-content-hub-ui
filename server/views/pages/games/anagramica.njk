@@ -4,7 +4,7 @@
 {% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
 {% block head %}
-	<link href="/assets/anagramica/stylesheets/style.css" rel="stylesheet"/>
+	<link href="/assets/js/games/anagramica/stylesheets/style.css" rel="stylesheet"/>
   {{ super() }}
 {% endblock %}
 
@@ -173,9 +173,9 @@
 
 {% block bodyEnd %}
   <script nonce="{{ cspNonce }}" src="/assets/jquery.min.js"></script>
-  <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/anagramica/lib/helpers.js"></script>
-  <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/anagramica/lib/finder.js"></script>
-  <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/anagramica/anagramica.js"></script>
+  <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/games/anagramica/lib/helpers.js"></script>
+  <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/games/anagramica/lib/finder.js"></script>
+  <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/games/anagramica/anagramica.js"></script>
 	<script type="text/javascript" nonce="{{ cspNonce }}">
 		$(document).ready(function(){
 			anagramica.game.init();

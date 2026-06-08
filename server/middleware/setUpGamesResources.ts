@@ -14,7 +14,6 @@ export default function setUpGamesResources(): Router {
   const staticResourcesConfig = { maxAge: config.staticResourceCacheDuration, redirect: false }
 
   Array.of(
-    '/assets/js/games',
     '/node_modules/@chrisoakman/chessboardjs/dist', // chess
     '/node_modules/howler/dist', // invaders from space
     '/node_modules/stockfish.js', // chess
@@ -23,9 +22,10 @@ export default function setUpGamesResources(): Router {
   })
 
   // Required for chessboard js to work
-  Array.of('/assets/images/chesspieces').forEach(dir => {
-    router.use('/games/img/chesspieces/wikipedia', express.static(path.join(process.cwd(), dir), staticResourcesConfig))
-  })
+  router.use(
+    '/games/img/chesspieces/wikipedia',
+    express.static(path.join(process.cwd(), '/assets/images/chesspieces'), staticResourcesConfig),
+  )
 
   // Don't cache dynamic resources
   router.use(noCache())

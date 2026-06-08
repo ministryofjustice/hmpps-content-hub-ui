@@ -3,7 +3,7 @@
 
 {% block head %}
   {{ super() }}
-  <link href="/assets/solitaire/main.css" rel="stylesheet" type="text/css"/>
+  <link href="/assets/js/games/solitaire/main.css" rel="stylesheet" type="text/css"/>
 {% endblock %}\
 
 {% set pageTitle = applicationName + " - Solitaire" %}
@@ -317,5 +317,5 @@
 
 {% block bodyEnd %}
   <script nonce="{{ cspNonce }}" src="/assets/jquery.min.js"></script>
-  <script src="/assets/solitaire/main.js"></script>
+  <script src="/assets/js/games/solitaire/main.js"></script>
 {% endblock %}

@@ -3,10 +3,10 @@
 {% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
 {% block head %}
-  <link href="/assets/chess/chessboard.css" rel="stylesheet" type="text/css"/>
+  <link href="/assets/js/games/chess/chessboard.css" rel="stylesheet" type="text/css"/>
   <!-- chess -->
   <script nonce="{{ cspNonce }}" src="/assets/jquery.min.js"></script>
-  <script nonce="{{ cspNonce }}" src="/assets/chess/chess.min.js"></script>
+  <script nonce="{{ cspNonce }}" src="/assets/js/games/chess/chess.min.js"></script>
   <script nonce="{{ cspNonce }}" src="/assets/chessboard-1.0.0.min.js"></script>
   <script nonce="{{ cspNonce }}" src="/assets/stockfish.js"></script>
   {{ super() }}
@@ -106,8 +106,8 @@
     </div>
   </div>
 
-  <script nonce="{{ cspNonce }}" src="/assets/chess/enginegame.js"></script>
-  <script nonce="{{ cspNonce }}" src="/assets/chess/game.js"></script>
+  <script nonce="{{ cspNonce }}" src="/assets/js/games/chess/enginegame.js"></script>
+  <script nonce="{{ cspNonce }}" src="/assets/js/games/chess/game.js"></script>
   <script nonce="{{ cspNonce }}">
     $('#new-game-button').on('click', function() {
         newGame();

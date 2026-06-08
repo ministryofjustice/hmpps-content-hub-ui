@@ -16591,7 +16591,7 @@ var Music = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: 'Music' },
-        _react2.default.createElement('audio', { ref: 'player', src: '/assets/mimstris/mimstris.mp3', loop: 'true' })
+        _react2.default.createElement('audio', { ref: 'player', src: '/assets/js/games/mimstris/mimstris.mp3', loop: 'true' })
       );
     }
   }]);

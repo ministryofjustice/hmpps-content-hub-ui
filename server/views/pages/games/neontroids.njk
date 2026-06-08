@@ -1,13 +1,12 @@
 {% extends "../../partials/layout.njk" %}
 
 {% block head %}
-  <link href="/assets/neontroids/neontroids.css" rel="stylesheet" type="text/css"/>
+  <link href="/assets/js/games/neontroids/neontroids.css" rel="stylesheet" type="text/css"/>
   {{ super() }}
 {% endblock %}
 
 {% set pageTitle = applicationName + " - Neontroids" %}
 {% set containerClasses = "neontroids-container" %}
-
 
 {% block main %}
 <div class="neontroids-container">
@@ -19,17 +18,16 @@
       document.body.classList += ' full-dimensions';
       document.body.classList += ' noscroll';
     </script>
-    <script nonce="{{ cspNonce }}" src="/assets/neontroids/sound-fx.js"></script>
-    <script nonce="{{ cspNonce }}" src="/assets/neontroids/keyboard-io.js"></script>
-    <script nonce="{{ cspNonce }}" src="/assets/neontroids/collisions.js"></script>
-    <script nonce="{{ cspNonce }}" src="/assets/neontroids/asteroids-sprites.js"></script>
-    <script nonce="{{ cspNonce }}" src="/assets/neontroids/asteroids-polygon.js"></script>
-    <script nonce="{{ cspNonce }}" src="/assets/neontroids/display-text.js"></script>
-    <script nonce="{{ cspNonce }}" src="/assets/neontroids/asteroids.js"></script>
+    <script nonce="{{ cspNonce }}" src="/assets/js/games/neontroids/sound-fx.js"></script>
+    <script nonce="{{ cspNonce }}" src="/assets/js/games/neontroids/keyboard-io.js"></script>
+    <script nonce="{{ cspNonce }}" src="/assets/js/games/neontroids/collisions.js"></script>
+    <script nonce="{{ cspNonce }}" src="/assets/js/games/neontroids/asteroids-sprites.js"></script>
+    <script nonce="{{ cspNonce }}" src="/assets/js/games/neontroids/asteroids-polygon.js"></script>
+    <script nonce="{{ cspNonce }}" src="/assets/js/games/neontroids/display-text.js"></script>
+    <script nonce="{{ cspNonce }}" src="/assets/js/games/neontroids/asteroids.js"></script>
   </div>
 </div>
 {% endblock %}
-
 
 {% block footer %}
   {# override footer to not render topics #}

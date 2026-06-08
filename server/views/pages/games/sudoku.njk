@@ -3,7 +3,7 @@
 {% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
 {% block head %}
-  <link href="/assets/sudoku/sudokuJS.css" rel="stylesheet" type="text/css"/>
+  <link href="/assets/js/games/sudoku/sudokuJS.css" rel="stylesheet" type="text/css"/>
   {{ super() }}
 {% endblock %}
 
@@ -68,6 +68,6 @@
 
 {% block bodyEnd %}
   <script nonce="{{ cspNonce }}" src="/assets/jquery.min.js"></script>
-  <script nonce="{{ cspNonce }}" src="/assets/sudoku/sudokuJS.js"></script>
-  <script nonce="{{ cspNonce }}" src="/assets/sudoku/newBoard.js"></script>
+  <script nonce="{{ cspNonce }}" src="/assets/js/games/sudoku/sudokuJS.js"></script>
+  <script nonce="{{ cspNonce }}" src="/assets/js/games/sudoku/newBoard.js"></script>
 {% endblock %}
