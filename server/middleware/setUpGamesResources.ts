@@ -24,7 +24,7 @@ export default function setUpGamesResources(): Router {
   // Required for chessboard js to work
   router.use(
     '/games/img/chesspieces/wikipedia',
-    express.static(path.join(process.cwd(), '/assets/images/chesspieces'), staticResourcesConfig),
+    express.static(path.join(process.cwd(), '/dist/assets/images/chesspieces'), staticResourcesConfig),
   )
 
   // Don't cache dynamic resources
