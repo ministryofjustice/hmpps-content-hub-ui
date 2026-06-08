@@ -1,0 +1,73 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
+
+{% block head %}
+  <link href="/assets/js/games/sudoku/sudokuJS.css" rel="stylesheet" type="text/css"/>
+  {{ super() }}
+{% endblock %}
+
+{% set pageTitle = applicationName + " - Sudoku" %}
+
+{% block content %}
+  {{ breadcrumbNavigation() }}
+  {{ breadcrumb(breadcrumbs) }}
+
+  <div class="govuk-width-container">
+    <main class="govuk-main-wrapper">
+
+      <h1 class="govuk-heading-l">Sudoku</h1>
+
+      <div class="govuk-grid-row govuk-!-margin-bottom-6">
+        <div class="govuk-grid-column-one-half">
+          <div id="sudoku" class="sudoku-board js-sudoku-board" data-board-size="9"></div>
+        </div>
+
+        <div class="govuk-grid-column-one-half">
+          <p class="govuk-body">Sudoku is a game that involves a grid of 81 squares, divided into nine blocks, each containing nine squares.</p>
+          <p class="govuk-body">Each of the nine blocks has to contain the numbers 1-9, each number can only appear once in a row, column or box. Each vertical nine-square column, or horizontal nine-square line across, within the larger square, must also contain the numbers 1-9, without repetition or omission.</p>
+          <p class="govuk-body">Each sudoku puzzle has only one correct solution.</p>
+          {{ govukRadios({
+            classes: "govuk-radios--small",
+            idPrefix: "sudoku-difficulty",
+            name: "sudoku-difficulty",
+            fieldset: {
+              legend: {
+                text: "Difficulty level",
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            items: [
+              {
+                value: "easy",
+                text: "Easy"
+              },
+              {
+                value: "medium",
+                text: "Medium"
+              },
+              {
+                value: "hard",
+                text: "Hard"
+              },
+              {
+                value: "very hard",
+                text: "Very hard"
+              }
+            ]
+          }) }}
+          <p>
+            <button id="new-game" class="govuk-button" title="Start a new game">Start a new game</button>
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script nonce="{{ cspNonce }}" src="/assets/jquery.min.js"></script>
+  <script nonce="{{ cspNonce }}" src="/assets/js/games/sudoku/sudokuJS.js"></script>
+  <script nonce="{{ cspNonce }}" src="/assets/js/games/sudoku/newBoard.js"></script>
+{% endblock %}

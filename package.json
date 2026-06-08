@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.1034.0",
+    "@chrisoakman/chessboardjs": "1.0.0",
     "@ministryofjustice/frontend": "^9.0.0",
     "@ministryofjustice/hmpps-auth-clients": "^1.0.2",
     "@ministryofjustice/hmpps-monitoring": "^1.0.2",
@@ -50,6 +51,7 @@
     "express-session": "^1.19.0",
     "govuk-frontend": "^6.1.0",
     "helmet": "^8.1.0",
+    "howler": "2.2.4",
     "http-errors": "^2.0.1",
     "i18next": "26.0.8",
     "i18next-fs-backend": "2.6.5",
@@ -64,6 +66,7 @@
     "passport-openidconnect": "^0.1.2",
     "pg": "8.20.0",
     "redis": "^5.12.1",
+    "stockfish.js": "10.0.2",
     "superagent": "^10.3.0",
     "video.js": "8.23.7"
   },

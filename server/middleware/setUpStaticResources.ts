@@ -14,7 +14,6 @@ export default function setUpStaticResources(): Router {
   const staticResourcesConfig = { maxAge: config.staticResourceCacheDuration, redirect: false }
 
   Array.of(
-    '/assets/js/scripts',
     '/dist/assets',
     '/node_modules/govuk-frontend/dist/govuk/assets',
     '/node_modules/govuk-frontend/dist',
