@@ -103,7 +103,7 @@ describe('cms queries', () => {
     expect(params.get('page[limit]')).toBe('40')
     expect(params.get('page[offset]')).toBe('0')
     expect(params.get('include')).toContain('field_topics.field_moj_thumbnail_image')
-    expect(params.get('sort')).toBe('created')
+    expect(params.get('sort')).toBe('-created')
   })
 
   it('builds the topic page query string with sorting', () => {

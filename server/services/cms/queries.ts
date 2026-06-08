@@ -116,7 +116,7 @@ export const buildTopicItemsQueryString = (topicUuid: string, page: number) =>
     .addFields('node--moj_pdf_item', TOPIC_ITEMS_TILE_FIELDS)
     .addFields('file--file', FILE_FIELDS)
     .addInclude(TOPIC_ITEMS_INCLUDE)
-    .addSort('created')
+    .addSort('created', 'DESC')
     .addPageLimit(PAGE_SIZE)
     .addPageOffset(calculatePageOffset(page))
     .getQueryString()
