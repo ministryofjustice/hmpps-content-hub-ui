@@ -7,6 +7,7 @@ import { defaultTopicsResponse } from '../../fixtures/cmsTopics'
 const allTopicsResponse = defaultTopicsResponse
 
 const expectedTopics = allTopicsResponse.data.map(topic => topic.attributes.name)
+const expectedTopicSubheadings = [...new Set(expectedTopics.map(topic => topic.trim().charAt(0).toUpperCase()))]
 
 const stubStaffHomepageCms = async ({ includeTagPageStubs = false }: { includeTagPageStubs?: boolean } = {}) => {
   const requests = [
@@ -72,6 +73,11 @@ test.describe('Staff homepage UI', () => {
 
     await expect(page).toHaveURL('/topics')
     await expect(page.getByRole('heading', { name: 'Browse all topics', level: 1 })).toBeVisible()
+    await Promise.all(
+      expectedTopicSubheadings.map(letter =>
+        expect(page.locator('#main-content').getByRole('heading', { name: letter, level: 2 })).toBeVisible(),
+      ),
+    )
     await Promise.all(
       expectedTopics.map(topic =>
         expect(page.locator('#main-content').getByRole('link', { name: topic, exact: true })).toBeVisible(),
