@@ -7,6 +7,28 @@ import cmsApi from './mockApis/cmsApi'
 
 export { resetStubs }
 
+type TopicStub = {
+  id: string
+  attributes: {
+    drupal_internal__tid: number
+    name: string
+  }
+}
+
+export const stubTopicPage = (topic: TopicStub) => [
+  cmsApi.stubTagLookupByTid({
+    tid: topic.attributes.drupal_internal__tid,
+    topicId: topic.id,
+    topicName: topic.attributes.name,
+  }),
+  cmsApi.stubTopicHeaderById({
+    tid: topic.attributes.drupal_internal__tid,
+    topicId: topic.id,
+    topicName: topic.attributes.name,
+  }),
+  cmsApi.stubTopicItemsById({ topicId: topic.id }),
+]
+
 export const stubHomePageQueries = async () => {
   await Promise.all([
     cmsApi.stubPrimaryNavigation(),

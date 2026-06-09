@@ -49,6 +49,47 @@ jobs:
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_integration_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
     secrets: inherit
+  coverage_report:
+    name: coverage report (${{ matrix.suite }})
+    needs: [node_build]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - suite: unit
+            command: npm run test:coverage
+            artifact: coverage-unit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm run setup
+
+      - name: Run coverage for ${{ matrix.suite }}
+        run: ${{ matrix.command }}
+
+      - name: Publish coverage summary
+        if: always()
+        run: |
+          node -e "const fs=require('fs');const p='coverage/coverage-summary.json';if(!fs.existsSync(p)){console.log('No coverage summary found');process.exit(0)};const s=JSON.parse(fs.readFileSync(p,'utf8')).total;const line='|'+['${{ matrix.suite }}',s.lines.pct,s.statements.pct,s.functions.pct,s.branches.pct].join('|')+'|';const header='|suite|lines|statements|functions|branches|\\n|---|---:|---:|---:|---:|';fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,header+'\\n'+line+'\\n');"
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            coverage/lcov.info
+            coverage/lcov-report
+            coverage/coverage-summary.json
+          if-no-files-found: warn
   playwright_integration_tests:
     name: playwright integration tests
     needs: [node_build]
@@ -139,6 +180,7 @@ jobs:
     # if: github.ref == 'refs/heads/main'
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
     needs:
+      - coverage_report
       - node_integration_tests
       - playwright_integration_tests
       - node_unit_tests
