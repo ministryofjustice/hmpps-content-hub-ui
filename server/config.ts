@@ -153,5 +153,8 @@ export default {
   nprStream: get('NPR_STREAM_URL', '/npr-stream', requiredInProduction),
   knownPages: {
     help: get('HELP_CONTENT_URL', '/tags/1503'),
+    inspireAndEntertain: get('INSPIRE_AND_ENTERTAIN_URL', '/tags/1282'),
+    games: get('GAMES_URL', '/tags/647'),
+    chessGuide: get('CHESS_GUIDE_URL', '/content/10180'),
   },
 }

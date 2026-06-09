@@ -1,7 +1,7 @@
 $govuk-global-styles: true;
 $path: "/assets/images/";
 
-$moj-page-width: 1170px;
+$moj-page-width: 1200px;
 $govuk-page-width: $moj-page-width;
 
 @import "govuk-frontend/dist/govuk/index";
@@ -9,6 +9,7 @@ $govuk-page-width: $moj-page-width;
 
 @import './mixins/tile-hover';
 
+@import './components/crossword';
 @import './components/external-link';
 @import './components/header-bar';
 @import './components/page-navigation';
@@ -18,5 +19,6 @@ $govuk-page-width: $moj-page-width;
 @import './components/media-player';
 @import './components/page-navigation';
 @import './components/show-more';
+@import './components/smashout';
 @import './components/urgent-banner';
 @import './overrides/local';

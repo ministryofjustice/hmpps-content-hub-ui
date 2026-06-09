@@ -24,6 +24,7 @@ import setupPortals from './middleware/setUpPortals'
 
 import routes from './routes'
 import type { Services } from './services'
+import setUpGamesResources from './middleware/setUpGamesResources'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -39,6 +40,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
+  app.use(setUpGamesResources())
 
   const njkEnv = nunjucksSetup(app)
 
