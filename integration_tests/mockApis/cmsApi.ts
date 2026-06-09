@@ -374,7 +374,8 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/taxonomy_term\\?.*filter%5Bvid.meta.drupal_internal__target_id%5D=topics.*',
+        urlPattern:
+          '/en/jsonapi/prison/[^/]+/taxonomy_term\\?.*filter%5Bvid.meta.drupal_internal__target_id%5D=topics.*',
       },
       response: {
         status: httpStatus,
@@ -479,10 +480,7 @@ export default {
       },
     }),
 
-  stubTopicHeader: (
-    httpStatus = 200,
-    body: Record<string, unknown> = defaultTopicHeaderResponse,
-  ): SuperAgentRequest =>
+  stubTopicHeader: (httpStatus = 200, body: Record<string, unknown> = defaultTopicHeaderResponse): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -495,10 +493,7 @@ export default {
       },
     }),
 
-  stubTopicItems: (
-    httpStatus = 200,
-    body: Record<string, unknown> = defaultTopicItemsResponse,
-  ): SuperAgentRequest =>
+  stubTopicItems: (httpStatus = 200, body: Record<string, unknown> = defaultTopicItemsResponse): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -513,7 +508,7 @@ export default {
 
   stubTagLookupByTid: ({
     tid,
-    topicId,
+    topicId: _topicId,
     topicName,
     httpStatus = 200,
   }: {

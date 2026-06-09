@@ -72,9 +72,11 @@ test.describe('Staff homepage UI', () => {
 
     await expect(page).toHaveURL('/topics')
     await expect(page.getByRole('heading', { name: 'Browse all topics', level: 1 })).toBeVisible()
-    for (const topic of expectedTopics) {
-      await expect(page.locator('#main-content').getByRole('link', { name: topic, exact: true })).toBeVisible()
-    }
+    await Promise.all(
+      expectedTopics.map(topic =>
+        expect(page.locator('#main-content').getByRole('link', { name: topic, exact: true })).toBeVisible(),
+      ),
+    )
   })
 
   test('Browse all topics page contains valid links for all topics', async ({ page }) => {
@@ -88,12 +90,14 @@ test.describe('Staff homepage UI', () => {
     const topicLinks = page.locator('#main-content .govuk-grid-row .govuk-list .govuk-link')
     await expect(topicLinks).toHaveCount(expectedTopics.length)
 
-    for (const topic of expectedTopics) {
-      await expect(page.locator('#main-content').getByRole('link', { name: topic, exact: true })).toHaveAttribute(
-        'href',
-        /\/tags\/\d+$/,
-      )
-    }
+    await Promise.all(
+      expectedTopics.map(topic =>
+        expect(page.locator('#main-content').getByRole('link', { name: topic, exact: true })).toHaveAttribute(
+          'href',
+          /\/tags\/\d+$/,
+        ),
+      ),
+    )
   })
 
   test('Browse all topics page launches each topic link', async ({ page }) => {
@@ -104,6 +108,8 @@ test.describe('Staff homepage UI', () => {
     const homePage = await HomePage.verifyOnPage(page)
     await homePage.browseAllTopicsButton.click()
 
+    // Navigation assertions are intentionally sequential to keep browser state deterministic.
+    /* eslint-disable no-await-in-loop */
     for (let index = 0; index < expectedTopics.length; index += 1) {
       const topic = expectedTopics[index]
       const topicLink = page.locator('#main-content').getByRole('link', { name: topic, exact: true })
@@ -114,5 +120,6 @@ test.describe('Staff homepage UI', () => {
       await page.goto('/topics')
       await expect(page).toHaveURL('/topics')
     }
+    /* eslint-enable no-await-in-loop */
   })
 })
