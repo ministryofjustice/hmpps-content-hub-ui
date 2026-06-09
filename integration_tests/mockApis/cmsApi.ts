@@ -330,6 +330,32 @@ const defaultUrgentBannerResponse = {
   links: {},
 }
 
+const defaultTopicHeaderResponse = {
+  data: {
+    type: 'taxonomy_term--topics',
+    id: 'topic-1',
+    attributes: {
+      drupal_internal__tid: 1,
+      name: 'Appeals',
+      description: { processed: '<p>Topic description</p>' },
+      breadcrumbs: [{ text: 'Home', href: '/' }, { text: 'Topics', href: '/topics' }, { text: 'Appeals' }],
+    },
+    relationships: {
+      field_moj_thumbnail_image: {
+        data: [],
+      },
+    },
+  },
+  included: [],
+  links: {},
+}
+
+const defaultTopicItemsResponse = {
+  data: [],
+  included: [],
+  links: {},
+}
+
 export default {
   stubPing: (httpStatus = 200): SuperAgentRequest =>
     stubFor({
@@ -348,7 +374,8 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/taxonomy_term.*',
+        urlPattern:
+          '/en/jsonapi/prison/[^/]+/taxonomy_term\\?.*filter%5Bvid.meta.drupal_internal__target_id%5D=topics.*',
       },
       response: {
         status: httpStatus,
@@ -450,6 +477,136 @@ export default {
         status: httpStatus,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: body,
+      },
+    }),
+
+  stubTopicHeader: (httpStatus = 200, body: Record<string, unknown> = defaultTopicHeaderResponse): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/en/jsonapi/prison/[^/]+/taxonomy_term/topics/[^/]+\\?.*',
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: body,
+      },
+    }),
+
+  stubTopicItems: (httpStatus = 200, body: Record<string, unknown> = defaultTopicItemsResponse): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/en/jsonapi/prison/[^/]+/node\\?.*filter%5Bfield_topics.id%5D=.*',
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: body,
+      },
+    }),
+
+  stubTagLookupByTid: ({
+    tid,
+    topicId: _topicId,
+    topicName,
+    httpStatus = 200,
+  }: {
+    tid: number
+    topicId: string
+    topicName: string
+    httpStatus?: number
+  }): SuperAgentRequest =>
+    stubFor({
+      priority: 1,
+      request: {
+        method: 'GET',
+        urlPathPattern: '/en/jsonapi/prison/[^/]+/taxonomy_term',
+        queryParameters: {
+          'filter[drupal_internal__tid]': {
+            equalTo: `${tid}`,
+          },
+        },
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          data: [
+            {
+              type: 'taxonomy_term--topics',
+              id: `${tid}`,
+              attributes: {
+                drupal_internal__tid: tid,
+                name: topicName,
+                description: { processed: `<p>${topicName}</p>` },
+              },
+            },
+          ],
+          included: [],
+          links: {},
+        },
+      },
+    }),
+
+  stubTopicHeaderById: ({
+    tid,
+    topicId,
+    topicName,
+    httpStatus = 200,
+  }: {
+    tid: number
+    topicId: string
+    topicName: string
+    httpStatus?: number
+  }): SuperAgentRequest =>
+    stubFor({
+      priority: 1,
+      request: {
+        method: 'GET',
+        urlPathPattern: `/en/jsonapi/prison/[^/]+/taxonomy_term/topics/(?:${topicId}|${tid})`,
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          data: {
+            type: 'taxonomy_term--topics',
+            id: `${tid}`,
+            attributes: {
+              drupal_internal__tid: tid,
+              name: topicName,
+              description: { processed: `<p>${topicName}</p>` },
+              breadcrumbs: [{ text: 'Home', href: '/' }, { text: 'Topics', href: '/topics' }, { text: topicName }],
+            },
+            relationships: {
+              field_moj_thumbnail_image: {
+                data: [],
+              },
+            },
+          },
+          included: [],
+          links: {},
+        },
+      },
+    }),
+
+  stubTopicItemsById: ({ topicId, httpStatus = 200 }: { topicId: string; httpStatus?: number }): SuperAgentRequest =>
+    stubFor({
+      priority: 1,
+      request: {
+        method: 'GET',
+        urlPathPattern: '/en/jsonapi/prison/[^/]+/node',
+        queryParameters: {
+          'filter[field_topics.id]': {
+            matches: `(?:${topicId}|${topicId.replace('topic-', '')})`,
+          },
+        },
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: defaultTopicItemsResponse,
       },
     }),
 }

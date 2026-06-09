@@ -6,7 +6,7 @@ export const defaultTopicsResponse = {
       id: 'topic-1',
       attributes: {
         drupal_internal__tid: 1,
-        name: 'Education',
+        name: 'Appeals',
       },
     },
     {
@@ -14,7 +14,7 @@ export const defaultTopicsResponse = {
       id: 'topic-2',
       attributes: {
         drupal_internal__tid: 2,
-        name: 'Health',
+        name: 'Business Hub',
       },
     },
   ],
