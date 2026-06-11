@@ -34,7 +34,7 @@ describe('establishmentsMiddleware', () => {
 
       it('sets the establishment to the first one in the config list', () => {
         establishmentsMiddleware(req, res, next)
-        expect(res.locals.establishment.code).toBe('BNI')
+        expect(res.locals.establishment.code).toBe('BWI')
       })
     })
   })
