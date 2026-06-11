@@ -609,4 +609,81 @@ export default {
         jsonBody: defaultTopicItemsResponse,
       },
     }),
+
+  stubContentLookupByNid: ({
+    nid,
+    uuid,
+    httpStatus = 200,
+  }: {
+    nid: number
+    uuid: string
+    httpStatus?: number
+  }): SuperAgentRequest =>
+    stubFor({
+      priority: 1,
+      request: {
+        method: 'GET',
+        urlPathPattern: '/en/jsonapi/prison/[^/]+/node',
+        queryParameters: {
+          'filter[drupal_internal__nid]': { equalTo: `${nid}` },
+        },
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          data: [
+            {
+              type: 'node--page',
+              id: uuid,
+              attributes: { drupal_internal__nid: nid },
+            },
+          ],
+        },
+      },
+    }),
+
+  stubPageContentByUuid: ({
+    uuid,
+    nid,
+    title,
+    description = '<p>Page content.</p>',
+    httpStatus = 200,
+  }: {
+    uuid: string
+    nid: number
+    title: string
+    description?: string
+    httpStatus?: number
+  }): SuperAgentRequest =>
+    stubFor({
+      priority: 1,
+      request: {
+        method: 'GET',
+        urlPathPattern: `/en/jsonapi/prison/[^/]+/node/page/${uuid}`,
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          data: {
+            type: 'node--page',
+            id: uuid,
+            attributes: {
+              drupal_internal__nid: nid,
+              title,
+              field_main_body_content: { processed: description },
+              breadcrumbs: [{ text: 'Home', uri: '/' }, { text: title }],
+              field_topics: null,
+              field_moj_top_level_categories: null,
+            },
+            relationships: {
+              field_topics: { data: [] },
+              field_moj_top_level_categories: { data: [] },
+            },
+          },
+          included: [],
+        },
+      },
+    }),
 }
