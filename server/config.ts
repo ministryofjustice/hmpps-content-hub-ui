@@ -116,6 +116,7 @@ export default {
   establishments: [
     { code: 'BNI', name: 'bullingdon', displayName: 'HMP Bullingdon', youth: false },
     { code: 'BWI', name: 'berwyn', displayName: 'HMP Berwyn', youth: false },
+    { code: 'BLI', name: 'bristol', displayName: 'HMP Bristol', youth: false },
     { code: 'CDI', name: 'chelmsford', displayName: 'HMP Chelmsford', youth: false },
     { code: 'CFI', name: 'cardiff', displayName: 'HMP Cardiff', youth: false },
     { code: 'CKI', name: 'cookhamwood', displayName: 'HMP Cookham Wood', youth: false },
