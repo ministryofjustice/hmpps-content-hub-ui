@@ -1,6 +1,5 @@
 const setupTypeahead = (searchInput, typeaheadContainer) => {
   const clearTypeahead = () => {
-    console.log('typeahead cleared')
     typeaheadContainer.hide();
     typeaheadContainer.empty();
   }
@@ -23,11 +22,9 @@ const setupTypeahead = (searchInput, typeaheadContainer) => {
   })
 
     typeaheadContainer.on('focusout', () => {
-    console.log('focusout')
     if (!$(document.activeElement).closest(typeaheadContainer).length) {
-      console.log('bye bye')
-        clearTypeahead();
-        clearTimeout(timeoutId)
+      clearTypeahead();
+      clearTimeout(timeoutId)
     }
   })
 }
