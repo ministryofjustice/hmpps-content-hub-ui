@@ -39,6 +39,8 @@ import {
   CategoryContent,
   CategoryMenuContent,
   MediaContent,
+  CmsSearchResult,
+  CmsSearchResultAttributes,
 } from './types'
 import {
   findIncluded,
@@ -500,4 +502,16 @@ export const mapHomePageContent = (relationships: CmsHomePageRelationships, incl
       ? mapResourceIdentifierToTiles([relationships.field_large_update_tile.data], included, 'large')[0]
       : null,
   }
+}
+
+export const mapSearchResponse = (
+  response: JsonApiCollectionResponse<CmsSearchResultAttributes>,
+): CmsSearchResult[] => {
+  return response.data.map(item => {
+    return {
+      title: item.attributes.title,
+      summary: item.attributes.field_summary || 'No summary available',
+      url: item.attributes.path?.alias || `/content/${item.attributes.drupal_internal__nid}`,
+    }
+  })
 }
