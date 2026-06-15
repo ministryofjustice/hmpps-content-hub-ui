@@ -1,5 +1,6 @@
 const setupTypeahead = (searchInput, typeaheadContainer) => {
   const clearTypeahead = () => {
+    console.log('typeahead cleared')
     typeaheadContainer.hide();
     typeaheadContainer.empty();
   }
@@ -15,12 +16,16 @@ const setupTypeahead = (searchInput, typeaheadContainer) => {
       const { html } = response
       typeaheadContainer.append(html)
       typeaheadContainer.show()
+      typeaheadContainer.attr('tabindex', '-1');
+      typeaheadContainer.trigger('focus');
     })
     }, 300)
   })
 
     typeaheadContainer.on('focusout', () => {
+    console.log('focusout')
     if (!$(document.activeElement).closest(typeaheadContainer).length) {
+      console.log('bye bye')
         clearTypeahead();
         clearTimeout(timeoutId)
     }
