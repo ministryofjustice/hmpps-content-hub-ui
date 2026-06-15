@@ -4,13 +4,6 @@ const setupTypeahead = (searchInput, typeaheadContainer) => {
     typeaheadContainer.empty();
   }
 
-  typeaheadContainer.on('focusout', () => {
-    if (!$(document.activeElement).closest(typeaheadContainer).length) {
-        clearTypeahead();
-    }
-  })
-
-
   let timeoutId;
   searchInput.on('input', () => {
     clearTypeahead();
@@ -24,5 +17,12 @@ const setupTypeahead = (searchInput, typeaheadContainer) => {
       typeaheadContainer.show()
     })
     }, 300)
+  })
+
+    typeaheadContainer.on('focusout', () => {
+    if (!$(document.activeElement).closest(typeaheadContainer).length) {
+        clearTypeahead();
+        clearTimeout(timeoutId)
+    }
   })
 }
