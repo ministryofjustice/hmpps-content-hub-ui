@@ -1,12 +1,20 @@
 import JsonApiClient, { JsonApiCollectionResponse, JsonApiSingleResponse } from '../data/jsonApiClient'
 import CmsService from './cmsService'
 import {
+  CmsAudioContent,
+  CmsAudioNodeAttributes,
   CMSContentNodeAttributes,
   CmsHomePageRelationships,
   CmsNodeAttributes,
+  CmsPageContent,
+  CmsPageNodeAttributes,
+  CmsPdfContent,
+  CmsPdfNodeAttributes,
   CmsPrimaryNavigationAttributes,
   CmsTopicAttributes,
   CmsTopicPage,
+  CmsVideoContent,
+  CmsVideoNodeAttributes,
   ExploreContent,
   UpdatesContent,
 } from './cms/types'
@@ -488,5 +496,209 @@ describe('homepage content queries', () => {
     }
 
     expect(response).toStrictEqual(expectedUpdatesContent)
+  })
+})
+
+describe('content queries', () => {
+  const jsonApiClient = new JsonApiClient(null, null) as jest.Mocked<JsonApiClient>
+  let cmsService: CmsService
+
+  const mockContentWithType = (type: string): JsonApiCollectionResponse<CmsNodeAttributes> => {
+    return {
+      data: [
+        {
+          type,
+          id: 'topic-1',
+          attributes: {
+            drupal_internal__nid: 42,
+            title: 'test-title',
+            field_summary: 'test-field-summary',
+          },
+        },
+      ],
+    }
+  }
+
+  const mockNodeWithType = <AttributeType>(
+    attributes: AttributeType,
+    type: string,
+  ): JsonApiSingleResponse<AttributeType> => {
+    return {
+      data: {
+        type,
+        id: 'topic-1',
+        attributes,
+        relationships: {
+          field_moj_top_level_categories: { data: [{ type: 'top-level-category-type', id: 'top-level-category-id' }] },
+          field_topics: { data: [{ type: 'topics-type', id: 'topics-id' }] },
+          field_moj_series: { data: [{ type: 'moj-series-type', id: 'moj-series-id' }] },
+          field_moj_pdf: { data: [{ type: 'moj-pdf-type', id: 'moj-pdf-id' }] },
+        },
+      },
+      included: [
+        {
+          type: 'top-level-category-type',
+          id: 'top-level-category-id',
+          attributes: {
+            drupal_internal__tid: 1,
+            name: 'top-level-category-name',
+          },
+        },
+        {
+          type: 'topics-type',
+          id: 'topics-id',
+          attributes: {
+            drupal_internal__tid: 2,
+            name: 'topics-name',
+          },
+        },
+        {
+          type: 'moj-series-type',
+          id: 'moj-series-id',
+          attributes: {
+            drupal_internal__tid: 3,
+            name: 'moj-series-name',
+            path: { alias: 'moj-series-path' },
+          },
+        },
+        {
+          type: 'moj-pdf-type',
+          id: 'moj-pdf-id',
+          attributes: {
+            uri: { url: 'pdf-url' },
+          },
+        },
+      ],
+    }
+  }
+
+  beforeEach(() => {
+    cmsService = new CmsService(jsonApiClient)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
+  it('should fetch page content', async () => {
+    const pageAttributes: CmsPageNodeAttributes = {
+      drupal_internal__nid: 42,
+      title: 'test-title',
+      created: 'created-date',
+      field_main_body_content: { processed: 'page description' },
+      field_moj_stand_first: 'stand-first',
+      field_exclude_feedback: true,
+      breadcrumbs: [{ title: 'a breadcrumb', url: 'breadcrumb-url' }],
+    }
+
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockContentWithType('node--page'))
+    jsonApiClient.getSingleByPath.mockResolvedValue(
+      mockNodeWithType<CmsPageNodeAttributes>(pageAttributes, 'node--page'),
+    )
+
+    const response = (await cmsService.getContent('bullingdon', 42, 'en')) as CmsPageContent
+
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      '/en/jsonapi/prison/bullingdon/node?filter%5Bdrupal_internal__nid%5D=42&page%5Blimit%5D=1&fields%5Bnode--page%5D=drupal_internal__nid&fields%5Bnode--moj_video_item%5D=drupal_internal__nid&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid',
+    )
+
+    expect(response.contentType).toBe('page')
+    expect(response.description).toBe('page description')
+    expect(response.standFirst).toBe('stand-first')
+    expect(response.id).toBe(42)
+    expect(response.title).toBe('test-title')
+    expect(response.breadcrumbs).toEqual([{ text: 'a breadcrumb', href: '/breadcrumb-url' }])
+    expect(response.categories).toEqual({ id: 1, name: 'top-level-category-name' })
+    expect(response.topics).toEqual([{ id: 2, name: 'topics-name' }])
+    expect(response.excludeFeedback).toBe(true)
+  })
+
+  it('should fetch video content', async () => {
+    const videoAttributes: CmsVideoNodeAttributes = {
+      drupal_internal__nid: 42,
+      title: 'test-title',
+      created: 'created-date',
+      field_description: { processed: 'page description' },
+      field_moj_season: 5,
+      field_moj_episode: 2,
+      series_sort_value: 10,
+      breadcrumbs: [{ text: 'a breadcrumb', href: 'breadcrumb-url' }],
+    }
+
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockContentWithType('node--moj_video_item'))
+    jsonApiClient.getSingleByPath.mockResolvedValue(
+      mockNodeWithType<CmsVideoNodeAttributes>(videoAttributes, 'node--moj_video_item'),
+    )
+
+    const response = (await cmsService.getContent('bullingdon', 42, 'en')) as CmsVideoContent
+
+    expect(response.contentType).toBe('video')
+    expect(response.description).toBe('page description')
+    expect(response.id).toBe(42)
+    expect(response.title).toBe('test-title')
+    expect(response.created).toBe('created-date')
+    expect(response.seasonId).toBe(5)
+    expect(response.seriesId).toBe(3)
+    expect(response.seriesName).toBe('moj-series-name')
+    expect(response.seriesPath).toBe('moj-series-path')
+    expect(response.seriesSortValue).toBe(10)
+    expect(response.episodeId).toBe(5002)
+    expect(response.breadcrumbs).toEqual([{ text: 'a breadcrumb', href: '/breadcrumb-url' }])
+    expect(response.excludeFeedback).toBe(false)
+  })
+
+  it('should fetch audio content', async () => {
+    const audioAttributes: CmsAudioNodeAttributes = {
+      drupal_internal__nid: 42,
+      title: 'test-title',
+      created: 'created-date',
+      field_description: { processed: 'page description' },
+      field_moj_programme_code: 'programme-code',
+      field_moj_season: 1,
+      field_moj_episode: 10,
+      series_sort_value: 2,
+      breadcrumbs: [{ text: 'a breadcrumb', uri: 'breadcrumb-url' }],
+    }
+
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockContentWithType('node--moj_radio_item'))
+    jsonApiClient.getSingleByPath.mockResolvedValue(
+      mockNodeWithType<CmsAudioNodeAttributes>(audioAttributes, 'node--moj_radio_item'),
+    )
+
+    const response = (await cmsService.getContent('bullingdon', 42, 'en')) as CmsAudioContent
+
+    expect(response.contentType).toBe('radio')
+    expect(response.description).toBe('page description')
+    expect(response.id).toBe(42)
+    expect(response.title).toBe('test-title')
+    expect(response.created).toBe('created-date')
+    expect(response.seasonId).toBe(1)
+    expect(response.seriesId).toBe(3)
+    expect(response.seriesName).toBe('moj-series-name')
+    expect(response.seriesPath).toBe('moj-series-path')
+    expect(response.seriesSortValue).toBe(2)
+    expect(response.episodeId).toBe(1010)
+    expect(response.breadcrumbs).toEqual([{ text: 'a breadcrumb', href: '/breadcrumb-url' }])
+    expect(response.excludeFeedback).toBe(false)
+  })
+
+  it('should fetch pdf content', async () => {
+    const pdfAttributes: CmsPdfNodeAttributes = {
+      drupal_internal__nid: 42,
+      title: 'test-title',
+      created: 'created-date',
+    }
+
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockContentWithType('node--moj_pdf_item'))
+    jsonApiClient.getSingleByPath.mockResolvedValue(
+      mockNodeWithType<CmsPdfNodeAttributes>(pdfAttributes, 'node--moj_pdf_item'),
+    )
+
+    const response = (await cmsService.getContent('bullingdon', 42, 'en')) as CmsPdfContent
+
+    expect(response).toEqual({
+      contentType: 'pdf',
+      url: 'pdf-url',
+    })
   })
 })

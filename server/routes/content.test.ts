@@ -121,6 +121,26 @@ describe('Content Routes', () => {
         })
     })
 
+    it('should redirect to the associated url for page content', () => {
+      cmsService.getContent.mockResolvedValue({
+        contentType: 'pdf',
+        url: 'test-url',
+      })
+
+      return request(app)
+        .get('/content/123')
+        .expect('Content-Type', /text\/plain/)
+        .expect(302)
+        .expect(res => {
+          expect(res.text).toBe('Found. Redirecting to test-url')
+          expect(auditService.logPageView).toHaveBeenCalledWith(Page.CONTENT, {
+            who: user.username,
+            correlationId: expect.any(String),
+            subjectId: '123',
+          })
+        })
+    })
+
     it('should return 404 when content is not found', () => {
       cmsService.getContent.mockResolvedValue(null)
 

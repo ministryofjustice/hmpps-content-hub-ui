@@ -25,6 +25,10 @@ export default function contentRoutes({ auditServiceSource, cmsService }: Servic
         return next()
       }
 
+      if (data.contentType === 'pdf') {
+        return res.redirect(data.url)
+      }
+
       const templateByContentType: Record<string, string> = {
         radio: 'pages/content/audio',
         video: 'pages/content/video',

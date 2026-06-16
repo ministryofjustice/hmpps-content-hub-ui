@@ -206,6 +206,12 @@ export type CmsAudioNodeAttributes = {
   breadcrumbs?: CmsRawBreadcrumb[]
 }
 
+export type CmsPdfNodeAttributes = {
+  drupal_internal__nid?: number
+  title: string
+  created?: string
+}
+
 export type CmsEpisodeTileNodeAttributes = {
   drupal_internal__nid?: number
   title: string
@@ -225,7 +231,7 @@ export type CMSContentNodeAttributes = {
   field_display_url?: string
 }
 
-export type CmsContentType = 'page' | 'video' | 'radio'
+export type CmsContentType = 'page' | 'video' | 'radio' | 'pdf'
 
 export interface CmsContentBase {
   id: number
@@ -274,7 +280,12 @@ export interface CmsAudioContent extends CmsContentBase {
   seriesSortValue: number | null
 }
 
-export type CmsContent = CmsPageContent | CmsVideoContent | CmsAudioContent
+export interface CmsPdfContent {
+  contentType: 'pdf'
+  url: string
+}
+
+export type CmsContent = CmsPageContent | CmsVideoContent | CmsAudioContent | CmsPdfContent
 
 export type CmsMediaContent = CmsVideoContent | CmsAudioContent
 
