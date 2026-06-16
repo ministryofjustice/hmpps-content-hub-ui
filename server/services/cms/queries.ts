@@ -307,3 +307,6 @@ export const unixTimestamp = (offset: number, date = Date.now()) => {
 
 export const buildExternalLinkQueryString = () =>
   new DrupalJsonApiParams().addFields('node--link', EXTERNAL_LINK_FIELDS).getQueryString()
+
+export const buildSearchQueryString = (searchTerm: string, pageLimit = 5) =>
+  new DrupalJsonApiParams().addFilter('fulltext', searchTerm).addPageLimit(pageLimit).getQueryString()

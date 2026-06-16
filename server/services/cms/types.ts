@@ -325,3 +325,16 @@ export interface CmsLink {
 }
 
 export type LookupType = 'content' | 'tags' | 'link'
+
+export interface CmsSearchResultAttributes {
+  title: string
+  drupal_internal__nid: number
+  field_summary?: string
+  path?: { alias: string }
+}
+
+export interface CmsSearchResult {
+  title: string
+  summary: string
+  url: string
+}

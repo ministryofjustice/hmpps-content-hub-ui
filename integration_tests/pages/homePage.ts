@@ -36,7 +36,7 @@ export default class HomePage extends AbstractPage {
     this.featuredHeading = page.getByRole('heading', { name: 'Featured', level: 2 })
     this.recentlyAddedHeading = page.getByRole('heading', { name: 'Recently added', level: 2 })
     this.exploreHeading = page.getByRole('heading', { name: /Explore the Hub/i, level: 2 })
-    this.searchBox = page.getByRole('searchbox', { name: 'Search' })
+    this.searchBox = page.locator('#search-input')
     this.updatesItems = page.locator('.hmpps-update-items-link')
     this.keyInfoItems = page.locator('.hmpps-key-info-item')
     this.featuredCards = page.locator('#featuredContent .hmpps-category-card')
