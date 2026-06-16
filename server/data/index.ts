@@ -1,16 +1,6 @@
-/* eslint-disable import/first */
-/*
- * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
- * In particular, applicationinsights automatically collects bunyan logs
- */
 import { AuthenticationClient, InMemoryTokenStore, RedisTokenStore } from '@ministryofjustice/hmpps-auth-clients'
 import { minutes } from '@ministryofjustice/hmpps-prisoner-auth'
-import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
 import applicationInfoSupplier from '../applicationInfo'
-
-const applicationInfo = applicationInfoSupplier()
-initialiseAppInsights()
-buildAppInsightsClient(applicationInfo)
 
 import { createRedisClient } from './redisClient'
 import config from '../config'
@@ -20,6 +10,8 @@ import JsonApiClient from './jsonApiClient'
 import FeedbackClient from './feedbackClient'
 import { RedisCache } from '../services/cache/redisCache'
 import { InMemoryCache } from '../services/cache/inMemoryCache'
+
+const applicationInfo = applicationInfoSupplier()
 
 export const dataAccess = () => {
   const hmppsAuthClient = new AuthenticationClient(
