@@ -1,0 +1,11 @@
+<div class="hmpps-typeahead__wrapper">
+  {% for item in results %}
+    <a
+      role="option"
+      class="govuk-link govuk-link--no-visited-state govuk-link--no-underline hmpps-typeahead__suggestion"
+      href="{{item.url}}"
+    >
+      {{ item.title | safe }}
+    </a>
+  {% endfor %}
+</div>

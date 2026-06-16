@@ -6,12 +6,12 @@
 <header class="hmpps-header" role="banner">
   <div class="hmpps-header__container">
     <div class="hmpps-header__title">
+      <img class="hmpps-header__logo" src="/assets/images/content-hub-logo.png" alt="logo">
       <a class="hmpps-header__link hmpps-header__title__organisation-name" href="/">
-        <img class="hmpps-header__logo" src="/assets/images/content-hub-logo.png" alt="logo">
         {{ t('common:header.title') or 'Content Hub' }}
 
         {% if establishment %}
-          <a class="hmpps-header__link hmpps-header__title__service-name" href="/">{{ establishment.displayName }}</a>
+          {{ establishment.displayName }}
         {% endif %}
       </a>
 
@@ -30,7 +30,8 @@
       supportedLanguages: supportedLanguages,
       language: language,
       showSearch: showSearch,
-      searchQuery: searchQuery
+      searchQuery: searchQuery,
+      cspNonce: cspNonce
     }, t) }}
   </div>
 </header>

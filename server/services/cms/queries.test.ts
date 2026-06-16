@@ -26,6 +26,7 @@ import {
   buildRecentlyAddedQueryString,
   unixTimestamp,
   buildPdfContentQueryString,
+  buildSearchQueryString,
 } from './queries'
 
 describe('cms queries', () => {
@@ -208,6 +209,15 @@ describe('cms queries', () => {
     const params = new URLSearchParams(buildExternalLinkQueryString())
 
     expect(params.get('fields[node--link]')).toEqual('field_show_interstitial_page,field_url')
+  })
+
+  it('builds search query strings', () => {
+    const TEST_SEARCH_TERM = 'test-search'
+    const TEST_PAGE_LIMIT = 10
+    const params = new URLSearchParams(buildSearchQueryString(TEST_SEARCH_TERM, TEST_PAGE_LIMIT))
+
+    expect(params.get('filter[fulltext]')).toEqual(TEST_SEARCH_TERM)
+    expect(params.get('page[limit]')).toEqual(`${TEST_PAGE_LIMIT}`)
   })
 })
 

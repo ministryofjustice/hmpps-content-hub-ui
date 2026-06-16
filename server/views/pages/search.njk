@@ -1,0 +1,32 @@
+{% extends "../partials/layout.njk" %}
+{% from "../partials/breadcrumb.njk" import breadcrumbNavigation %}
+
+
+{% set pageTitle = applicationName + " - Search" %}
+
+{% block content %}
+  {{ breadcrumbNavigation(true) }}
+
+  <h1 class="govuk-heading-xl">{{ t('common:search.label') }}</h1>
+
+  <div class="hmpps-search-results">
+    {% if results.length %}
+      <h3 class="govuk-heading-m">{{ t("pages:search.showingResults", {term:query}) }}</h3>
+      <ul class="govuk-list">
+        {% for item in results %}
+          <li>
+            <a class="govuk-link govuk-link--no-underline" href="{{item.url}}">
+              <span class="govuk-!-font-weight-bold">{{ item.title }}</span>
+              <p class="govuk-body">
+                {{ item.summary }}
+              </p>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <h3 class="govuk-heading-m">{{ t("pages:search.noResults", {term:query}) }}</h3>
+    {% endif %}
+  </div>
+
+{% endblock %}

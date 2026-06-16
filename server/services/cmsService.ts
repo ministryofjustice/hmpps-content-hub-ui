@@ -21,6 +21,7 @@ import {
   mapHomePageContent,
   mapRecentlyAddedContent,
   mapPdfContent,
+  mapSearchResponse,
 } from './cms/mappers'
 import {
   buildAudioContentQueryString,
@@ -49,6 +50,7 @@ import {
   buildVideoContentQueryString,
   buildRecentlyAddedQueryString,
   buildPdfContentQueryString,
+  buildSearchQueryString,
 } from './cms/queries'
 import { mapTagType } from './cms/utils'
 import {
@@ -88,6 +90,8 @@ import {
   CmsTagItem,
   CmsPaginatedContent,
   CmsPdfNodeAttributes,
+  CmsSearchResult,
+  CmsSearchResultAttributes,
 } from './cms/types'
 
 export default class CmsService {
@@ -442,6 +446,19 @@ export default class CmsService {
       url: response.data.attributes.field_url,
       intercept: response.data.attributes.field_show_interstitial_page === true,
     }
+  }
+
+  async getSearchContent(
+    establishmentName: string,
+    searchTerm: string,
+    pageLimit?: number,
+  ): Promise<CmsSearchResult[]> {
+    const queryString = buildSearchQueryString(searchTerm, pageLimit)
+
+    const path = `/jsonapi/prison/${establishmentName}/index/content_for_search?${queryString}`
+    const response = await this.jsonApiClient.getCollectionByPath<CmsSearchResultAttributes>(path)
+
+    return mapSearchResponse(response)
   }
 
   private async lookup(establishmentName: string, id: string, lookupType: LookupType) {

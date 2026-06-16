@@ -4,6 +4,7 @@ import {
   mapCategoryFeaturedContent,
   mapCategoryMenuItem,
   mapPrimaryNavigationItem,
+  mapSearchResponse,
   mapSeriesHeader,
   mapSeriesItem,
   mapTopic,
@@ -338,5 +339,44 @@ describe('cms mappers', () => {
         },
       ],
     })
+  })
+
+  it('Maps search responses', () => {
+    const response = {
+      data: [
+        {
+          type: 'search-result',
+          id: 'sr-1',
+          attributes: {
+            title: 'search-response-1',
+            drupal_internal__nid: 1,
+            field_summary: 'field-summary-1',
+            path: {
+              alias: '/any-path',
+            },
+          },
+        },
+        {
+          type: 'search-result',
+          id: 'sr-2',
+          attributes: {
+            title: 'search-response-2',
+            drupal_internal__nid: 2,
+          },
+        },
+      ],
+    }
+
+    const mappedResponse = mapSearchResponse(response)
+
+    expect(mappedResponse).toHaveLength(2)
+
+    expect(mappedResponse[0].title).toBe('search-response-1')
+    expect(mappedResponse[0].summary).toBe('field-summary-1')
+    expect(mappedResponse[0].url).toBe('/any-path')
+
+    expect(mappedResponse[1].title).toBe('search-response-2')
+    expect(mappedResponse[1].summary).toBe('No summary available')
+    expect(mappedResponse[1].url).toBe('/content/2')
   })
 })

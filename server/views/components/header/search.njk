@@ -2,18 +2,20 @@
 <div class="hmpps-header__search {% if params.small %}hmpps-header__search{% endif %}">
   <form action="/search" method="get" role="search" aria-label="{{ t('common:search.label') or 'Search' }}">
     <div class="hmpps-header__search-wrapper">
-      <label for="hmpps-header__search-input" class="govuk-visually-hidden">
+      <label for="search-input" class="govuk-visually-hidden">
         {{ t('search.label') or 'Search' }}
       </label>
       <input
         type="search"
-        id="hmpps-header__search-input"
+        id="search-input"
         name="query"
         class="hmpps-header__search-input"
         placeholder="{{ t('common:search.placeholder') or 'Search the Content Hub' }}"
         value="{{ params.query }}"
-        autocomplete="off"
       />
+      <div class="hmpps-typeahead" id="typeahead-container">
+        {% include '../../partials/search/typeahead.njk' %}
+      </div>
       <button type="submit" class="hmpps-header__search-button" aria-label="{{ t('common:search.label') or 'Search' }}">
         <svg class="hmpps-header__search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
@@ -23,4 +25,10 @@
     </div>
   </form>
 </div>
+
+<script nonce="{{ params.cspNonce }}" src="/assets/jquery.min.js"></script>
+<script nonce="{{ params.cspNonce }}" src="/assets/js/scripts/typeahead.js"></script>
+<script nonce="{{ params.cspNonce }}">
+  setupTypeahead($('#search-input'), $('#typeahead-container'))
+</script>
 {% endmacro %}
