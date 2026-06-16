@@ -33,6 +33,7 @@ import {
   MOJ_THUMBNAIL_IMAGE_INCLUDE,
   CONTENT_TILE_FIELDS,
   CONTENT_FILTERS,
+  PDF_CONTENT_FIELDS,
 } from './constants'
 
 const calculatePageOffset = (page: number, pageSize: number = PAGE_SIZE) => Math.max(page - 1, 0) * pageSize
@@ -159,6 +160,12 @@ export const buildAudioContentQueryString = () =>
     .addFields('taxonomy_term--topics', ['drupal_internal__tid', 'name'])
     .addFields('taxonomy_term--moj_categories', ['drupal_internal__tid', 'name'])
     .addInclude(AUDIO_CONTENT_INCLUDE)
+    .getQueryString()
+
+export const buildPdfContentQueryString = () =>
+  new DrupalJsonApiParams()
+    .addFields('node--moj_pdf_item', PDF_CONTENT_FIELDS)
+    .addInclude(['field_moj_pdf'])
     .getQueryString()
 
 export const buildContentLookupQueryString = (contentId: string) =>

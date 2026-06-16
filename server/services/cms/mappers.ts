@@ -39,6 +39,8 @@ import {
   CategoryContent,
   CategoryMenuContent,
   MediaContent,
+  CmsPdfContent,
+  CmsPdfNodeAttributes,
   CmsSearchResult,
   CmsSearchResultAttributes,
 } from './types'
@@ -374,6 +376,17 @@ export const mapAudioContent = (
     topics: mapContentTopics(data.relationships, response.included),
     image: resolveFileUrl(thumbnail) ?? null,
     excludeFeedback: data.attributes.field_exclude_feedback ?? false,
+  }
+}
+
+export const mapPdfContent = (response: JsonApiSingleResponse<CmsPdfNodeAttributes>): CmsPdfContent => {
+  const { data, included } = response
+  const pdfIdentifier = relationshipDataArray(data.relationships?.field_moj_pdf)[0]
+  const pdf = findIncluded<CmsFileAttributes>(included, pdfIdentifier)
+
+  return {
+    contentType: 'pdf',
+    url: pdf.attributes.uri.url,
   }
 }
 

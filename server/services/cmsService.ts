@@ -20,6 +20,7 @@ import {
   mapUpdatesContent,
   mapHomePageContent,
   mapRecentlyAddedContent,
+  mapPdfContent,
   mapSearchResponse,
 } from './cms/mappers'
 import {
@@ -48,6 +49,7 @@ import {
   buildUrgentBannerQueryString,
   buildVideoContentQueryString,
   buildRecentlyAddedQueryString,
+  buildPdfContentQueryString,
   buildSearchQueryString,
 } from './cms/queries'
 import { mapTagType } from './cms/utils'
@@ -87,6 +89,7 @@ import {
   MediaContent,
   CmsTagItem,
   CmsPaginatedContent,
+  CmsPdfNodeAttributes,
   CmsSearchResult,
   CmsSearchResultAttributes,
 } from './cms/types'
@@ -327,6 +330,12 @@ export default class CmsService {
         const response = await this.jsonApiClient.getSingleByPath<CmsAudioNodeAttributes>(path)
         const content = mapAudioContent(response, language)
         return this.enrichMediaContent(establishmentName, content, language)
+      }
+      case 'node--moj_pdf_item': {
+        const qs = buildPdfContentQueryString()
+        const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_pdf_item/${uuid}?${qs}`
+        const response = await this.jsonApiClient.getSingleByPath<CmsPdfNodeAttributes>(path)
+        return mapPdfContent(response)
       }
       default:
         return null

@@ -25,6 +25,7 @@ import {
   buildUpdatesContentQueryString,
   buildRecentlyAddedQueryString,
   unixTimestamp,
+  buildPdfContentQueryString,
   buildSearchQueryString,
 } from './queries'
 
@@ -143,6 +144,13 @@ describe('cms queries', () => {
     expect(params.get('fields[taxonomy_term--topics]')).toBe('drupal_internal__tid,name')
     expect(params.get('fields[taxonomy_term--moj_categories]')).toContain('drupal_internal__tid,name')
     expect(params.get('include')).toContain('field_moj_audio')
+  })
+
+  it('builds the pdf content query string', () => {
+    const params = new URLSearchParams(buildPdfContentQueryString())
+
+    expect(params.get('fields[node--moj_pdf_item]')).toContain('field_moj_pdf')
+    expect(params.get('include')).toBe('field_moj_pdf')
   })
 
   it('builds the content lookup query string', () => {
