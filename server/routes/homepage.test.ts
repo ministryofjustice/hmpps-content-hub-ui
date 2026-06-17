@@ -131,4 +131,20 @@ describe('GET /', () => {
         expect(cmsService.getHomepageContent).toHaveBeenCalledWith(config.establishments[0].name, 'en')
       })
   })
+
+  it('should render nav bar with language controls for bilingual prisons ', () => {
+    setupMocks()
+
+    return request(app)
+      .get('/')
+      .expect('Content-Type', /html/)
+      .expect(200)
+      .expect(res => {
+        expect(res.text).toContain('HMP Berwyn')
+        expect(res.text).toContain('English')
+        expect(res.text).toContain('?lng=en')
+        expect(res.text).toContain('Cymraeg')
+        expect(res.text).toContain('?lng=cy')
+      })
+  })
 })

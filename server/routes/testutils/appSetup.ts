@@ -12,6 +12,7 @@ import setUpI18n from '../../middleware/setUpI18n'
 import setUpFooterTopics from '../../middleware/setUpFooterTopics'
 import setUpPrimaryNavigation from '../../middleware/setUpPrimaryNavigation'
 import config from '../../config'
+import setUpContentHubHeader from '../../middleware/setUpContentHubHeader'
 
 export const user: HmppsUser = {
   name: 'FIRST LAST',
@@ -68,6 +69,7 @@ function appSetup(
   })
   app.use(setUpPrimaryNavigation(mergedServices.cmsService))
   app.use(setUpFooterTopics(mergedServices.cmsService))
+  app.use(setUpContentHubHeader())
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes(mergedServices))
