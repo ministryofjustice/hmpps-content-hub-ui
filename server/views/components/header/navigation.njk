@@ -3,7 +3,7 @@
 {% macro headerNavigation(params, t) %}
 <nav class="hmpps-header__nav-container" aria-label="{{ t('common:header.navigationLabel') or 'Content Hub Navigation' }}">
   <ul class="hmpps-header__navigation">
-    {% if params.supportedLanguages and params.supportedLanguages.length > 1 %}
+    {% if params.supportedLanguages and params.establishmentLanguages.length > 1 %}
       <li class="hmpps-header__navigation__item hmpps-header__navigation__item--languages">
         {% for lang in params.supportedLanguages %}
           <a
