@@ -4,14 +4,17 @@ import AbstractPage from './abstractPage'
 export default class BasicPage extends AbstractPage {
   readonly mainContent: Locator
 
+  readonly pageHeading: Locator
+
   private constructor(page: Page) {
     super(page)
     this.mainContent = page.locator('#main-content')
+    this.pageHeading = page.locator('#main-content h1')
   }
 
-  static async verifyOnPage(page: Page, title: string): Promise<BasicPage> {
+  static async verifyOnPage(page: Page): Promise<BasicPage> {
     const basicPage = new BasicPage(page)
-    await expect(basicPage.page.getByRole('heading', { name: title, level: 1 })).toBeVisible()
+    await expect(basicPage.pageHeading).toBeVisible()
     return basicPage
   }
 

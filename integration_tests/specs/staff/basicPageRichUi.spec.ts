@@ -51,7 +51,7 @@ test.describe('Staff basic page UI', () => {
     await basicPageLink.click()
 
     await expect(page).toHaveURL(basicPageHref!)
-    const basicPage = await BasicPage.verifyOnPage(page, basicPageTitle!)
+    const basicPage = await BasicPage.verifyOnPage(page)
 
     await basicPage.verifyMainContentText('Large introductory text for this basic page.')
     await basicPage.verifyMainContentText('Standard paragraph content for the page body.')
