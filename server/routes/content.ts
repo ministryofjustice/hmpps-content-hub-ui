@@ -9,17 +9,17 @@ export default function contentRoutes({ auditServiceSource, cmsService }: Servic
   router.get('/content/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
+      const { establishment, feedbackId, language, user } = res.locals
 
       await auditServiceSource.get(req.portalType).logPageView(Page.CONTENT, {
-        who: res.locals.user?.username,
+        who: user?.username,
         correlationId: req.id,
         subjectId: id?.toString(),
       })
 
-      const establishmentName = res.locals.establishment?.name || config.establishments[0].name
-      const language = res.locals.language || 'en'
+      const establishmentName = establishment?.name || config.establishments[0].name
 
-      const data = await cmsService.getContent(establishmentName, parseInt(id?.toString(), 10), language)
+      const data = await cmsService.getContent(establishmentName, parseInt(id?.toString(), 10), language || 'en')
 
       if (!data) {
         return next()
@@ -43,7 +43,7 @@ export default function contentRoutes({ auditServiceSource, cmsService }: Servic
       return res.render(template, {
         pageTitle: data.title,
         data: { ...data, topics },
-        feedbackId: data.excludeFeedback ? undefined : data.id,
+        feedbackId,
         feedbackTitle: data.title,
         feedbackContentType: data.contentType,
         excludeFeedback: data.excludeFeedback,

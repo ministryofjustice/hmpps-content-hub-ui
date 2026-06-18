@@ -4,6 +4,10 @@ import { Page } from '../services/auditService'
 import type { FeedbackPayload, FeedbackContentType, FeedbackSentiment, FeedbackRecord } from '../@types/feedbackTypes'
 import logger from '../../logger'
 
+interface FeedbackParams {
+  feedbackId: string
+}
+
 const VALID_CONTENT_TYPES: FeedbackContentType[] = ['article', 'video', 'audio', 'game', 'series', 'topic', 'category']
 const VALID_SENTIMENTS: FeedbackSentiment[] = ['LIKE', 'DISLIKE']
 
@@ -46,9 +50,11 @@ function validateFeedbackPayload(body: unknown): FeedbackPayload | null {
 export default function feedbackRoutes({ auditServiceSource, feedbackService }: Services): Router {
   const router = Router()
 
-  router.post('/feedback/:feedbackId', async (req: Request, res: Response, next: NextFunction) => {
+  router.post('/feedback/:feedbackId', async (req: Request<FeedbackParams>, res: Response, next: NextFunction) => {
+    const { establishment, user } = res.locals
+
     try {
-      const feedbackId = String(req.params.feedbackId)
+      const { feedbackId } = req.params
 
       if (!isUUID(feedbackId)) {
         res.status(400).send()
@@ -63,7 +69,7 @@ export default function feedbackRoutes({ auditServiceSource, feedbackService }: 
       }
 
       await auditServiceSource.get(req.portalType).logPageView(Page.FEEDBACK, {
-        who: res.locals.user?.username,
+        who: user?.username,
         correlationId: req.id,
         subjectId: feedbackId,
       })
@@ -72,13 +78,18 @@ export default function feedbackRoutes({ auditServiceSource, feedbackService }: 
         ...payload,
         feedbackId,
         date: new Date().toISOString(),
-        establishment: res.locals.establishment?.displayName?.toUpperCase() as string | undefined,
-        sessionId: String(req.sessionID),
+        establishment: establishment?.displayName?.toUpperCase() as string | undefined,
+        sessionId: req.sessionID,
       }
 
-      logger.info('Feedback from user %s: %s', res.locals.user?.username ?? 'anon', feedbackId)
-
-      feedbackService.sendFeedback(record).catch(() => {})
+      feedbackService
+        .sendFeedback(record)
+        .then(() => {
+          logger.info('Feedback from user %s: %s', user?.username ?? 'anon', feedbackId)
+        })
+        .catch(() => {
+          logger.error('Failed to send feedback from user %s: %s', user?.username ?? 'anon', feedbackId)
+        })
 
       res.status(200).send()
     } catch (error) {
