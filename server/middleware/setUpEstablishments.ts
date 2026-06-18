@@ -12,7 +12,7 @@ export const establishmentsMiddleware: RequestHandler = (req, res, next) => {
   // Prisoners are assigned the establishment from login
   if (res.locals.isPrisonerPortal) {
     res.locals.establishment = config.establishments.find(
-      ({ code }) => code === (res.locals.user as LaunchpadUser).establishment.agency_id,
+      ({ code }) => code === (res.locals.user as LaunchpadUser).idToken.establishment.agency_id,
     )
   }
 
