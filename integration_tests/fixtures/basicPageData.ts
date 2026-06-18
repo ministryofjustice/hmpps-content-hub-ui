@@ -29,9 +29,9 @@ export const BASIC_PAGE_DESCRIPTION = `
 `
 
 export const UPDATE_BASIC_PAGES = [
-  { nid: 901, uuid: 'update-101', title: 'NTP 06-26 | Gym Orderly Vacancy' },
-  { nid: 902, uuid: 'update-102', title: 'Criminon UK | Course brochure and list' },
-  { nid: 903, uuid: 'update-103', title: 'DHL - Current availability issues' },
-  { nid: 904, uuid: 'update-104', title: 'DHL - Back to local product list' },
-  { nid: 905, uuid: 'update-105', title: 'DHL - Changes for week commencing 31 May 2026' },
+  { nid: 301, uuid: 'update-1', title: 'NTP 06-26 | Gym Orderly Vacancy' },
+  { nid: 302, uuid: 'update-2', title: 'Criminon UK | Course brochure and list' },
+  { nid: 303, uuid: 'update-3', title: 'DHL - Current availability issues' },
+  { nid: 304, uuid: 'update-4', title: 'DHL - Back to local product list' },
+  { nid: 305, uuid: 'update-5', title: 'DHL - Changes for week commencing 31 May 2026' },
 ]
