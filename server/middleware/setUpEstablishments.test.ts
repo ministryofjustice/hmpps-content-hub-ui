@@ -5,7 +5,7 @@ describe('establishmentsMiddleware', () => {
   describe('when we are on the prisoners portal', () => {
     const req = {} as Request
     const res = {
-      locals: { isPrisonerPortal: true, user: { establishment: { agency_id: 'WYI' } } },
+      locals: { isPrisonerPortal: true, user: { idToken: { establishment: { agency_id: 'WYI' } } } },
     } as Response
     const next = jest.fn()
 
