@@ -19,6 +19,7 @@ const prisonerAuthStrategy: AuthStrategy = {
   // Determine if user is authenticated, potentially refresh tokens and either block or allow them to continue on
   checkAuthentication: async (req, res, next) => {
     if (!req.isAuthenticated()) {
+      if (req.path === '/stats') return res.sendStatus(401)
       req.session.returnTo = req.originalUrl
       return res.redirect('/sign-in')
     }

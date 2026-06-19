@@ -47,6 +47,7 @@ export declare global {
       appInsightsConnectionString?: string
       appInsightsApplicationName?: string
       buildNumber?: string
+      contentId?: number
     }
   }
 }

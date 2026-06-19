@@ -48,6 +48,7 @@ export default function createApp(services: Services): express.Application {
   // global per-request makes it available to the `| t` filter inside macros.
   app.use((req, _res, next) => {
     njkEnv.addGlobal('t', req.t)
+    njkEnv.addGlobal('requestId', req.id)
     next()
   })
 
