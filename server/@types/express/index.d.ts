@@ -48,6 +48,7 @@ export declare global {
       appInsightsApplicationName?: string
       buildNumber?: string
       contentId?: number
+      tagId?: number
     }
   }
 }

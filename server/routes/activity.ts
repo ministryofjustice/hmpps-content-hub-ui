@@ -17,6 +17,7 @@ export default function activityRoutes({ auditServiceSource }: Services): Router
         timeOnPageInSeconds,
         path,
         contentId,
+        tagId,
         journeyId,
         requestId,
       } = req.body
@@ -33,6 +34,7 @@ export default function activityRoutes({ auditServiceSource }: Services): Router
           timeOnPageInSeconds,
           path,
           contentId,
+          tagId,
           journeyId,
           requestId,
         },

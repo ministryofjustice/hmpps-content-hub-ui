@@ -9,6 +9,9 @@
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
   <meta name="csrf" content="{{ csrfToken }}" />
   <meta name="requestId" content="{{ requestId }}" />
+  {% if tagId %}
+    <meta name="tagId" content="{{ tagId }}" />
+  {% endif %}
   {% if contentId %}
     <meta name="contentId" content="{{ contentId }}" />
   {% endif %}

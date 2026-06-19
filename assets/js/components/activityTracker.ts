@@ -37,6 +37,7 @@ export const initActivityTracker = () => {
 
     const csrf = document.querySelector('meta[name=csrf]')?.getAttribute('content')
     const contentId = document.querySelector('meta[name=contentId]')?.getAttribute('content')
+    const tagId = document.querySelector('meta[name=tagId]')?.getAttribute('content')
     const requestId = document.querySelector('meta[name=requestId]')?.getAttribute('content')
     const journeyId = sessionStorage.getItem('journeyId')
 
@@ -59,6 +60,7 @@ export const initActivityTracker = () => {
         timeOnPageInSeconds: timeOnPage.elapsedSeconds,
         path: window.location.pathname,
         contentId,
+        tagId,
         journeyId,
         requestId,
       }),
