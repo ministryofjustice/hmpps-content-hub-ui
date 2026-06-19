@@ -1,11 +1,14 @@
 import { Router } from 'express'
 import type { Services } from '../services'
+import { isRequestForStaffPortal } from '../middleware/setUpPortals'
 
 export default function activityRoutes({ auditServiceSource }: Services): Router {
   const router = Router()
 
   router.post('/record/activity', async (req, res, next) => {
     try {
+      if (isRequestForStaffPortal(req)) return res.sendStatus(200)
+
       const {
         videoPlayed,
         videoPaused,
