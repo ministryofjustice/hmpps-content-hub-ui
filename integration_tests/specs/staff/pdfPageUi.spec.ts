@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { loginWithHmppsAuth, resetStubs } from '../../testUtils'
 import HomePage from '../../pages/homePage'
+import ChangePrisonPage from '../../pages/changePrisonPage'
 import cmsApi from '../../mockApis/cmsApi'
 import config from '../../../server/config'
 import pdfTestContent, {
@@ -37,14 +38,14 @@ test.describe('Staff PDF page UI', () => {
 
     await loginWithHmppsAuth(page, { name: 'A TestUser' })
 
-    await HomePage.verifyOnPage(page)
-    await page.getByRole('link', { name: 'Change prison' }).click()
-    await expect(page.getByRole('heading', { name: 'Change prison', level: 1 })).toBeVisible()
-    await page.getByRole('radio', { name: config.establishments[1].displayName }).check()
-    await page.getByRole('button', { name: 'Choose prison' }).click()
+    const homePage = await HomePage.verifyOnPage(page)
+    await homePage.changePrisonLink.click()
 
-    await HomePage.verifyOnPage(page)
-    const pdfPageLink = page.getByRole('link', { name: new RegExp(pdfTestContent.title, 'i') }).first()
+    const changePrisonPage = await ChangePrisonPage.verifyOnPage(page)
+    await changePrisonPage.choosePrison(config.establishments[1].displayName)
+
+    const updatedHomePage = await HomePage.verifyOnPage(page)
+    const pdfPageLink = updatedHomePage.contentLink(new RegExp(pdfTestContent.title, 'i'))
 
     await expect(pdfPageLink).toBeVisible()
     await expect(pdfPageLink).toHaveAttribute('target', '_blank')
