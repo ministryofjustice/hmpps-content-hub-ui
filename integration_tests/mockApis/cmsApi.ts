@@ -324,6 +324,21 @@ const defaultExploreHomepageCollectionResponse = {
   links: {},
 }
 
+const buildSearchResponse = (results: Array<{ title: string; summary?: string; url: string }>) => ({
+  data: results.map((result, index) => ({
+    type: 'node--page',
+    id: `search-${index + 1}`,
+    attributes: {
+      title: result.title,
+      field_summary: result.summary,
+      path: { alias: result.url },
+      drupal_internal__nid: index + 1,
+    },
+  })),
+  included: [],
+  links: {},
+})
+
 const defaultUrgentBannerResponse = {
   data: [],
   included: [],
@@ -461,6 +476,23 @@ export default {
         status: httpStatus,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: body,
+      },
+    }),
+
+  stubSearchContent: (
+    results: Array<{ title: string; summary?: string; url: string }>,
+    httpStatus = 200,
+  ): SuperAgentRequest =>
+    stubFor({
+      priority: 1,
+      request: {
+        method: 'GET',
+        urlPathPattern: '/jsonapi/prison/[^/]+/index/content_for_search',
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: buildSearchResponse(results),
       },
     }),
 

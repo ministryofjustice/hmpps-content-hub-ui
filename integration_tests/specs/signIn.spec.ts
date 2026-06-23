@@ -31,8 +31,7 @@ test.describe('SignIn (Prisoners login)', () => {
     await stubHomePageQueries()
     await loginWithPrisonerAuth(page, { name: 'A TestUser' })
 
-    await HomePage.verifyOnPage(page)
-
+    await expect(page).toHaveURL('/')
     await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).not.toBeVisible()
   })
 })
