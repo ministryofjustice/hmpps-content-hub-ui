@@ -405,6 +405,7 @@ export default {
     body: Record<string, unknown> = defaultHomepageContentResponse,
   ): SuperAgentRequest =>
     stubFor({
+      priority: 1,
       request: {
         method: 'GET',
         urlPattern: '/en/jsonapi/prison/[^/]+/node/homepage.*',
@@ -421,6 +422,7 @@ export default {
     body: Record<string, unknown> = defaultHomepageCollectionResponse,
   ): SuperAgentRequest =>
     stubFor({
+      priority: 1,
       request: {
         method: 'GET',
         urlPattern: '/en/jsonapi/prison/[^/]+/node\\?.*',
@@ -437,6 +439,7 @@ export default {
     body: Record<string, unknown> = defaultRecentlyAddedHomepageCollectionResponse,
   ): SuperAgentRequest =>
     stubFor({
+      priority: 1,
       request: {
         method: 'GET',
         urlPattern: '/en/jsonapi/prison/[^/]+/recently-added.*',
@@ -453,6 +456,7 @@ export default {
     body: Record<string, unknown> = defaultExploreHomepageCollectionResponse,
   ): SuperAgentRequest =>
     stubFor({
+      priority: 1,
       request: {
         method: 'GET',
         urlPattern: '/en/jsonapi/prison/[^/]+/explore/node.*',
@@ -613,17 +617,19 @@ export default {
   stubContentLookupByNid: ({
     nid,
     uuid,
+    nodeType = 'node--page',
     httpStatus = 200,
   }: {
     nid: number
     uuid: string
+    nodeType?: 'node--page' | 'node--moj_pdf_item'
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
       priority: 1,
       request: {
         method: 'GET',
-        urlPathPattern: '/en/jsonapi/prison/[^/]+/node',
+        urlPathPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node',
         queryParameters: {
           'filter[drupal_internal__nid]': { equalTo: `${nid}` },
         },
@@ -634,7 +640,116 @@ export default {
         jsonBody: {
           data: [
             {
-              type: 'node--page',
+              type: nodeType,
+              id: uuid,
+              attributes: { drupal_internal__nid: nid },
+            },
+          ],
+        },
+      },
+    }),
+
+  stubPdfContentByUuid: ({
+    uuid,
+    nid,
+    fileUrl,
+    httpStatus = 200,
+  }: {
+    uuid: string
+    nid: number
+    fileUrl: string
+    httpStatus?: number
+  }): SuperAgentRequest =>
+    stubFor({
+      priority: 1,
+      request: {
+        method: 'GET',
+        urlPathPattern: `/(?:en|cy)/jsonapi/prison/[^/]+/node/moj_pdf_item/${uuid}`,
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          data: {
+            type: 'node--moj_pdf_item',
+            id: uuid,
+            attributes: {
+              drupal_internal__nid: nid,
+              title: 'Test PDF content',
+            },
+            relationships: {
+              field_moj_pdf: {
+                data: [{ type: 'file--file', id: `${uuid}-pdf-file` }],
+              },
+            },
+          },
+          included: [
+            {
+              type: 'file--file',
+              id: `${uuid}-pdf-file`,
+              attributes: {
+                uri: {
+                  url: fileUrl,
+                },
+              },
+            },
+          ],
+        },
+      },
+    }),
+
+  stubPdfLookupByUuid: ({
+    uuid,
+    nid,
+    httpStatus = 200,
+  }: {
+    uuid: string
+    nid: number
+    httpStatus?: number
+  }): SuperAgentRequest =>
+    stubFor({
+      priority: 1,
+      request: {
+        method: 'GET',
+        urlPathPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node',
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          data: [
+            {
+              type: 'node--moj_pdf_item',
+              id: uuid,
+              attributes: { drupal_internal__nid: nid },
+            },
+          ],
+        },
+      },
+    }),
+
+  stubPdfLookupByNid: ({
+    uuid,
+    nid,
+    httpStatus = 200,
+  }: {
+    uuid: string
+    nid: number
+    httpStatus?: number
+  }): SuperAgentRequest =>
+    stubFor({
+      priority: 1,
+      request: {
+        method: 'GET',
+        urlPattern: `/(?:en|cy)/jsonapi/prison/[^/]+/node\\?.*drupal_internal__nid%5D=${nid}.*`,
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          data: [
+            {
+              type: 'node--moj_pdf_item',
               id: uuid,
               attributes: { drupal_internal__nid: nid },
             },
@@ -660,7 +775,7 @@ export default {
       priority: 1,
       request: {
         method: 'GET',
-        urlPathPattern: `/en/jsonapi/prison/[^/]+/node/page/${uuid}`,
+        urlPathPattern: `/(?:en|cy)/jsonapi/prison/[^/]+/node/page/${uuid}`,
       },
       response: {
         status: httpStatus,
