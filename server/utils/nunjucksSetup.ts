@@ -6,6 +6,7 @@ import fs from 'fs'
 import { initialiseName } from './utils'
 import config from '../config'
 import logger from '../../logger'
+import { CmsBreadcrumbItem, CmsPrimaryNavigationItem } from '../services/cms/types'
 
 export default function nunjucksSetup(app: express.Express): nunjucks.Environment {
   app.set('view engine', 'njk')
@@ -51,6 +52,21 @@ export default function nunjucksSetup(app: express.Express): nunjucks.Environmen
     }
     return key
   })
+
+  njkEnv.addFilter(
+    'makeCurrentPrimaryCategoryActive',
+    (primaryNavigation: CmsPrimaryNavigationItem[], currentUrl, breadcrumbs: CmsBreadcrumbItem[] = []) => {
+      if (!primaryNavigation || !primaryNavigation.length) return null
+
+      const currentPrimaryCategory = primaryNavigation.find(navItem => {
+        const { href: navItemHref } = navItem
+        return currentUrl === navItemHref || breadcrumbs.find(({ href }) => href === navItemHref)
+      })
+
+      if (currentPrimaryCategory) currentPrimaryCategory.active = true
+      return primaryNavigation
+    },
+  )
 
   return njkEnv
 }

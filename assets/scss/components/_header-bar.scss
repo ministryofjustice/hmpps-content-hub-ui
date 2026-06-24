@@ -10,10 +10,6 @@
     align-items: center;
   }
 
-  &__logo {
-    @include govuk-responsive-margin(2, 'right');
-  }
-
   &__title {
     @include govuk-responsive-padding(3, 'right');
     display: flex;
@@ -22,7 +18,7 @@
 
     &__organisation-name {
       @include govuk-responsive-margin(2, 'right');
-      @include govuk-font($size: 24, $weight: 'bold');
+      @include govuk-font($size: 24);
       display: flex;
       align-items: center;
     }

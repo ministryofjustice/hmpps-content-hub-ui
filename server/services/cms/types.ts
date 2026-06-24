@@ -20,6 +20,7 @@ export interface CmsPrimaryNavigationAttributes {
 export interface CmsPrimaryNavigationItem {
   text: string
   href: string
+  active?: boolean
 }
 
 export interface CmsTopicPageHeader {
