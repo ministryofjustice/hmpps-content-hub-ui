@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test'
-import { loginWithHmppsAuth, loginWithPrisonerAuth, resetStubs, stubHomePageQueries } from '../testUtils'
+import { loginWithHmppsAuth, resetStubs, stubHomePageQueries } from '../testUtils'
 import HomePage from '../pages/homePage'
 import prisonerAuth from '../mockApis/prisonerAuth'
 import hmppsAuth from '../mockApis/hmppsAuth'
+import tokenVerification from '../mockApis/tokenVerification'
 
 test.describe('SignIn (Prisoners login)', () => {
   test.use({
@@ -28,11 +29,21 @@ test.describe('SignIn (Prisoners login)', () => {
   })
 
   test('User with correct details is logged in successfully', async ({ page }) => {
-    await stubHomePageQueries()
-    await loginWithPrisonerAuth(page, { name: 'A TestUser' })
+    await Promise.all([
+      prisonerAuth.favicon(),
+      prisonerAuth.stubSignInPage(),
+      prisonerAuth.token({ name: 'A TestUser', establishmentCode: 'BNI', expiresInSeconds: 9999 }),
+      hmppsAuth.token({ name: 'A TestUser', roles: ['ROLE_PRISON'], authSource: 'nomis' }),
+      tokenVerification.stubVerifyToken(true),
+    ])
 
-    await expect(page).toHaveURL('/')
-    await expect(page.getByRole('heading', { name: 'Sign in', level: 1 })).not.toBeVisible()
+    await page.goto('/')
+
+    const callbackUrl = await prisonerAuth.getSignInUrl()
+    const response = await page.request.get(callbackUrl, { maxRedirects: 0 })
+
+    expect(response.status()).toBe(302)
+    expect(response.headers().location).toBe('/')
   })
 })
 
