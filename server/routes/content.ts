@@ -1,12 +1,21 @@
 import { Router, Request, Response, NextFunction } from 'express'
+import helmet from 'helmet'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
 import config from '../config'
+import { DEFAULT_CSP_DIRECTIVES } from '../middleware/setUpWebSecurity'
+
+const CONTENT_ROUTE_CSP = helmet.contentSecurityPolicy({
+  directives: {
+    ...DEFAULT_CSP_DIRECTIVES,
+    styleSrc: ["'self'", "'unsafe-inline'"],
+  },
+})
 
 export default function contentRoutes({ auditServiceSource, cmsService }: Services): Router {
   const router = Router()
 
-  router.get('/content/:id', async (req: Request, res: Response, next: NextFunction) => {
+  router.get('/content/:id', CONTENT_ROUTE_CSP, async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
       const { establishment, feedbackId, language, user } = res.locals

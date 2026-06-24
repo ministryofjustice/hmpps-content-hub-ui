@@ -2,6 +2,8 @@
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
+{% set feedbackBlackBackground = false %}
+
 {% block head %}
   <link href="/assets/js/games/sudoku/sudokuJS.css" rel="stylesheet" type="text/css"/>
   {{ super() }}

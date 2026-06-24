@@ -3,6 +3,7 @@
 
 {% set pageTitle = applicationName + " - Tag" %}
 {% set mainClasses = "govuk-body" %}
+{% set feedbackHeading = t("features:feedback.headings.alternative") %}
 
 {% if tag %}
   {% set feedbackContentType = tag.type or '' %}

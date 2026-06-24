@@ -72,6 +72,19 @@
           </div>
         {% endif %}
 
+        {{ feedbackWidget({
+          feedbackId: feedbackId,
+          title: feedbackTitle or pageTitle or '',
+          contentType: feedbackContentType or '',
+          series: feedbackSeries or '',
+          categories: feedbackCategories or '',
+          topics: feedbackTopics or '',
+          csrfToken: csrfToken,
+          cspNonce: cspNonce,
+          blackBackground: true,
+          heading: ''
+        }) }}
+
         {% if data.topics and data.topics.length %}
           <div class="hmpps-related-topics govuk-!-margin-top-6 govuk-!-padding-5">
             <h2 class="govuk-heading-m">{{ "features:relatedTopics.heading" | t }}</h2>
@@ -120,3 +133,5 @@
     {% endif %}
   </section>
 {% endblock %}
+
+{% block feedbackWidget %}{% endblock %}

@@ -17,32 +17,31 @@ export default function setUpWebSecurity(): Router {
   router.use(
     helmet({
       contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          // This nonce allows us to use scripts with the use of the `cspNonce` local, e.g (in a Nunjucks template):
-          // <script nonce="{{ cspNonce }}">
-          // or
-          // <link href="http://example.com/" rel="stylesheet" nonce="{{ cspNonce }}">
-          // This ensures only scripts we trust are loaded, and not anything injected into the
-          // page by an attacker.
-          scriptSrc: [
-            "'self'",
-            (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
-          ],
-          styleSrc: [
-            "'self'",
-            "'unsafe-inline'",
-            (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
-          ],
-          fontSrc: ["'self'", 'data:'],
-          imgSrc: ["'self'", 'data:', 'https:'],
-          mediaSrc: ["'self'", 'https:'],
-          formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
-          ...(config.production ? {} : { upgradeInsecureRequests: null }),
-        },
+        directives: DEFAULT_CSP_DIRECTIVES,
       },
       crossOriginEmbedderPolicy: false,
     }),
   )
   return router
+}
+
+export const DEFAULT_CSP_DIRECTIVES = {
+  defaultSrc: ["'self'"],
+  // This nonce allows us to use scripts with the use of the `cspNonce` local, e.g (in a Nunjucks template):
+  // <script nonce="{{ cspNonce }}">
+  // or
+  // <link href="http://example.com/" rel="stylesheet" nonce="{{ cspNonce }}">
+  // This ensures only scripts we trust are loaded, and not anything injected into the
+  // page by an attacker.
+  scriptSrc: ["'self'", (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`],
+  styleSrc: [
+    "'self'",
+    "'unsafe-inline'",
+    (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
+  ],
+  fontSrc: ["'self'", 'data:'],
+  imgSrc: ["'self'", 'data:', 'https:'],
+  mediaSrc: ["'self'", 'https:'],
+  formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
+  ...(config.production ? {} : { upgradeInsecureRequests: null }),
 }

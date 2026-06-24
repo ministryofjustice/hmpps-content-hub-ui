@@ -1,4 +1,6 @@
 .hmpps-dynamic-content {
+  display: flex;
+
   p {
     @extend .govuk-body;
   }

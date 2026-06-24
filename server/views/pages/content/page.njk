@@ -3,6 +3,7 @@
 
 {% set pageTitle = data.title or applicationName %}
 {% set mainClasses = "govuk-body" %}
+{% set feedbackBlackBackground = false %}
 
 {% block content %}
   {{ breadcrumbNavigation(t) }}
@@ -18,7 +19,9 @@
 
   {% if data.description %}
     <div class="hmpps-dynamic-content">
-      {{ data.description | safe }}
+      <div class="govuk-grid-column-two-thirds">
+        {{ data.description | safe }}
+      </div>
     </div>
   {% endif %}
 
