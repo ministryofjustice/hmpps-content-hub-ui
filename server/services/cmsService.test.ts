@@ -437,6 +437,36 @@ describe('homepage content queries', () => {
     expect(response.largeUpdateTile.id).toBe(3)
   })
 
+  it('should safely fetch homepage content when relationships are missing', async () => {
+    jsonApiClient.getCollectionByPath.mockResolvedValue({
+      ...mockHomePageNode,
+      data: [
+        {
+          type: 'node--homepage',
+          id: 'topic-1',
+          attributes: {
+            drupal_internal__nid: 42,
+            drupal_internal__tid: 42,
+            title: 'test-homepage',
+            field_summary: '',
+            field_display_url: '',
+          },
+          relationships: {},
+        },
+      ],
+    })
+
+    const response = await cmsService.getHomepageContent('bullingdon', 'en')
+
+    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
+      '/en/jsonapi/prison/bullingdon/node/homepage?include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--field_featured_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--field_key_info_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri',
+    )
+
+    expect(response.featuredContent.data.length).toBe(0)
+    expect(response.keyInfo.data.length).toBe(0)
+    expect(response.largeUpdateTile).toBe(null)
+  })
+
   it('should fetch recently added homepage content', async () => {
     jsonApiClient.getCollectionByPath.mockResolvedValue(mockContent)
 
