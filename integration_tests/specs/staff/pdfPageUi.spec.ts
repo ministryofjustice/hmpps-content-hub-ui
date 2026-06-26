@@ -63,7 +63,7 @@ test.describe('Staff PDF page UI', () => {
     ])
 
     expect(pdfViewerPage).toBeTruthy()
-  logger.info('PDF request URL: %s', pdfRequest.url())
+    logger.info('PDF request URL: %s', pdfRequest.url())
     expect(pdfRequest.url()).toMatch(/\/assets\/.+\.pdf$/)
 
     const opener = await pdfViewerPage.opener()
