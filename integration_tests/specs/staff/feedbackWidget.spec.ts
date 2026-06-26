@@ -4,8 +4,8 @@ import cmsApi from '../../mockApis/cmsApi'
 import BasicPage from '../../pages/basicPage'
 import FeedbackWidget from '../../pages/feedbackWidget'
 
-const FEEDBACK_PAGE_NID = 4856
-const FEEDBACK_PAGE_UUID = 'feedback-page-uuid-4856'
+const FEEDBACK_PAGE_NID = 4857
+const FEEDBACK_PAGE_UUID = 'feedback-page-uuid-4857'
 const FEEDBACK_PAGE_TITLE = 'Privacy'
 const FEEDBACK_PAGE_DESCRIPTION = '<p>Feedback test content page.</p>'
 
