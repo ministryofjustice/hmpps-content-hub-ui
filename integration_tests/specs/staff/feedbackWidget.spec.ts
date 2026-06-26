@@ -4,8 +4,8 @@ import cmsApi from '../../mockApis/cmsApi'
 import BasicPage from '../../pages/basicPage'
 import FeedbackWidget from '../../pages/feedbackWidget'
 
-const FEEDBACK_PAGE_NID = 4856
-const FEEDBACK_PAGE_UUID = 'feedback-page-uuid-4856'
+const FEEDBACK_PAGE_NID = 4857
+const FEEDBACK_PAGE_UUID = 'feedback-page-uuid-4857'
 const FEEDBACK_PAGE_TITLE = 'Privacy'
 const FEEDBACK_PAGE_DESCRIPTION = '<p>Feedback test content page.</p>'
 
@@ -35,7 +35,8 @@ const stubFeedbackContentPage = () =>
   ])
 
 const openFeedbackPage = async (page: Page) => {
-  await Promise.all([stubHomePageQueries(), stubFeedbackContentPage()])
+  await stubHomePageQueries()
+  await stubFeedbackContentPage()
   await loginWithHmppsAuth(page, { name: 'A TestUser' })
   await page.goto(`/content/${FEEDBACK_PAGE_NID}`)
   await BasicPage.verifyOnPage(page)

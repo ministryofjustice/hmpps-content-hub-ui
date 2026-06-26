@@ -4,6 +4,10 @@ import AbstractPage from './abstractPage'
 export default class HomePage extends AbstractPage {
   readonly header: Locator
 
+  readonly changePrisonLink: Locator
+
+  readonly organisationSwitcher: Locator
+
   readonly updatesHeading: Locator
 
   readonly featuredHeading: Locator
@@ -31,6 +35,8 @@ export default class HomePage extends AbstractPage {
   private constructor(page: Page) {
     super(page)
     this.header = page.getByRole('link', { name: 'Browse all topics' })
+    this.changePrisonLink = page.getByRole('link', { name: 'Change prison' })
+    this.organisationSwitcher = page.getByLabel('Organisation switcher')
     this.browseAllTopicsButton = page.getByRole('link', { name: 'Browse all topics' })
     this.updatesHeading = page.getByRole('heading', { name: 'Updates', level: 2 })
     this.featuredHeading = page.getByRole('heading', { name: 'Featured', level: 2 })
@@ -81,5 +87,9 @@ export default class HomePage extends AbstractPage {
     await expect(this.recentlyAddedCards.first()).toBeVisible()
     await expect(this.exploreCards.first()).toBeVisible()
     await expect(this.updatesItems.first()).toBeVisible()
+  }
+
+  contentLink(name: string | RegExp): Locator {
+    return this.page.getByRole('link', { name }).first()
   }
 }
