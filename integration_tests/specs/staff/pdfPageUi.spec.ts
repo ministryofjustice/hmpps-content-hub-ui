@@ -4,6 +4,7 @@ import HomePage from '../../pages/homePage'
 import ChangePrisonPage from '../../pages/changePrisonPage'
 import cmsApi from '../../mockApis/cmsApi'
 import config from '../../../server/config'
+import logger from '../../../logger'
 import pdfTestContent, {
   PDF_HOMEPAGE_COLLECTION_RESPONSE,
   PDF_HOMEPAGE_CONTENT_RESPONSE,
@@ -54,8 +55,19 @@ test.describe('Staff PDF page UI', () => {
     const pdfHref = await pdfPageLink.getAttribute('href')
     expect(pdfHref).toMatch(/^\/assets\/.+\.pdf$/)
 
-    const [pdfViewerPage] = await Promise.all([page.waitForEvent('popup'), pdfPageLink.click()])
+    const currentUrl = page.url()
+    const [pdfViewerPage, pdfRequest] = await Promise.all([
+      page.waitForEvent('popup'),
+      page.context().waitForEvent('request', request => /\/assets\/.+\.pdf$/.test(request.url())),
+      pdfPageLink.click(),
+    ])
 
     expect(pdfViewerPage).toBeTruthy()
+  logger.info('PDF request URL: %s', pdfRequest.url())
+    expect(pdfRequest.url()).toMatch(/\/assets\/.+\.pdf$/)
+
+    const opener = await pdfViewerPage.opener()
+    expect(opener).toBe(page)
+    await expect(page).toHaveURL(currentUrl)
   })
 })
