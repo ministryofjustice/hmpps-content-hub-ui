@@ -35,7 +35,8 @@ const stubFeedbackContentPage = () =>
   ])
 
 const openFeedbackPage = async (page: Page) => {
-  await Promise.all([stubHomePageQueries(), stubFeedbackContentPage()])
+  await stubHomePageQueries()
+  await stubFeedbackContentPage()
   await loginWithHmppsAuth(page, { name: 'A TestUser' })
   await page.goto(`/content/${FEEDBACK_PAGE_NID}`)
   await BasicPage.verifyOnPage(page)

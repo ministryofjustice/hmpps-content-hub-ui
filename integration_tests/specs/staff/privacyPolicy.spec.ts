@@ -46,7 +46,8 @@ test.describe('Staff privacy policy', () => {
   })
 
   test('Footer privacy policy link opens the privacy page', async ({ page }) => {
-    await Promise.all([stubHomePageQueries(), stubPrivacyPage()])
+    await stubHomePageQueries()
+    await stubPrivacyPage()
 
     await loginWithHmppsAuth(page, { name: 'A TestUser' })
 
