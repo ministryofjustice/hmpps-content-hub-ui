@@ -1,16 +1,23 @@
 import { expect, test } from '@playwright/test'
 import { loginWithHmppsAuth, resetStubs, stubHomePageQueries } from '../../testUtils'
 import HomePage from '../../pages/homePage'
+import BasicPage from '../../pages/basicPage'
 import cmsApi from '../../mockApis/cmsApi'
 
 const PRIVACY_NID = 4856
 const PRIVACY_UUID = 'privacy-page-uuid-4856'
 const PRIVACY_TITLE = 'Privacy'
+const PRIVACY_DESCRIPTION = '<p>Privacy policy content for integration testing.</p>'
 
 const stubPrivacyPage = () =>
   Promise.all([
     cmsApi.stubContentLookupByNid({ nid: PRIVACY_NID, uuid: PRIVACY_UUID }),
-    cmsApi.stubPageContentByUuid({ uuid: PRIVACY_UUID, nid: PRIVACY_NID, title: PRIVACY_TITLE }),
+    cmsApi.stubPageContentByUuid({
+      uuid: PRIVACY_UUID,
+      nid: PRIVACY_NID,
+      title: PRIVACY_TITLE,
+      description: PRIVACY_DESCRIPTION,
+    }),
   ])
 
 test.describe('Staff privacy policy', () => {
@@ -39,7 +46,8 @@ test.describe('Staff privacy policy', () => {
   })
 
   test('Footer privacy policy link opens the privacy page', async ({ page }) => {
-    await Promise.all([stubHomePageQueries(), stubPrivacyPage()])
+    await stubHomePageQueries()
+    await stubPrivacyPage()
 
     await loginWithHmppsAuth(page, { name: 'A TestUser' })
 
@@ -48,6 +56,7 @@ test.describe('Staff privacy policy', () => {
     await page.getByRole('contentinfo').getByRole('link', { name: 'Privacy' }).click()
 
     await expect(page).toHaveURL(/\/content\/4856/)
-    await expect(page.getByRole('heading', { level: 1, name: PRIVACY_TITLE })).toBeVisible()
+    const privacyPage = await BasicPage.verifyOnPage(page)
+    await privacyPage.verifyMainContentText('Privacy policy content for integration testing.')
   })
 })

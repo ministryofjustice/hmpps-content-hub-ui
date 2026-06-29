@@ -21,16 +21,36 @@ function createToken(userToken: UserToken) {
   return jwt.sign(payload, 'secret', { expiresIn: '1h' })
 }
 
+function createIdToken(userToken: UserToken) {
+  const payload = {
+    name: userToken.name || 'john smith',
+    user_name: 'USER1',
+    authorities: userToken.roles,
+    aud: 'clientid',
+    sub: 'A-BOOKING-ID',
+    iss: 'http://localhost:9091/launchpadauth',
+  }
+
+  return jwt.sign(payload, 'secret', { expiresIn: '1h' })
+}
+
 export default {
-  getSignInUrl: (): Promise<string> =>
-    getMatchingRequests({
+  getSignInUrl: async (): Promise<string> => {
+    const data = await getMatchingRequests({
       method: 'GET',
       urlPath: '/auth/oauth/authorize',
-    }).then(data => {
-      const { requests } = data.body
-      const stateValue = requests[requests.length - 1].queryParams.state.values[0]
-      return `/sign-in/callback?code=codexxxx&state=${stateValue}`
-    }),
+    })
+
+    const { requests = [] } = data.body as { requests?: Array<{ queryParams?: { state?: { values?: string[] } } }> }
+    const lastRequest = requests[requests.length - 1]
+    const stateValue = lastRequest?.queryParams?.state?.values?.[0]
+
+    if (stateValue) {
+      return `/sign-in/callback?code=codexxxx&state=${encodeURIComponent(stateValue)}`
+    }
+
+    throw new Error('Unable to determine HMPPS auth state')
+  },
 
   favicon: () =>
     stubFor({
@@ -114,6 +134,8 @@ export default {
         },
         jsonBody: {
           access_token: createToken(userToken),
+          refresh_token: createToken(userToken),
+          id_token: createIdToken(userToken),
           token_type: 'bearer',
           auth_source: userToken.authSource,
           user_name: 'USER1',
