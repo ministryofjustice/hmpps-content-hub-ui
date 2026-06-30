@@ -56,6 +56,7 @@ export default function contentRoutes({ auditServiceSource, cmsService }: Servic
         feedbackTitle: data.title,
         feedbackContentType: data.contentType,
         excludeFeedback: data.excludeFeedback,
+        contentId: data.id,
       })
     } catch (error) {
       return next(error)
