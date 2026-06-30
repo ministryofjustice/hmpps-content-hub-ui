@@ -13,9 +13,10 @@
 {% endblock %}
 
 {% set pageTitle = applicationName + " - Chess" %}
+{% set feedbackBlackBackground = false %}
 
 {% block content %}
-  {{ breadcrumbNavigation() }}
+  {{ breadcrumbNavigation(t) }}
   {{ breadcrumb(breadcrumbs) }}
 
   <div class="govuk-main-wrapper">

@@ -3,13 +3,15 @@
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
+{% set feedbackBlackBackground = false %}
+
 {% block head %}
 	<link href="/assets/js/games/anagramica/stylesheets/style.css" rel="stylesheet"/>
   {{ super() }}
 {% endblock %}
 
 {% block content %}
-  {{ breadcrumbNavigation() }}
+  {{ breadcrumbNavigation(t) }}
   {{ breadcrumb(breadcrumbs) }}
 
   <div class="govuk-main-wrapper">

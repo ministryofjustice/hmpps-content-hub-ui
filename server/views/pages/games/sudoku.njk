@@ -2,6 +2,8 @@
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
+{% set feedbackBlackBackground = false %}
+
 {% block head %}
   <link href="/assets/js/games/sudoku/sudokuJS.css" rel="stylesheet" type="text/css"/>
   {{ super() }}
@@ -10,7 +12,7 @@
 {% set pageTitle = applicationName + " - Sudoku" %}
 
 {% block content %}
-  {{ breadcrumbNavigation() }}
+  {{ breadcrumbNavigation(t) }}
   {{ breadcrumb(breadcrumbs) }}
 
   <div class="govuk-width-container">

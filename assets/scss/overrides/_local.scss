@@ -16,9 +16,8 @@ $hmpps-category-grid-gap: 5px;
 
 .hmpps-section--dark {
   background-color: govuk-colour('black');
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  width: 100vw;
+  margin-left: calc(50% - 49.6vw);
+  margin-right: calc(50% - 49.6vw);
 
   .govuk-heading-xl,
   .govuk-heading-l,
@@ -96,11 +95,11 @@ $hmpps-category-grid-gap: 5px;
   flex-direction: column;
   flex: 1;
   min-height: 80px;
-  padding: govuk-spacing(2);
+}
 
-  .govuk-heading-s {
-    margin-bottom: govuk-spacing(1);
-  }
+.hmpps-category-card__title-text {
+  padding-bottom: 50px;
+  margin: 5px 15px;
 }
 
 $hmpps-watch-colour: #d64d8b;
@@ -108,14 +107,10 @@ $hmpps-listen-colour: govuk-colour('green');
 $hmpps-read-colour: govuk-colour('blue');
 
 .hmpps-category-card__content-label {
-  align-items: center;
+  padding: 10px 0;
+  margin: 0;
   color: govuk-colour('white');
-  display: inline-flex;
   font-size: 1.2rem;
-  gap: 0;
-  line-height: 1.2;
-  margin-top: auto;
-  padding-top: govuk-spacing(1);
   text-decoration: underline;
 
   &::before {
@@ -128,6 +123,12 @@ $hmpps-read-colour: govuk-colour('blue');
     text-align: center;
     text-decoration: none;
     width: 25px;
+  }
+
+  &--small {
+    position: absolute;
+    bottom: 0;
+    padding-left: 15px;
   }
 }
 

@@ -3,6 +3,7 @@
 
 {% set pageTitle = applicationName + " - Tag" %}
 {% set mainClasses = "govuk-body" %}
+{% set feedbackHeading = t("features:feedback.headings.alternative") %}
 
 {% if tag %}
   {% set feedbackContentType = tag.type or '' %}
@@ -20,13 +21,13 @@
 
 {% block content %}
   {% if tag %}
-    {{ breadcrumbNavigation() }}
+    {{ breadcrumbNavigation(t) }}
     {% if tag.breadcrumbs and tag.breadcrumbs.length %}
       {{ breadcrumb(tag.breadcrumbs) }}
     {% endif %}
 
     {% if tag.type == "category" %}
-      <h1>{{ tag.name or "Tag" }}</h1>
+      <h1 class="govuk-heading-xl">{{ tag.name or "Tag" }}</h1>
     {% endif %}
 
     {% if tag.type == "topic" %}

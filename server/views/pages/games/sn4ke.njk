@@ -7,9 +7,10 @@
 {% endblock %}
 
 {% set pageTitle = applicationName + " - Sn4ke" %}
+{% set feedbackBlackBackground = false %}
 
 {% block content %}
-  {{ breadcrumbNavigation() }}
+  {{ breadcrumbNavigation(t) }}
   {{ breadcrumb(breadcrumbs) }}
 
   <main class="govuk-main-wrapper">

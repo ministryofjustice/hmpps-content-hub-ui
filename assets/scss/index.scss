@@ -10,6 +10,7 @@ $govuk-page-width: $moj-page-width;
 @import './mixins/tile-hover';
 
 @import './components/crossword';
+@import './components/dynamic-content';
 @import './components/external-link';
 @import './components/header-bar';
 @import './components/page-navigation';
@@ -22,4 +23,7 @@ $govuk-page-width: $moj-page-width;
 @import './components/show-more';
 @import './components/smashout';
 @import './components/urgent-banner';
+
+@import './overrides/breadcrumbs';
+@import './overrides/footer';
 @import './overrides/local';

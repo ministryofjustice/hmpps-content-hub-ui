@@ -1,8 +1,6 @@
 {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
 
-{% set navItems = primaryNavigation or [] %}
-
 {{ mojPrimaryNavigation({
   label: 'Primary navigation',
-  items: navItems
+  items: primaryNavigation | makeCurrentPrimaryCategoryActive(originalUrl, data.breadcrumbs)
 }) }}

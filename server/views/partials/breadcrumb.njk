@@ -1,13 +1,13 @@
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 
-{% macro breadcrumbNavigation(showHomeLink=false) %}
+{% macro breadcrumbNavigation(t, showHomeLink=false) %}
 <div class="page-navigation govuk-!-display-none-print">
   <nav class="page-navigation__links" aria-label="Page navigation">
     {% if showHomeLink %}
-      <a href="/" class="page-navigation__link" ata-page-nav-action="home">Home</a>
+      <a href="/" class="page-navigation__link" ata-page-nav-action="home">{{ t("common:pageNavigation.home") }}</a>
     {% endif %}
-    <a href="#" class="govuk-link page-navigation__link page-navigation__link--back" data-page-nav-action="back">Back</a>
-    <a href="#" class="govuk-link page-navigation__link page-navigation__link--forward" data-page-nav-action="forward">Forward</a>
+    <a href="#" class="govuk-link page-navigation__link page-navigation__link--back" data-page-nav-action="back">{{ t("common:pageNavigation.back") }}</a>
+    <a href="#" class="govuk-link page-navigation__link page-navigation__link--forward" data-page-nav-action="forward">{{ t("common:pageNavigation.forward") }}</a>
   </nav>
 </div>
 
@@ -19,7 +19,7 @@
 {{ govukBreadcrumbs({
   collapseOnMobile: true,
   items: breadcrumbs,
-  classes: "govuk-!-display-none-print"
+  classes: "govuk-!-display-none-print govuk-link govuk-link--no-visited-state hmpps-breadcrumbs"
 }) }}
 
 {% endmacro %}

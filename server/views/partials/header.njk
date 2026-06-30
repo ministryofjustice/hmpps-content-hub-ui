@@ -6,10 +6,9 @@
 <header class="hmpps-header" role="banner">
   <div class="hmpps-header__container">
     <div class="hmpps-header__title">
-      <img class="hmpps-header__logo" src="/assets/images/content-hub-logo.png" alt="logo">
+      <img src="/assets/images/content-hub-logo.png" alt="logo">
       <a class="hmpps-header__link hmpps-header__title__organisation-name" href="/">
-        {{ t('common:header.title') or 'Content Hub' }}
-
+        <strong> {{ t('common:header.title') or 'Content Hub' }} </strong>
         {% if establishment %}
           {{ establishment.displayName }}
         {% endif %}

@@ -5,7 +5,7 @@
 {% set mainClasses = "govuk-body" %}
 
 {% block content %}
-  {{ breadcrumbNavigation() }}
+  {{ breadcrumbNavigation(t) }}
   {{ breadcrumb([ { href: '/', text: t("common:pageNavigation.home") }, { href: '', text: t("pages:home.updates") } ]) }}
 
   {% set summaryHeader = t("pages:home.updates") %}

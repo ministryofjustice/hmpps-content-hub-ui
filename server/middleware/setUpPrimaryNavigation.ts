@@ -9,7 +9,11 @@ export default function setUpPrimaryNavigation(cmsService: CmsService): RequestH
     const language = res.locals.language || 'en'
 
     try {
-      res.locals.primaryNavigation = await cmsService.getPrimaryNavigation(establishmentName, language)
+      const primaryNavigation = await cmsService.getPrimaryNavigation(establishmentName, language)
+      res.locals.primaryNavigation = primaryNavigation
+      res.locals.originalUrl = req.originalUrl.match(/games/)
+        ? primaryNavigation.find(({ text = '' }) => text.toLowerCase().includes('inspire and entertain'))?.href
+        : req.originalUrl
     } catch (error) {
       logger.warn('Failed to load CMS primary navigation', error)
       res.locals.primaryNavigation = []

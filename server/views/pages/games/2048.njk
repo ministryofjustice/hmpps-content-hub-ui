@@ -8,9 +8,10 @@
 {% endblock %}
 
 {% set pageTitle = applicationName + " - 2048" %}
+{% set feedbackBlackBackground = false %}
 
 {% block content %}
-  {{ breadcrumbNavigation() }}
+  {{ breadcrumbNavigation(t) }}
   {{ breadcrumb(breadcrumbs) }}
 
   <div class="govuk-main-wrapper">

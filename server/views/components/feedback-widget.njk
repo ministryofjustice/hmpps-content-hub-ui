@@ -19,7 +19,7 @@
 
 {% macro feedbackWidget(params) %}
   <div id="feedback-widget"
-       class="feedback-widget"
+       class="{{ 'feedback-widget--dark' if params.blackBackground else 'feedback-widget' }}"
        data-content-type="{{ params.contentType }}"
        data-title="{{ params.title }}"
        data-series="{{ params.series }}"
