@@ -37,7 +37,9 @@ const hmppsAuthStrategy: AuthStrategy = {
       return next()
     }
 
-    if (req.path === '/stats') return res.sendStatus(401)
+    // Do not return to the user to the activity logging route post login
+    if (req.path === '/record/activity') return res.sendStatus(401)
+
     req.session.returnTo = req.originalUrl
 
     return res.redirect('/sign-in')
