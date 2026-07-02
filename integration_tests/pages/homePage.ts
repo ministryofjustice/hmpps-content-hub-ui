@@ -32,6 +32,8 @@ export default class HomePage extends AbstractPage {
 
   readonly primaryNavigationLinks: Locator
 
+  readonly activePrimaryNavigationLinks: Locator
+
   private constructor(page: Page) {
     super(page)
     this.header = page.getByRole('button', { name: 'Browse all topics' })
@@ -49,6 +51,7 @@ export default class HomePage extends AbstractPage {
     this.recentlyAddedCards = page.locator('#recentlyAdded .hmpps-category-card')
     this.exploreCards = page.locator('#exploreContent .hmpps-category-card')
     this.primaryNavigationLinks = page.locator('.moj-primary-navigation__item a')
+    this.activePrimaryNavigationLinks = page.locator('.moj-primary-navigation__link[aria-current]')
   }
 
   static async verifyOnPage(page: Page): Promise<HomePage> {
@@ -91,5 +94,16 @@ export default class HomePage extends AbstractPage {
 
   contentLink(name: string | RegExp): Locator {
     return this.page.getByRole('link', { name }).first()
+  }
+
+  activePrimaryNavigationLink(name: string): Locator {
+    return this.activePrimaryNavigationLinks.filter({ hasText: new RegExp(`^${name}$`) })
+  }
+
+  async verifyActivePrimaryNavigation(name: string, href: string): Promise<void> {
+    const link = this.activePrimaryNavigationLink(name)
+    await expect(link).toHaveText(name)
+    await expect(link).toHaveAttribute('href', href)
+    await expect(link).toHaveAttribute('aria-current', 'page')
   }
 }
