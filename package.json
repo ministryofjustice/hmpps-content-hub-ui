@@ -38,7 +38,7 @@
     "@ministryofjustice/hmpps-azure-telemetry": "^1.0.1",
     "@ministryofjustice/hmpps-monitoring": "^2.1.0",
     "@ministryofjustice/hmpps-prisoner-auth": "0.0.6",
-    "@ministryofjustice/hmpps-rest-client": "^2.1.0",
+    "@ministryofjustice/hmpps-rest-client": "^2.2.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
     "compression": "^1.8.1",
@@ -66,7 +66,7 @@
     "passport-oauth2": "^1.8.0",
     "passport-openidconnect": "^0.1.2",
     "pg": "8.22.0",
-    "redis": "6.0.0",
+    "redis": "6.0.1",
     "stockfish.js": "10.0.2",
     "superagent": "^10.3.0",
     "video.js": "8.23.9"
