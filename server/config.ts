@@ -114,6 +114,7 @@ export default {
     },
   },
   establishments: [
+    { code: 'BFI', name: 'bedford', displayName: 'HMP Bedford', youth: false, languages: ['en'] },
     { code: 'BWI', name: 'berwyn', displayName: 'HMP Berwyn', youth: false, languages: ['en', 'cy'] },
     { code: 'BLI', name: 'bristol', displayName: 'HMP Bristol', youth: false, languages: ['en'] },
     { code: 'BNI', name: 'bullingdon', displayName: 'HMP Bullingdon', youth: false, languages: ['en'] },
@@ -131,6 +132,7 @@ export default {
     { code: 'STI', name: 'styal', displayName: 'HMPYOI Styal', youth: false, languages: ['en'] },
     { code: 'SLI', name: 'swaleside', displayName: 'HMP Swaleside', youth: false, languages: ['en'] },
     { code: 'MTI', name: 'themount', displayName: 'HMP The Mount', youth: false, languages: ['en'] },
+    { code: '', name: 'thestudio', displayName: 'HMP The Studio', youth: false, languages: ['en', 'cy'] },
     { code: 'WLI', name: 'wayland', displayName: 'HMP Wayland', youth: false, languages: ['en'] },
     { code: 'WNI', name: 'werrington', displayName: 'HMYOI Werrington', youth: false, languages: ['en'] },
     { code: 'WYI', name: 'wetherby', displayName: 'HMYOI Wetherby', youth: true, languages: ['en'] },

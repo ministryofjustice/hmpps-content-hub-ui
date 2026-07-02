@@ -13,6 +13,7 @@ import setUpFooterTopics from '../../middleware/setUpFooterTopics'
 import setUpPrimaryNavigation from '../../middleware/setUpPrimaryNavigation'
 import config from '../../config'
 import setUpContentHubHeader from '../../middleware/setUpContentHubHeader'
+import { Establishment } from '../../@types/launchpad'
 
 export const user: HmppsUser = {
   name: 'FIRST LAST',
@@ -32,6 +33,7 @@ function appSetup(
   production: boolean,
   userSupplier: () => HmppsUser,
   isStaffPortal: boolean,
+  establishment: Establishment,
 ): Express {
   const app = express()
   const mergedServices: Services = {
@@ -50,7 +52,7 @@ function appSetup(
     res.locals = {
       ...res.locals,
       user: { ...req.user } as HmppsUser,
-      establishment: config.establishments[0],
+      establishment,
       isPrisonerPortal: !isStaffPortal,
       isStaffPortal,
       cspNonce: '',
@@ -85,13 +87,15 @@ export function appWithAllRoutes({
   services = {},
   userSupplier = () => user,
   isStaffPortal = false,
+  establishment = config.establishments[0],
 }: {
   production?: boolean
   services?: Partial<MockedServices>
   userSupplier?: () => HmppsUser
   isStaffPortal?: boolean
+  establishment?: Establishment
 }): Express {
-  return appSetup(services as Services, production, userSupplier, isStaffPortal)
+  return appSetup(services as Services, production, userSupplier, isStaffPortal, establishment)
 }
 
 // Provide a base working set of services to be overridden, merged with or just left

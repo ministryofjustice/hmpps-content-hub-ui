@@ -133,6 +133,13 @@ describe('GET /', () => {
   })
 
   it('should render nav bar with language controls for bilingual prisons ', () => {
+    app = appWithAllRoutes({
+      services: {
+        cmsService,
+        auditServiceSource,
+      },
+      establishment: config.establishments[1], // Berwyn
+    })
     setupMocks()
 
     return request(app)
