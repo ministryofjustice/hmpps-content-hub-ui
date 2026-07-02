@@ -59,6 +59,33 @@ test.describe('Staff My Prison navigation and breadcrumbs', () => {
     await tagPage.verifyBreadcrumbContains(navigationTopic.attributes.name)
   })
 
+  test('Topic page breadcrumb Topics link navigates to the topics page', async ({ page }) => {
+    await stubMyPrisonTopicJourney()
+
+    await loginWithHmppsAuth(page, { name: 'A TestUser' })
+    await page.goto('/tags/103')
+
+    const tagPage = await TagPage.verifyOnPage(page, navigationTopic.attributes.name)
+    await tagPage.clickBreadcrumb('Topics')
+
+    await expect(page).toHaveURL('/topics')
+    await TopicsPage.verifyOnPage(page)
+  })
+
+  test('Topic page breadcrumb Home link navigates to the homepage', async ({ page }) => {
+    await stubMyPrisonTopicJourney()
+
+    await loginWithHmppsAuth(page, { name: 'A TestUser' })
+    await page.goto('/tags/103')
+
+    const tagPage = await TagPage.verifyOnPage(page, navigationTopic.attributes.name)
+    await tagPage.clickBreadcrumb('Home')
+
+    await expect(page).toHaveURL('/')
+    const homePage = await HomePage.verifyOnPage(page)
+    await homePage.verifyActivePrimaryNavigation('My prison', '/')
+  })
+
   test('Topic page back and forward navigation links move through browser history', async ({ page }) => {
     await stubMyPrisonTopicJourney()
 

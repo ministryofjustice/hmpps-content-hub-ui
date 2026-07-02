@@ -46,6 +46,14 @@ export default class TagPage extends AbstractPage {
     await expect(this.breadcrumbs).toContainText(text)
   }
 
+  breadcrumbLink(name: string): Locator {
+    return this.breadcrumbs.getByRole('link', { name })
+  }
+
+  async clickBreadcrumb(name: string): Promise<void> {
+    await this.breadcrumbLink(name).click()
+  }
+
   async clickBackNavigation(): Promise<void> {
     await this.backNavigationLink.click()
   }
