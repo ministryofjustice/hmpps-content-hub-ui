@@ -17,6 +17,10 @@ export default class FeedbackWidget {
 
   readonly confirmationHeading: Locator
 
+  readonly widgetHeading: Locator
+
+  readonly confirmationLink: Locator
+
   readonly sentimentText: Locator
 
   readonly submitButton: Locator
@@ -28,12 +32,11 @@ export default class FeedbackWidget {
     this.form = this.root.locator('[data-feedback-form]')
     this.contactSection = this.root.locator('.feedback-widget__contact')
     this.confirmationSection = this.root.locator('.feedback-widget__confirmation')
-    this.confirmationHeading = this.confirmationSection.getByRole('heading', {
-      name: 'Thanks for your feedback',
-      level: 3,
-    })
+    this.widgetHeading = this.root.locator('.feedback-widget__ui .feedback-widget__heading')
+    this.confirmationHeading = this.confirmationSection.locator('.feedback-widget__heading')
+    this.confirmationLink = this.confirmationSection.getByRole('link')
     this.sentimentText = this.root.locator('.feedback-widget__sentiment-text')
-    this.submitButton = this.root.getByRole('button', { name: 'Send' })
+    this.submitButton = this.root.locator('.feedback-widget__submit')
   }
 
   static async verifyOnPage(page: Page): Promise<FeedbackWidget> {
@@ -79,10 +82,22 @@ export default class FeedbackWidget {
     await this.submitButton.click()
   }
 
-  async verifyConfirmation(): Promise<void> {
+  async verifyHeading(expectedText: string): Promise<void> {
+    await expect(this.widgetHeading).toHaveText(expectedText)
+  }
+
+  async verifySubmitButtonLabel(expectedText: string): Promise<void> {
+    await expect(this.submitButton).toHaveText(expectedText)
+  }
+
+  async verifyConfirmation(
+    expectedHeading = 'Thanks for your feedback',
+    expectedLinkText = 'What happens to your feedback?',
+  ): Promise<void> {
     await expect(this.confirmationSection).toBeVisible()
     await expect(this.confirmationHeading).toBeVisible()
-    await expect(this.confirmationHeading).toHaveText('Thanks for your feedback')
-    await expect(this.confirmationSection.getByRole('link', { name: 'What happens to your feedback?' })).toBeVisible()
+    await expect(this.confirmationHeading).toHaveText(expectedHeading)
+    await expect(this.confirmationLink).toHaveText(expectedLinkText)
+    await expect(this.confirmationLink).toBeVisible()
   }
 }

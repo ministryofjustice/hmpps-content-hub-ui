@@ -6,7 +6,7 @@ describe('establishmentsMiddleware', () => {
     const req = {} as Request
     const res = {
       locals: { isPrisonerPortal: true, user: { idToken: { establishment: { agency_id: 'WYI' } } } },
-    } as Response
+    } as unknown as Response
     const next = jest.fn()
 
     it('sets the establishment to the one given at authentication', () => {

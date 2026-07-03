@@ -390,7 +390,7 @@ export default {
       request: {
         method: 'GET',
         urlPattern:
-          '/en/jsonapi/prison/[^/]+/taxonomy_term\\?.*filter%5Bvid.meta.drupal_internal__target_id%5D=topics.*',
+          '/(?:en|cy)/jsonapi/prison/[^/]+/taxonomy_term\\?.*filter%5Bvid.meta.drupal_internal__target_id%5D=topics.*',
       },
       response: {
         status: httpStatus,
@@ -406,7 +406,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/primary_navigation.*',
+        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/primary_navigation.*',
       },
       response: {
         status: httpStatus,
@@ -423,7 +423,7 @@ export default {
       priority: 1,
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/node/homepage.*',
+        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node/homepage.*',
       },
       response: {
         status: httpStatus,
@@ -440,7 +440,7 @@ export default {
       priority: 1,
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/node\\?.*',
+        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node\\?.*',
       },
       response: {
         status: httpStatus,
@@ -457,7 +457,7 @@ export default {
       priority: 1,
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/recently-added.*',
+        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/recently-added.*',
       },
       response: {
         status: httpStatus,
@@ -474,7 +474,7 @@ export default {
       priority: 1,
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/explore/node.*',
+        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/explore/node.*',
       },
       response: {
         status: httpStatus,
@@ -507,7 +507,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/node/urgent_banner.*',
+        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node/urgent_banner.*',
       },
       response: {
         status: httpStatus,
@@ -520,7 +520,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/taxonomy_term/topics/[^/]+\\?.*',
+        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/taxonomy_term/topics/[^/]+\\?.*',
       },
       response: {
         status: httpStatus,
@@ -533,7 +533,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/en/jsonapi/prison/[^/]+/node\\?.*filter%5Bfield_topics.id%5D=.*',
+        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node\\?.*filter%5Bfield_topics.id%5D=.*',
       },
       response: {
         status: httpStatus,
@@ -557,7 +557,7 @@ export default {
       priority: 1,
       request: {
         method: 'GET',
-        urlPathPattern: '/en/jsonapi/prison/[^/]+/taxonomy_term',
+        urlPathPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/taxonomy_term',
         queryParameters: {
           'filter[drupal_internal__tid]': {
             equalTo: `${tid}`,
