@@ -3,55 +3,31 @@
 [![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/hmpps-content-hub-ui/badge?style=flat)](https://github-community.service.justice.gov.uk/repository-standards/hmpps-content-hub-ui)
 [![Docker Repository on ghcr](https://img.shields.io/badge/ghcr.io-repository-2496ED.svg?logo=docker)](https://ghcr.io/ministryofjustice/hmpps-content-hub-ui)
 
-Template github repo used for new Typescript based projects.
+This is the UI for the Content Hub, intended as a replacement for the existing non-TypeScript Content Hub front end (prisoner-content-hub-frontend).
+
+The same UI is used for both Staff and Prisoners.
 
 # Instructions
 
-If this is a HMPPS project then the creation of new services is automated and cloning/forking this repository is not required.
-
-Documentation to create new services is located [here](https://tech-docs.hmpps.service.justice.gov.uk/creating-new-services/).
-
-This project is community managed by the mojdt `#typescript` slack channel.
-Please raise any questions or queries there. Contributions welcome!
-
-Our security policy is located [here](https://github.com/ministryofjustice/hmpps-content-hub-ui/security/policy).
-
-More information about the template project including features can be
-found [here](https://dsdmoj.atlassian.net/wiki/spaces/NDSS/pages/3488677932/Typescript+template+project).
-
-## Creating a Cloud Platform namespace
-
-When deploying to a new namespace, you may wish to use the
-[templates project namespace](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-templates-dev)
-as the basis for your new namespace. This namespace contains both the kotlin and typescript template projects, which
-is the usual way that projects are setup. This namespace includes an AWS elasticache setup - which is required by this
-template project.
-
-Copy this folder and update all the existing namespace references. If you only need the typescript configuration then
-remove all kotlin references. Submit a PR to the Cloud Platform team in #ask-cloud-platform. Further instructions from
-the Cloud Platform team can be found in
-the [Cloud Platform User Guide](https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide)
-
-## Customising the new project
-
-As part of the automation to create the new service, various parts of the codebase will be updated to reflect it's specific name.
-
-## Oauth2 Credentials
-
-The template project is set up to run with two sets of credentials, each one support a different oauth2 flows.
-These need to be requested from the auth team by filling in
-this [template](https://dsdmoj.atlassian.net/browse/HAAR-140) and raising on their slack channel.
-
-### Auth Code flow
+### Auth Code flows
 
 These are used to allow authenticated users to access the application. After the user is redirected from auth back to
-the application, the typescript app will use the returned auth code to request a JWT token for that user containing the
+the application, the application will use the returned auth code to request a JWT token for that user containing the
 user's roles. The JWT token will be verified and then stored in the user's session.
+
+Different authentication flows are used for staff and prisoners. Prisoners authenticate via Launchpad Auth, whilst staff
+authenticate via HMPPS Auth.
+
+The application defaults to using prisoner authentication, and changes to staff authentication by the presence of a
+'staff' subdomain. For instance, when running locally, using the hostname localhost:3000 will use prisoner
+authentication, and using the hostname staff.localhost will use staff authentication.
 
 These credentials are configured using the following env variables:
 
 - AUTH_CODE_CLIENT_ID
 - AUTH_CODE_CLIENT_SECRET
+- LAUNCHPAD_API_CLIENT_ID
+- LAUNCHPAD_API_CLIENT_SECRET
 
 ### Client Credentials flow
 
@@ -69,42 +45,42 @@ These credentials are configured using the following env variables:
 - CLIENT_CREDS_CLIENT_ID
 - CLIENT_CREDS_CLIENT_SECRET
 
+When running locally, all the client IDs and secrets should be retrieved from k8s secrets in the dev environment.
+The easiest way to retrieve these is to use the [Cloud Platform CLI tool](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html),
+for example:
+
+`cloud-platform decode-secret -n prisoner-content-hub-development  -s hmpps-content-hub-ui-client-creds`
+
 ### Dependencies
 
-### HMPPS Auth
+### Redis
 
-To allow authenticated users to access your application you need to point it to a running instance of `hmpps-auth`.
-By default the application is configured to run against an instance running in docker that can be started
-via `docker-compose`.
+The Content Hub UI caches session information and responses to JSON:API requests to the Drupal backend. In Cloud
+Platform environments, Redis/Elasticache is used for this purpose.
 
-**NB:** It's common for developers to run against the instance of auth running in the development/T3 environment for
-local development.
-Most APIs don't have images with cached data that you can run with docker: setting up realistic stubbed data in sync
-across a variety of services is very difficult.
+If Redis is not available, the application will fall back to using a local in-memory cache.
 
-### REDIS
+Therefore, it is not required to run Redis locally unless you need a more persistent cache, or you are specifically
+testing Redis functionality.
 
-When deployed to an environment with multiple pods we run applications with an instance of REDIS/Elasticache to provide
-a distributed cache of sessions.
-The template app is, by default, configured not to use REDIS when running locally.
+Redis can be installed via brew
 
-### Running the app via docker-compose
+```
+brew update && brew install redis
+brew services start redis
+```
 
-The easiest way to run the app is to use docker compose to create the service and all dependencies.
+Set the environment variable REDIS_ENABLED=true to set the Content Hub UI to cache using Redis rather than the in-memory
+cache.
 
-The production image now uses the `hmpps-node:24-alpine-runtime` base image and starts with `node dist/server.js` directly, so npm is not present in the final runtime stage.
-
-`docker compose pull`
-
-`docker compose up`
+The docker compose file does not currently support running Redis via Docker.
 
 ### Running the app for development
 
-To start the main services excluding the example typescript template app:
-
-`docker compose up --scale=app=0`
-
 Create an environment file by copying `.env.example` -> `.env`
+
+Set the values in .env as detailed in the above sections.
+
 Environment variables set in here will be available when running `start:dev`
 
 Install dependencies using `npm run setup`, ensuring you are using `node v24`
@@ -116,17 +92,6 @@ and the github pipeline build config.
 And then, to build the assets and start the app with esbuild:
 
 `npm run start:dev`
-
-### Logging in with a test user
-
-Once the application is running you should then be able to login with:
-
-username: AUTH_USER
-password: password123456
-
-To request specific users and roles then raise a PR
-to [update the seed data](https://github.com/ministryofjustice/hmpps-auth/blob/main/src/main/resources/db/dev/data/auth/V900_3__users.sql)
-for the in-memory DB used by Auth
 
 ### Installing dependencies
 

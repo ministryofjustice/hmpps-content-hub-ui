@@ -1,31 +1,4 @@
 services:
-  hmpps-launchpad-auth:
-    image: ghcr.io/ministryofjustice/hmpps-launchpad-auth:latest
-    container_name: content-hub-ui-hmpps-launchpad-auth
-    ports:
-      - "8080:8080"
-    network_mode: "bridge"
-    healthcheck:
-      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/8080"]
-    env_file: docker-compose.launchpad-auth.env
-    environment:
-      - azure.launchpad-redirectUri=http://localhost:8080/v1/oauth2/callback
-      - launchpad.auth.iss-url=http://localhost:8080
-      - hmpps.auth.url=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-      - DB_ENDPOINT=host.docker.internal:5432
-
-  hmpps-template-kotlin:
-    image: ghcr.io/ministryofjustice/hmpps-template-kotlin:latest
-    networks:
-      - hmpps
-    container_name: hmpps-template-kotlin
-    ports:
-      - "8181:8080"
-    healthcheck:
-      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/8080"]
-    environment:
-      - HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-
   app:
     build:
       context: .
@@ -40,10 +13,7 @@ services:
       - "3000:3000"
     healthcheck:
       test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/3000"]
-    env_file: docker-compose.app.env
-    environment:
-      - LAUNCHPAD_AUTH_URL=http://host.docker.internal:8080
-      - LAUNCHPAD_AUTH_EXTERNAL_URL=http://localhost:8080
+    env_file: .env
 
 networks:
   hmpps:
