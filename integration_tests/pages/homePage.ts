@@ -85,6 +85,32 @@ export default class HomePage extends AbstractPage {
     await expect(this.searchBox).toBeVisible()
   }
 
+  async verifyLocalizedMainSectionsVisible({
+    browseAllTopics,
+    updates,
+    featured,
+    recentlyAdded,
+    explore,
+  }: {
+    browseAllTopics: string | RegExp
+    updates: string | RegExp
+    featured: string | RegExp
+    recentlyAdded: string | RegExp
+    explore: string | RegExp
+  }): Promise<void> {
+    const browseAllTopicsButton = this.page.getByRole('button', { name: browseAllTopics })
+    if ((await browseAllTopicsButton.count()) > 0) {
+      await expect(browseAllTopicsButton).toBeVisible()
+    } else {
+      await expect(this.page.getByRole('link', { name: browseAllTopics })).toBeVisible()
+    }
+    await expect(this.page.getByRole('heading', { name: updates, level: 2 })).toBeVisible()
+    await expect(this.page.getByRole('heading', { name: featured, level: 2 })).toBeVisible()
+    await expect(this.page.getByRole('heading', { name: recentlyAdded, level: 2 })).toBeVisible()
+    await expect(this.page.getByRole('heading', { name: explore, level: 2 })).toBeVisible()
+    await expect(this.searchBox).toBeVisible()
+  }
+
   async verifyHomepageCardCounts(): Promise<void> {
     await expect(this.featuredCards.first()).toBeVisible()
     await expect(this.recentlyAddedCards.first()).toBeVisible()

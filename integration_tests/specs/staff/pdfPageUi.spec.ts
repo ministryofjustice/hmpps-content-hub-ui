@@ -43,7 +43,8 @@ test.describe('Staff PDF page UI', () => {
     await homePage.changePrisonLink.click()
 
     const changePrisonPage = await ChangePrisonPage.verifyOnPage(page)
-    await changePrisonPage.choosePrison(config.establishments[1].displayName)
+    const pdfPrison = config.establishments.find(({ displayName }) => displayName === 'HMP Bristol')
+    await changePrisonPage.choosePrison(pdfPrison?.displayName ?? config.establishments[2].displayName)
 
     const updatedHomePage = await HomePage.verifyOnPage(page)
     const pdfPageLink = updatedHomePage.contentLink(new RegExp(pdfTestContent.title, 'i'))
