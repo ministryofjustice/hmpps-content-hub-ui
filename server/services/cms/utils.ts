@@ -119,3 +119,9 @@ export const cropTextWithEllipsis = (item: ContentTile, maxNumberOfChars = 30) =
 
   return { ...item, title }
 }
+
+export const unixTimestamp = (offset: number, date = Date.now()) => {
+  return Math.floor((date - 24 * 60 * 60 * 1000 * offset) / 1000).toString()
+}
+
+export const calculatePageOffset = (page: number, pageSize: number = 40) => Math.max(page - 1, 0) * pageSize

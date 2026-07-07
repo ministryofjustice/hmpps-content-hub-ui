@@ -2,10 +2,9 @@ import {
   JsonApiCollectionResponse,
   JsonApiRelationships,
   JsonApiResource,
-  JsonApiResourceIdentifier,
   JsonApiSingleResponse,
 } from '../../data/jsonApiClient'
-import type { EpisodeTile, ContentTile } from '../../@types/content'
+import type { EpisodeTile } from '../../@types/content'
 import {
   CmsAudioContent,
   CmsAudioNodeAttributes,
@@ -20,7 +19,6 @@ import {
   CmsPrimaryNavigationAttributes,
   CmsPrimaryNavigationItem,
   CmsSeriesTermAttributes,
-  CMSContentNodeAttributes,
   CmsTaxonomyAttributes,
   CmsTopicAttributes,
   CmsTopicHeaderAttributes,
@@ -30,11 +28,6 @@ import {
   CmsUrgentBannerAttributes,
   CmsVideoContent,
   CmsVideoNodeAttributes,
-  ExploreContent,
-  UpdatesContent,
-  CmsHomePageRelationships,
-  ImageSize,
-  RecentlyAddedContent,
   CmsTagItem,
   CategoryContent,
   CategoryMenuContent,
@@ -53,7 +46,6 @@ import {
   resolvePath,
   resolveTagHref,
   stripLanguagePrefix,
-  cropTextWithEllipsis,
 } from './utils'
 
 export const mapTopic = (item: JsonApiResource<CmsTopicAttributes>): CmsTopicItem => ({
@@ -412,82 +404,6 @@ export const mapEpisodeTile = (
 export const mapNextEpisodes = (response: JsonApiCollectionResponse<CmsEpisodeTileNodeAttributes>): EpisodeTile[] =>
   response.data.map(item => mapEpisodeTile(item, response.included))
 
-const EXTERNAL_CONTENT_TYPES = new Set(['moj_pdf_item', 'link'])
-
-const mapNodeTypeToContentType = (type: string): string => {
-  const match = type.match(/(?<=--)(.*)/)?.[0] ?? ''
-  if (match === 'moj_radio_item') return 'radio'
-  if (match === 'moj_video_item') return 'video'
-  return match
-}
-
-const mapContentTile = (
-  item: JsonApiResource<CMSContentNodeAttributes>,
-  included: JsonApiResource[] | undefined,
-  size?: ImageSize,
-): ContentTile => {
-  const thumbnailIdentifier = relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
-  const thumbnail =
-    thumbnailIdentifier && included ? findIncluded<CmsFileAttributes>(included, thumbnailIdentifier) : undefined
-  const contentType = mapNodeTypeToContentType(item.type)
-  const publishedAt = item.attributes.published_at
-
-  return {
-    id: (item.attributes.drupal_internal__nid ?? item.attributes.drupal_internal__tid)!,
-    contentType,
-    externalContent: EXTERNAL_CONTENT_TYPES.has(contentType),
-    title: (item.attributes.title ?? item.attributes.name)!,
-    summary: item.attributes.field_summary ?? '',
-    contentUrl: resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
-    displayUrl: item.attributes.field_display_url ?? '',
-    thumbnailUrl: resolveFileUrl(thumbnail, size) ?? '',
-    thumbnailAlt: '',
-    isNew: publishedAt ? (Date.now() - new Date(publishedAt).getTime()) / 86_400_000 <= 2 : false,
-    publishedAt: publishedAt
-      ? Intl.DateTimeFormat('en-GB', {
-          weekday: 'long',
-          day: '2-digit',
-          month: 'long',
-        }).format(new Date(publishedAt))
-      : undefined,
-  }
-}
-
-export const mapContentToTiles = (response: JsonApiCollectionResponse<CMSContentNodeAttributes>): ContentTile[] =>
-  response.data.map(item => mapContentTile(item, response.included))
-
-const mapResourceIdentifierToTiles = (
-  resourceIdentifier: JsonApiResourceIdentifier[],
-  included: JsonApiResource[],
-  size?: ImageSize,
-): ContentTile[] => {
-  if (!resourceIdentifier?.length || !included?.length) return []
-
-  const resourceIds = resourceIdentifier.map(item => item.id)
-  const includedItems = included.filter(item => resourceIds.includes(item.id))
-
-  return includedItems.map(item => mapContentTile(item, included, size))
-}
-
-export const mapRecentlyAddedContent = (
-  response: JsonApiCollectionResponse<CMSContentNodeAttributes>,
-): RecentlyAddedContent => mapExploreContent(response)
-
-export const mapExploreContent = (response: JsonApiCollectionResponse<CMSContentNodeAttributes>): ExploreContent => {
-  return {
-    data: mapContentToTiles(response),
-    isLastPage: !response.links.next,
-  }
-}
-
-export const mapUpdatesContent = (response: JsonApiCollectionResponse<CMSContentNodeAttributes>): UpdatesContent => {
-  return {
-    largeUpdateTileDefault: mapContentTile(response.data[0], response.included, 'large'),
-    updatesContent: mapContentToTiles(response),
-    isLastPage: !response.links.next,
-  }
-}
-
 export const mapUrgentBanner = (
   item: JsonApiResource<CmsUrgentBannerAttributes>,
   included: JsonApiResource[] | undefined,
@@ -500,22 +416,6 @@ export const mapUrgentBanner = (
     title: item.attributes.title,
     moreInfoLink: moreInfoPage?.attributes.path?.alias ?? null,
     unpublishOn: item.attributes.unpublish_on ? new Date(item.attributes.unpublish_on).getTime() : null,
-  }
-}
-
-export const mapHomePageContent = (relationships: CmsHomePageRelationships, included: JsonApiResource[]) => {
-  return {
-    featuredContent: {
-      data: mapResourceIdentifierToTiles(relationships.field_featured_tiles?.data, included),
-    },
-    keyInfo: {
-      data: mapResourceIdentifierToTiles(relationships.field_key_info_tiles?.data, included).map(keyInfoItem =>
-        cropTextWithEllipsis(keyInfoItem, 30),
-      ),
-    },
-    largeUpdateTile: relationships.field_large_update_tile
-      ? mapResourceIdentifierToTiles([relationships.field_large_update_tile?.data], included, 'large')[0]
-      : null,
   }
 }
 
