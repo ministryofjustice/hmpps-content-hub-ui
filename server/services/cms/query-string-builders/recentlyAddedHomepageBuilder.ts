@@ -2,7 +2,7 @@ import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
 import { calculatePageOffset } from '../utils'
 import { HOMEPAGE_CONTENT_TILE, HOMEPAGE_FILE_FIELDS, MOJ_THUMBNAIL_IMAGE_INCLUDE } from '../constants'
 
-export const buildRecentlyAddedHomepageContentQueryString = (page = 1, limit = 8) =>
+const buildRecentlyAddedHomepageContentQueryString = (page = 1, limit = 8) =>
   new DrupalJsonApiParams()
     .addFields('node--page', HOMEPAGE_CONTENT_TILE)
     .addFields('node--moj_video_item', HOMEPAGE_CONTENT_TILE)
