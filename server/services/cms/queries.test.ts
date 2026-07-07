@@ -4,9 +4,6 @@ import {
   buildCategoryMenuQueryString,
   buildCategoryPageQueryString,
   buildContentLookupQueryString,
-  buildExploreContentQueryString,
-  buildHomePageContentQueryString,
-  buildRecentlyAddedHomepageContentQueryString,
   buildExternalLinkQueryString,
   buildNextEpisodesQueryString,
   buildPageContentQueryString,
@@ -22,9 +19,6 @@ import {
   buildTopicsQueryString,
   buildUrgentBannerQueryString,
   buildVideoContentQueryString,
-  buildUpdatesContentQueryString,
-  buildRecentlyAddedQueryString,
-  unixTimestamp,
   buildPdfContentQueryString,
   buildSearchQueryString,
 } from './queries'
@@ -218,85 +212,5 @@ describe('cms queries', () => {
 
     expect(params.get('filter[fulltext]')).toEqual(TEST_SEARCH_TERM)
     expect(params.get('page[limit]')).toEqual(`${TEST_PAGE_LIMIT}`)
-  })
-})
-
-describe('cms home page queries', () => {
-  const TEST_PAGE_LIMIT = 10
-  const TEST_PAGE_OFFSET = 5
-  const TEST_DATE_OFFSET = 42
-
-  it('builds the Home Page Content query', () => {
-    const params = new URLSearchParams(buildHomePageContentQueryString(TEST_PAGE_LIMIT))
-
-    expect(params.get('fields[node--field_featured_tiles]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--field_key_info_tiles]')).toContain('drupal_internal__nid')
-    expect(params.get('include')).toContain('field_moj_thumbnail_image')
-    expect(params.get('fields[file--file]')).toBe('drupal_internal__fid,id,image_style_uri')
-    expect(params.get('page[limit]')).toBe(`${TEST_PAGE_LIMIT}`)
-  })
-
-  it('builds the Recently Added Home Page Content query', () => {
-    const params = new URLSearchParams(buildRecentlyAddedHomepageContentQueryString(TEST_PAGE_OFFSET, TEST_PAGE_LIMIT))
-
-    expect(params.get('fields[node--page]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_video_item]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_radio_item]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_pdf_item]')).toContain('drupal_internal__nid')
-    expect(params.get('include')).toContain('field_moj_thumbnail_image')
-    expect(params.get('fields[file--file]')).toBe('drupal_internal__fid,id,image_style_uri')
-    expect(params.get('page[offset]')).toBe(`${(TEST_PAGE_OFFSET - 1) * TEST_PAGE_LIMIT}`)
-    expect(params.get('page[limit]')).toBe(`${TEST_PAGE_LIMIT}`)
-    expect(params.get('sort')).toBe('-published_at,created')
-  })
-
-  it('builds the Recently Added Content query', () => {
-    const params = new URLSearchParams(
-      buildRecentlyAddedQueryString(TEST_PAGE_OFFSET, TEST_PAGE_LIMIT, TEST_DATE_OFFSET),
-    )
-
-    const expectedUnixTimeStamp = unixTimestamp(TEST_DATE_OFFSET, new Date().setHours(0, 0, 0, 0))
-
-    expect(params.get('fields[node--page]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_video_item]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_radio_item]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_pdf_item]')).toContain('drupal_internal__nid')
-    expect(params.get('include')).toContain('field_moj_thumbnail_image')
-    expect(params.get('fields[file--file]')).toBe('drupal_internal__fid,id,image_style_uri')
-    expect(params.get('filter[created][value]')).toBe(expectedUnixTimeStamp)
-    expect(params.get('page[offset]')).toBe(`${(TEST_PAGE_OFFSET - 1) * TEST_PAGE_LIMIT}`)
-    expect(params.get('page[limit]')).toBe(`${TEST_PAGE_LIMIT}`)
-    expect(params.get('sort')).toBe('-published_at,created')
-  })
-
-  it('builds the Explore Content query', () => {
-    const params = new URLSearchParams(buildExploreContentQueryString(TEST_PAGE_LIMIT))
-
-    expect(params.get('fields[node--page]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_video_item]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_radio_item]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_pdf_item]')).toContain('drupal_internal__nid')
-    expect(params.get('include')).toContain('field_moj_thumbnail_image')
-    expect(params.get('page[limit]')).toBe(`${TEST_PAGE_LIMIT}`)
-  })
-
-  it('builds the Updates Content query', () => {
-    const params = new URLSearchParams(buildUpdatesContentQueryString(TEST_PAGE_OFFSET, TEST_PAGE_LIMIT))
-
-    expect(params.get('fields[node--page]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_video_item]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_radio_item]')).toContain('drupal_internal__nid')
-    expect(params.get('fields[node--moj_pdf_item]')).toContain('drupal_internal__nid')
-    expect(params.get('include')).toContain('field_moj_thumbnail_image')
-    expect(params.get('fields[file--file]')).toBe('drupal_internal__fid,id,image_style_uri')
-    expect(params.get('page[offset]')).toBe(`${(TEST_PAGE_OFFSET - 1) * TEST_PAGE_LIMIT}`)
-    expect(params.get('page[limit]')).toBe(`${TEST_PAGE_LIMIT}`)
-    expect(params.get('sort')).toBe('-published_at,created')
-
-    expect(params.get('filter[parent_or_group][group][conjunction]')).toBe('OR')
-    expect(params.get('filter[field_moj_top_level_categories.field_is_homepage_updates][condition][value]')).toBe('1')
-    expect(params.get('filter[field_moj_series.field_is_homepage_updates][condition][path]')).toBe(
-      'field_moj_series.field_is_homepage_updates',
-    )
   })
 })

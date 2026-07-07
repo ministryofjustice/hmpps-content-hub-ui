@@ -23,16 +23,12 @@ import {
   TOPICS_TERM_FIELDS,
   VIDEO_CONTENT_FIELDS,
   VIDEO_CONTENT_INCLUDE,
-  HOMEPAGE_CONTENT_TILE,
-  HOMEPAGE_CONTENT_INCLUDE,
-  HOMEPAGE_FILE_FIELDS,
   EXTERNAL_LINK_FIELDS,
   MENU_FIELDS,
   HEADER_FIELDS,
   EPISODE_TILE_FIELDS,
   MOJ_THUMBNAIL_IMAGE_INCLUDE,
   CONTENT_TILE_FIELDS,
-  CONTENT_FILTERS,
   PDF_CONTENT_FIELDS,
 } from './constants'
 
@@ -236,76 +232,6 @@ export const buildUrgentBannerQueryString = () =>
     .addFields('node--urgent_banner', URGENT_BANNER_FIELDS)
     .addFields('node--page', ['path'])
     .addInclude(URGENT_BANNER_INCLUDE)
-    .getQueryString()
-
-export const buildHomePageContentQueryString = (limit = 4) =>
-  new DrupalJsonApiParams()
-    .addFields('node--field_featured_tiles', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--field_key_info_tiles', HOMEPAGE_CONTENT_TILE)
-    .addFields('file--file', HOMEPAGE_FILE_FIELDS)
-    .addInclude(HOMEPAGE_CONTENT_INCLUDE)
-    .addPageLimit(limit)
-    .getQueryString()
-
-export const buildRecentlyAddedHomepageContentQueryString = (page = 1, limit = 8) =>
-  new DrupalJsonApiParams()
-    .addFields('node--page', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_video_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_radio_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_pdf_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('file--file', HOMEPAGE_FILE_FIELDS)
-    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
-    .addSort('published_at', 'DESC')
-    .addSort('created')
-    .addPageLimit(limit)
-    .addPageOffset(calculatePageOffset(page, limit))
-    .getQueryString()
-
-export const buildRecentlyAddedQueryString = (page = 1, limit = 8, offsetDays = 14) =>
-  new DrupalJsonApiParams()
-    .addFields('node--page', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_video_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_radio_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_pdf_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('file--file', HOMEPAGE_FILE_FIELDS)
-    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
-    .addFilter('type.meta.drupal_internal__target_id', CONTENT_FILTERS, 'IN')
-    .addFilter('created', unixTimestamp(offsetDays, new Date().setHours(0, 0, 0, 0)), '>=')
-    .addSort('published_at', 'DESC')
-    .addSort('created')
-    .addPageLimit(limit)
-    .addPageOffset(calculatePageOffset(page, limit))
-    .getQueryString()
-
-export const buildExploreContentQueryString = (limit = 4) =>
-  new DrupalJsonApiParams()
-    .addFields('node--page', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_video_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_radio_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_pdf_item', HOMEPAGE_CONTENT_TILE)
-    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
-    .addPageLimit(limit)
-    .getQueryString()
-
-export const buildUpdatesContentQueryString = (page = 1, limit = 5) =>
-  new DrupalJsonApiParams()
-    .addFields('node--page', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_video_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_radio_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('node--moj_pdf_item', HOMEPAGE_CONTENT_TILE)
-    .addFields('file--file', HOMEPAGE_FILE_FIELDS)
-    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
-    .addGroup('parent_or_group', 'OR')
-    .addGroup('categories_group', 'AND', 'parent_or_group')
-    .addGroup('series_group', 'AND', 'parent_or_group')
-    .addFilter('field_moj_top_level_categories.field_is_homepage_updates', '1', '=', 'categories_group')
-    .addFilter('published_at', unixTimestamp(90, new Date().setHours(0, 0, 0, 0)), '>=', 'categories_group')
-    .addFilter('field_moj_series.field_is_homepage_updates', '1', '=', 'series_group')
-    .addFilter('published_at', unixTimestamp(90, new Date().setHours(0, 0, 0, 0)), '>=', 'series_group')
-    .addSort('published_at', 'DESC')
-    .addSort('created')
-    .addPageLimit(limit)
-    .addPageOffset(calculatePageOffset(page, limit))
     .getQueryString()
 
 export const unixTimestamp = (offset: number, date = Date.now()) => {

@@ -14,12 +14,7 @@ import {
   mapVideoContent,
   mapAudioContent,
   mapNextEpisodes,
-  mapContentToTiles,
   mapUrgentBanner,
-  mapExploreContent,
-  mapUpdatesContent,
-  mapHomePageContent,
-  mapRecentlyAddedContent,
   mapPdfContent,
   mapSearchResponse,
 } from './cms/mappers'
@@ -29,13 +24,10 @@ import {
   buildCategoryMenuQueryString,
   buildCategoryPageQueryString,
   buildContentLookupQueryString,
-  buildExploreContentQueryString,
-  buildHomePageContentQueryString,
   buildExternalLinkQueryString,
   buildNextEpisodesQueryString,
   buildPageContentQueryString,
   buildPrimaryNavigationQueryString,
-  buildRecentlyAddedHomepageContentQueryString,
   buildSeriesHeaderQueryString,
   buildSeriesItemsQueryString,
   buildSuggestionsQueryString,
@@ -45,10 +37,8 @@ import {
   buildTopicPageQueryString,
   buildTopicTermByTidQueryString,
   buildTopicsQueryString,
-  buildUpdatesContentQueryString,
   buildUrgentBannerQueryString,
   buildVideoContentQueryString,
-  buildRecentlyAddedQueryString,
   buildPdfContentQueryString,
   buildSearchQueryString,
 } from './cms/queries'
@@ -80,12 +70,9 @@ import {
   CmsUrgentBanner,
   CmsUrgentBannerAttributes,
   CmsVideoNodeAttributes,
-  ExploreContent,
   UpdatesContent,
   HomePageContent,
-  CmsHomePageRelationships,
   LookupType,
-  RecentlyAddedContent,
   MediaContent,
   CmsTagItem,
   CmsPaginatedContent,
@@ -93,6 +80,12 @@ import {
   CmsSearchResult,
   CmsSearchResultAttributes,
 } from './cms/types'
+import getHomepageContent from './cms/queries/getHomepageContent'
+import getRecentlyAddedContent from './cms/queries/getRecentlyAddedContent'
+import getRecentlyAddedHomepageContent from './cms/queries/getRecentlyAddedHomepageContent'
+import getExploreContent from './cms/queries/getExploreContent'
+import getUpdatesContent from './cms/queries/getUpdatesContent'
+import mapContentToTiles from './cms/mappers/mapContentToTiles'
 
 export default class CmsService {
   constructor(private readonly jsonApiClient: JsonApiClient) {}
@@ -388,19 +381,11 @@ export default class CmsService {
   }
 
   async getHomepageContent(establishmentName: string, language: string): Promise<HomePageContent> {
-    const queryString = buildHomePageContentQueryString()
-    const path = `/${language}/jsonapi/prison/${establishmentName}/node/homepage?${queryString}`
-    const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes, CmsHomePageRelationships>(
-      path,
-    )
-    return mapHomePageContent(response.data[0].relationships, response.included)
+    return getHomepageContent(establishmentName, language, this.jsonApiClient)
   }
 
   async getRecentlyAddedHomepageContent(establishmentName: string, language: string): Promise<ContentTile[]> {
-    const queryString = buildRecentlyAddedHomepageContentQueryString()
-    const path = `/${language}/jsonapi/prison/${establishmentName}/recently-added?${queryString}`
-    const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
-    return mapContentToTiles(response)
+    return getRecentlyAddedHomepageContent(establishmentName, language, this.jsonApiClient)
   }
 
   async getRecentlyAddedContent(
@@ -408,18 +393,12 @@ export default class CmsService {
     language: string,
     page?: number,
     limit?: number,
-  ): Promise<RecentlyAddedContent> {
-    const queryString = buildRecentlyAddedQueryString(page, limit)
-    const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
-    const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
-    return mapRecentlyAddedContent(response)
+  ): Promise<CmsPaginatedContent<ContentTile>> {
+    return getRecentlyAddedContent(establishmentName, language, this.jsonApiClient, page, limit)
   }
 
-  async getExploreContent(establishmentName: string, language: string): Promise<ExploreContent> {
-    const queryString = buildExploreContentQueryString()
-    const path = `/${language}/jsonapi/prison/${establishmentName}/explore/node?${queryString}`
-    const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
-    return mapExploreContent(response)
+  async getExploreContent(establishmentName: string, language: string): Promise<CmsPaginatedContent<ContentTile>> {
+    return getExploreContent(establishmentName, language, this.jsonApiClient)
   }
 
   async getUpdatesContent(
@@ -428,10 +407,7 @@ export default class CmsService {
     page?: number,
     limit?: number,
   ): Promise<UpdatesContent> {
-    const queryString = buildUpdatesContentQueryString(page, limit)
-    const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
-    const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
-    return mapUpdatesContent(response)
+    return getUpdatesContent(establishmentName, language, this.jsonApiClient, page, limit)
   }
 
   async getLink(establishmentName: string, linkId: string, language: string): Promise<CmsLink> {

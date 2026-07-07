@@ -55,7 +55,7 @@ describe('cms utils', () => {
     expect(findIncluded(included, { type: 'file--file', id: 'missing' })).toBeUndefined()
   })
 
-  it('resolves file urls with style and uri fallbacks', () => {
+  it('resolves file urls with image style uri attributes', () => {
     const fileWithStyles: JsonApiResource<CmsFileAttributes> = {
       type: 'file--file',
       id: 'file-1',
@@ -63,7 +63,26 @@ describe('cms utils', () => {
         image_style_uri: { tile_large: '/large', tile_small: '/small' },
       },
     }
-    const fileWithUri: JsonApiResource<CmsFileAttributes> = {
+
+    expect(resolveFileUrl(fileWithStyles)).toBe('/small')
+    expect(resolveFileUrl(fileWithStyles, 'large')).toBe('/large')
+    expect(resolveFileUrl(undefined)).toBeUndefined()
+  })
+
+  it('falls back to any string field when small and large styles not present', () => {
+    const fileWithOtherAttributes: JsonApiResource<CmsFileAttributes> = {
+      type: 'file--file',
+      id: 'file-1',
+      attributes: {
+        image_style_uri: { some_unexpected_field: '/fallback' },
+      },
+    }
+
+    expect(resolveFileUrl(fileWithOtherAttributes)).toBe('/fallback')
+  })
+
+  it('resolves file urls with uri attributes', () => {
+    const fileWithUriAndUrl: JsonApiResource<CmsFileAttributes> = {
       type: 'file--file',
       id: 'file-2',
       attributes: {
@@ -71,10 +90,38 @@ describe('cms utils', () => {
       },
     }
 
-    expect(resolveFileUrl(fileWithStyles)).toBe('/small')
-    expect(resolveFileUrl(fileWithStyles, 'large')).toBe('/large')
-    expect(resolveFileUrl(fileWithUri)).toBe('/uri-url')
-    expect(resolveFileUrl(undefined)).toBeUndefined()
+    const fileWithUriAndValue: JsonApiResource<CmsFileAttributes> = {
+      type: 'file--file',
+      id: 'file-2',
+      attributes: {
+        uri: { value: '/uri-value' },
+      },
+    }
+
+    expect(resolveFileUrl(fileWithUriAndUrl)).toBe('/uri-url')
+    expect(resolveFileUrl(fileWithUriAndValue)).toBe('/uri-value')
+  })
+
+  it('resolves file urls with url attributes', () => {
+    const fileWithUrl: JsonApiResource<CmsFileAttributes> = {
+      type: 'file--file',
+      id: 'file-2',
+      attributes: {
+        url: '/url',
+      },
+    }
+
+    expect(resolveFileUrl(fileWithUrl)).toBe('/url')
+  })
+
+  it('does not resolve file urls for files with empty attributes', () => {
+    const fileWithNoAttributes: JsonApiResource<CmsFileAttributes> = {
+      type: 'file--file',
+      id: 'file-1',
+      attributes: {},
+    }
+
+    expect(resolveFileUrl(fileWithNoAttributes)).toBeUndefined()
   })
 
   it('maps tag types from resource types', () => {
