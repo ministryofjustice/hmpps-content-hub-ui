@@ -12,7 +12,6 @@ import {
   CmsPdfNodeAttributes,
   CmsPrimaryNavigationAttributes,
   CmsTopicAttributes,
-  CmsTopicPage,
   CmsVideoContent,
   CmsVideoNodeAttributes,
   ExploreContent,
@@ -80,7 +79,7 @@ describe('CmsService', () => {
     const result = await cmsService.getPrimaryNavigation('bullingdon', 'en')
 
     expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
-      '/en/jsonapi/prison/bullingdon/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl',
+      '/en/jsonapi/prison/bullingdon/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=title%2Curl',
     )
     expect(result).toEqual([
       {
@@ -114,54 +113,6 @@ describe('CmsService', () => {
         href: '/tags/42',
       },
     ])
-  })
-
-  it('should fetch topic page data and map it into items', async () => {
-    const termResponse: JsonApiCollectionResponse<{
-      name: string
-      description?: string
-      drupal_internal__tid: number
-    }> = {
-      data: [
-        {
-          type: 'taxonomy_term--topics',
-          id: 'uuid-1',
-          attributes: {
-            name: 'Education',
-            drupal_internal__tid: 42,
-            description: 'Topic description',
-          },
-        },
-      ],
-    }
-
-    const nodeResponse: JsonApiCollectionResponse<{
-      title: string
-      field_summary?: string
-      path?: { alias?: string }
-    }> = {
-      data: [
-        {
-          type: 'node--page',
-          id: 'node-1',
-          attributes: {
-            title: 'Learning skills',
-            field_summary: 'Improve your skills',
-            path: { alias: '/content/123' },
-          },
-        },
-      ],
-    }
-
-    jsonApiClient.getCollectionByPath.mockResolvedValueOnce(termResponse).mockResolvedValueOnce(nodeResponse)
-
-    const result = (await cmsService.getTopicPage('bullingdon', '42', 'en')) as CmsTopicPage
-
-    expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
-      '/en/jsonapi/prison/bullingdon/taxonomy_term?filter%5Bvid.meta.drupal_internal__target_id%5D=topics&filter%5Bdrupal_internal__tid%5D=42&page%5Blimit%5D=1&fields%5Btaxonomy_term--topics%5D=name%2Cdescription%2Cdrupal_internal__tid',
-    )
-    expect(result.topic.title).toEqual('Education')
-    expect(result.items[0].title).toEqual('Learning skills')
   })
 })
 

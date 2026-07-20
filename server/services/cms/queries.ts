@@ -5,7 +5,6 @@ import {
   AUDIO_CONTENT_INCLUDE,
   CATEGORY_PAGE_FIELDS,
   CATEGORY_PAGE_INCLUDE,
-  CATEGORY_TILE_FIELDS,
   FILE_FIELDS,
   PAGE_CONTENT_FIELDS,
   PAGE_CONTENT_INCLUDE,
@@ -18,7 +17,6 @@ import {
   URGENT_BANNER_INCLUDE,
   TOPIC_ITEMS_INCLUDE,
   TOPIC_ITEMS_TILE_FIELDS,
-  TOPIC_PAGE_NODE_FIELDS,
   TOPIC_TERM_LOOKUP_FIELDS,
   TOPICS_TERM_FIELDS,
   VIDEO_CONTENT_FIELDS,
@@ -43,7 +41,7 @@ export const buildTopicsQueryString = () =>
     .getQueryString()
 
 export const buildPrimaryNavigationQueryString = () =>
-  new DrupalJsonApiParams().addFields('menu_link_content--menu_link_content', ['id', 'title', 'url']).getQueryString()
+  new DrupalJsonApiParams().addFields('menu_link_content--menu_link_content', ['title', 'url']).getQueryString()
 
 export const buildTagLookupQueryString = (tagId: string) =>
   new DrupalJsonApiParams()
@@ -56,11 +54,6 @@ export const buildTagLookupQueryString = (tagId: string) =>
 
 export const buildCategoryPageQueryString = () =>
   new DrupalJsonApiParams()
-    .addFields('node--page', CATEGORY_TILE_FIELDS)
-    .addFields('node--moj_video_item', CATEGORY_TILE_FIELDS)
-    .addFields('node--moj_radio_item', CATEGORY_TILE_FIELDS)
-    .addFields('node--moj_pdf_item', CATEGORY_TILE_FIELDS)
-    .addFields('taxonomy_term--series', MENU_FIELDS)
     .addFields('taxonomy_term--moj_categories', CATEGORY_PAGE_FIELDS)
     .addInclude(CATEGORY_PAGE_INCLUDE)
     .addFields('file--file', FILE_FIELDS)
@@ -118,23 +111,9 @@ export const buildTopicItemsQueryString = (topicUuid: string, page: number) =>
     .addPageOffset(calculatePageOffset(page))
     .getQueryString()
 
-export const buildTopicPageQueryString = (topicUuid: string, page: number) =>
-  new DrupalJsonApiParams()
-    .addFilter('field_topics.id', topicUuid)
-    .addFields('node--page', TOPIC_PAGE_NODE_FIELDS)
-    .addFields('node--moj_video_item', TOPIC_PAGE_NODE_FIELDS)
-    .addFields('node--moj_radio_item', TOPIC_PAGE_NODE_FIELDS)
-    .addFields('node--moj_pdf_item', TOPIC_PAGE_NODE_FIELDS)
-    .addSort('created', 'DESC')
-    .addPageLimit(PAGE_SIZE)
-    .addPageOffset(calculatePageOffset(page))
-    .getQueryString()
-
 export const buildPageContentQueryString = () =>
   new DrupalJsonApiParams()
     .addFields('node--page', PAGE_CONTENT_FIELDS)
-    .addFields('taxonomy_term--topics', ['drupal_internal__tid', 'name'])
-    .addFields('taxonomy_term--moj_categories', ['drupal_internal__tid', 'name'])
     .addInclude(PAGE_CONTENT_INCLUDE)
     .getQueryString()
 
@@ -230,7 +209,6 @@ export const buildCategoryContentQueryString = (categoryUuid: string, page: numb
 export const buildUrgentBannerQueryString = () =>
   new DrupalJsonApiParams()
     .addFields('node--urgent_banner', URGENT_BANNER_FIELDS)
-    .addFields('node--page', ['path'])
     .addInclude(URGENT_BANNER_INCLUDE)
     .getQueryString()
 

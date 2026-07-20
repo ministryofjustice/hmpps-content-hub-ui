@@ -1,14 +1,6 @@
 const COMMON_TILE_FIELDS = ['drupal_internal__nid', 'title', 'field_moj_thumbnail_image', 'path', 'published_at']
 
-export const HEADER_FIELDS = [
-  'name',
-  'description',
-  'breadcrumbs',
-  'drupal_internal__tid',
-  'field_moj_thumbnail_image',
-  'path',
-  'published_at',
-]
+export const HEADER_FIELDS = ['name', 'description', 'breadcrumbs', 'field_moj_thumbnail_image']
 
 export const MENU_FIELDS = ['drupal_internal__tid', 'name', 'path', 'field_moj_thumbnail_image']
 
@@ -16,14 +8,7 @@ export const CONTENT_TILE_FIELDS = [...COMMON_TILE_FIELDS, 'field_summary']
 
 export const MOJ_THUMBNAIL_IMAGE_INCLUDE = ['field_moj_thumbnail_image']
 
-export const CATEGORY_PAGE_FIELDS = [
-  'name',
-  'description',
-  'field_exclude_feedback',
-  'field_featured_tiles',
-  'breadcrumbs',
-  'child_term_count',
-]
+export const CATEGORY_PAGE_FIELDS = ['name', 'description', 'field_featured_tiles', 'breadcrumbs']
 
 export const CATEGORY_PAGE_INCLUDE = [
   'field_featured_tiles',
@@ -53,8 +38,6 @@ export const TOPIC_ITEMS_INCLUDE = ['field_moj_thumbnail_image', 'field_topics.f
 
 export const TOPIC_ITEMS_TILE_FIELDS = [...CONTENT_TILE_FIELDS, 'field_topics']
 
-export const TOPIC_PAGE_NODE_FIELDS = ['drupal_internal__nid', 'title', 'field_summary', 'path', 'published_at']
-
 export const TOPIC_TERM_LOOKUP_FIELDS = ['name', 'description', 'drupal_internal__tid']
 
 export const TOPICS_TERM_FIELDS = ['drupal_internal__tid', 'name']
@@ -70,7 +53,15 @@ const COMMON_CONTENT_FIELDS = [
   'breadcrumbs',
 ]
 
-export const PAGE_CONTENT_FIELDS = [...COMMON_CONTENT_FIELDS, 'field_main_body_content', 'field_moj_stand_first']
+export const PAGE_CONTENT_FIELDS = [
+  'title',
+  'field_topics',
+  'field_moj_top_level_categories',
+  'field_exclude_feedback',
+  'breadcrumbs',
+  'field_main_body_content',
+  'field_moj_stand_first',
+]
 
 export const PAGE_CONTENT_INCLUDE = ['field_topics', 'field_moj_top_level_categories']
 
@@ -123,14 +114,7 @@ export const EPISODE_TILE_FIELDS = [
 
 export const SUGGESTION_TILE_FIELDS = [...COMMON_TILE_FIELDS, 'field_summary', 'field_display_url']
 
-export const URGENT_BANNER_FIELDS = [
-  'drupal_internal__nid',
-  'title',
-  'created',
-  'changed',
-  'field_more_info_page',
-  'unpublish_on',
-]
+export const URGENT_BANNER_FIELDS = ['title', 'field_more_info_page', 'unpublish_on']
 
 export const URGENT_BANNER_INCLUDE = ['field_more_info_page']
 
@@ -160,4 +144,4 @@ export const HOMEPAGE_FILE_FIELDS = ['drupal_internal__fid', 'id', 'image_style_
 
 export const CONTENT_FILTERS = ['page', 'moj_video_item', 'moj_radio_item', 'moj_pdf_item']
 
-export const PDF_CONTENT_FIELDS = ['drupal_internal__nid', 'title', 'field_moj_pdf']
+export const PDF_CONTENT_FIELDS = ['field_moj_pdf']

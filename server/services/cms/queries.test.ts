@@ -14,7 +14,6 @@ import {
   buildTagLookupQueryString,
   buildTopicHeaderQueryString,
   buildTopicItemsQueryString,
-  buildTopicPageQueryString,
   buildTopicTermByTidQueryString,
   buildTopicsQueryString,
   buildUrgentBannerQueryString,
@@ -36,7 +35,7 @@ describe('cms queries', () => {
   it('builds the primary navigation query string', () => {
     const params = new URLSearchParams(buildPrimaryNavigationQueryString())
 
-    expect(params.get('fields[menu_link_content--menu_link_content]')).toBe('id,title,url')
+    expect(params.get('fields[menu_link_content--menu_link_content]')).toBe('title,url')
   })
 
   it('builds the tag lookup query string', () => {
@@ -50,7 +49,6 @@ describe('cms queries', () => {
   it('builds the category page query string', () => {
     const params = new URLSearchParams(buildCategoryPageQueryString())
 
-    expect(params.get('fields[node--page]')).toContain('drupal_internal__nid')
     expect(params.get('include')).toContain('field_featured_tiles.field_moj_thumbnail_image')
     expect(params.get('fields[file--file]')).toBe('image_style_uri,uri,url')
   })
@@ -102,21 +100,10 @@ describe('cms queries', () => {
     expect(params.get('sort')).toBe('-created')
   })
 
-  it('builds the topic page query string with sorting', () => {
-    const params = new URLSearchParams(buildTopicPageQueryString('topic-1', 3))
-
-    expect(params.get('filter[field_topics.id]')).toBe('topic-1')
-    expect(params.get('sort')).toBe('-created')
-    expect(params.get('page[limit]')).toBe('40')
-    expect(params.get('page[offset]')).toBe('80')
-  })
-
   it('builds the page content query string', () => {
     const params = new URLSearchParams(buildPageContentQueryString())
 
     expect(params.get('fields[node--page]')).toContain('field_main_body_content')
-    expect(params.get('fields[taxonomy_term--topics]')).toBe('drupal_internal__tid,name')
-    expect(params.get('fields[taxonomy_term--moj_categories]')).toContain('drupal_internal__tid,name')
     expect(params.get('include')).toBe('field_topics,field_moj_top_level_categories')
   })
 
@@ -195,7 +182,6 @@ describe('cms queries', () => {
     const params = new URLSearchParams(buildUrgentBannerQueryString())
 
     expect(params.get('fields[node--urgent_banner]')).toContain('unpublish_on')
-    expect(params.get('fields[node--page]')).toBe('path')
     expect(params.get('include')).toBe('field_more_info_page')
   })
 

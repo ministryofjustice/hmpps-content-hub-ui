@@ -9,7 +9,6 @@ import {
   mapTopic,
   mapTopicHeader,
   mapTopicItem,
-  mapTopicPageItem,
   mapPageContent,
   mapVideoContent,
   mapAudioContent,
@@ -34,8 +33,6 @@ import {
   buildTagLookupQueryString,
   buildTopicHeaderQueryString,
   buildTopicItemsQueryString,
-  buildTopicPageQueryString,
-  buildTopicTermByTidQueryString,
   buildTopicsQueryString,
   buildUrgentBannerQueryString,
   buildVideoContentQueryString,
@@ -64,9 +61,6 @@ import {
   CmsTopicAttributes,
   CmsTopicHeaderAttributes,
   CmsTopicItem,
-  CmsTopicPage,
-  CmsTopicTermAttributes,
-  CmsTopicTermItem,
   CmsUrgentBanner,
   CmsUrgentBannerAttributes,
   CmsVideoNodeAttributes,
@@ -104,29 +98,6 @@ export default class CmsService {
     const response = await this.jsonApiClient.getCollectionByPath<CmsPrimaryNavigationAttributes>(path)
 
     return response.data.map(item => mapPrimaryNavigationItem(item, language))
-  }
-
-  async getTopicPage(
-    establishmentName: string,
-    topicId: string,
-    language: string,
-    page: number = 1,
-  ): Promise<CmsTopicPage | null> {
-    const topicTerm = await this.getTopicTermByTid(establishmentName, topicId, language)
-    if (!topicTerm) return null
-
-    const queryString = buildTopicPageQueryString(topicTerm.id, page)
-    const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
-    const response = await this.jsonApiClient.getCollectionByPath<CmsNodeAttributes>(path)
-
-    return {
-      topic: {
-        id: `${topicTerm.attributes.drupal_internal__tid}`,
-        title: topicTerm.attributes.name,
-        description: topicTerm.attributes.description,
-      },
-      items: response.data.map(mapTopicPageItem),
-    }
   }
 
   async getTag(establishmentName: string, tagId: string, language: string): Promise<CmsTag | null> {
@@ -231,13 +202,6 @@ export default class CmsService {
 
     const categoryContent = await this.getCategoryContent(establishmentName, match.id, language, page)
     return categoryContent
-  }
-
-  private async getTopicTermByTid(establishmentName: string, topicId: string, language: string) {
-    const queryString = buildTopicTermByTidQueryString(topicId)
-    const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term?${queryString}`
-    const response = await this.jsonApiClient.getCollectionByPath<CmsTopicTermAttributes>(path)
-    return (response.data[0] as CmsTopicTermItem | undefined) ?? null
   }
 
   private async getCategoryDetails(establishmentName: string, categoryUuid: string, language: string) {

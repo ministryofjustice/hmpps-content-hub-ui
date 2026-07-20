@@ -98,17 +98,6 @@ export type CmsPath = {
   url?: string
 }
 
-export type CmsTopicTermAttributes = {
-  name: string
-  description?: string
-  drupal_internal__tid: number
-}
-
-export type CmsTopicTermItem = {
-  id: string
-  attributes: CmsTopicTermAttributes
-}
-
 export type CmsTagTermAttributes = {
   name?: string
   description?: string
