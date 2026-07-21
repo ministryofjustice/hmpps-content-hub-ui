@@ -125,7 +125,6 @@ export const HOMEPAGE_CONTENT_TILE = [
   'title',
   'field_moj_thumbnail_image',
   'field_summary',
-  'field_moj_series',
   'path',
   'type.meta.drupal_internal__target_id',
   'published_at',
