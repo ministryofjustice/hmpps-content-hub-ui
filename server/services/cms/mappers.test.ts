@@ -1,26 +1,22 @@
 import { JsonApiResource, JsonApiSingleResponse } from '../../data/jsonApiClient'
 import {
-  mapCategoryDetails,
   mapCategoryFeaturedContent,
-  mapCategoryMenuItem,
   mapPrimaryNavigationItem,
   mapSearchResponse,
-  mapSeriesHeader,
-  mapSeriesItem,
   mapTopic,
-  mapTopicHeader,
-  mapTopicItem,
   mapTopicPageItem,
 } from './mappers'
+import mapCategoryDetails from './mappers/mapCategoryDetails'
+import mapCategoryMenuItem from './mappers/mapCategoryMenuItem'
+import mapContentItem from './mappers/mapContentItem'
+import mapTagPageHeader from './mappers/mapTagPageHeader'
 import {
   CmsCategoryMenuAttributes,
-  CmsCategoryTermAttributes,
   CmsFileAttributes,
   CmsNodeAttributes,
   CmsPrimaryNavigationAttributes,
-  CmsSeriesTermAttributes,
+  CmsTagHeaderAttributes,
   CmsTopicAttributes,
-  CmsTopicHeaderAttributes,
 } from './types'
 
 describe('cms mappers', () => {
@@ -91,7 +87,7 @@ describe('cms mappers', () => {
   })
 
   it('maps series and topic headers with thumbnails', () => {
-    const seriesResponse: JsonApiSingleResponse<CmsSeriesTermAttributes> = {
+    const seriesResponse: JsonApiSingleResponse<CmsTagHeaderAttributes> = {
       data: {
         type: 'taxonomy_term--series',
         id: 'series-1',
@@ -116,7 +112,7 @@ describe('cms mappers', () => {
       ],
     }
 
-    const topicResponse: JsonApiSingleResponse<CmsTopicHeaderAttributes> = {
+    const topicResponse: JsonApiSingleResponse<CmsTagHeaderAttributes> = {
       data: {
         type: 'taxonomy_term--topics',
         id: 'topic-1',
@@ -138,7 +134,7 @@ describe('cms mappers', () => {
       ],
     }
 
-    expect(mapSeriesHeader(seriesResponse)).toEqual({
+    expect(mapTagPageHeader(seriesResponse)).toEqual({
       name: 'Series A',
       description: 'Series desc',
       breadcrumbs: [
@@ -147,7 +143,7 @@ describe('cms mappers', () => {
       ],
       thumbnailUrl: '/img/series.png',
     })
-    expect(mapTopicHeader(topicResponse)).toEqual({
+    expect(mapTagPageHeader(topicResponse)).toEqual({
       name: 'Topic A',
       description: 'Topic desc',
       breadcrumbs: [{ text: 'Home', href: '/' }, { text: 'Current topic' }],
@@ -177,7 +173,7 @@ describe('cms mappers', () => {
       },
     ]
 
-    expect(mapSeriesItem(item, included)).toEqual({
+    expect(mapContentItem(item, included)).toEqual({
       id: 'node-1',
       title: 'Content A',
       summary: 'Summary',
@@ -185,7 +181,7 @@ describe('cms mappers', () => {
       thumbnailUrl: '/img/content.png',
       contentType: 'page',
     })
-    expect(mapTopicItem(item, included)).toEqual({
+    expect(mapContentItem(item, included)).toEqual({
       id: 'node-1',
       title: 'Content A',
       summary: 'Summary',
@@ -207,7 +203,7 @@ describe('cms mappers', () => {
       },
     }
 
-    expect(mapSeriesItem(item, undefined)).toEqual({
+    expect(mapContentItem(item, undefined)).toEqual({
       id: 'node-2',
       title: 'External link',
       summary: 'Summary',
@@ -287,7 +283,7 @@ describe('cms mappers', () => {
   })
 
   it('maps category details with featured content', () => {
-    const response: JsonApiSingleResponse<CmsCategoryTermAttributes> = {
+    const response: JsonApiSingleResponse<CmsTagHeaderAttributes> = {
       data: {
         type: 'taxonomy_term--moj_categories',
         id: 'cat-1',

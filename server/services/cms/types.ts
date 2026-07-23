@@ -142,23 +142,7 @@ export type CmsFileAttributes = {
 
 export type ImageSize = 'small' | 'large'
 
-export type CmsCategoryTermAttributes = {
-  name?: string
-  description?: { processed?: string }
-  breadcrumbs?: CmsRawBreadcrumb[]
-  path?: CmsPath
-  drupal_internal__tid?: number
-}
-
-export type CmsSeriesTermAttributes = {
-  name?: string
-  description?: { processed?: string }
-  breadcrumbs?: CmsRawBreadcrumb[]
-  path?: CmsPath
-  drupal_internal__tid?: number
-}
-
-export type CmsTopicHeaderAttributes = {
+export type CmsTagHeaderAttributes = {
   name?: string
   description?: { processed?: string }
   breadcrumbs?: CmsRawBreadcrumb[]

@@ -8,8 +8,6 @@ import type { EpisodeTile } from '../../@types/content'
 import {
   CmsAudioContent,
   CmsAudioNodeAttributes,
-  CmsCategoryMenuAttributes,
-  CmsCategoryTermAttributes,
   CmsEpisodeTileNodeAttributes,
   CmsFileAttributes,
   CmsNodeAttributes,
@@ -18,10 +16,8 @@ import {
   CmsPath,
   CmsPrimaryNavigationAttributes,
   CmsPrimaryNavigationItem,
-  CmsSeriesTermAttributes,
   CmsTaxonomyAttributes,
   CmsTopicAttributes,
-  CmsTopicHeaderAttributes,
   CmsTopicItem,
   CmsTopicPageItem,
   CmsUrgentBanner,
@@ -30,8 +26,6 @@ import {
   CmsVideoNodeAttributes,
   CmsTagItem,
   CategoryContent,
-  CategoryMenuContent,
-  MediaContent,
   CmsPdfContent,
   CmsPdfNodeAttributes,
   CmsSearchResult,
@@ -68,106 +62,6 @@ export const mapTopicPageItem = (item: JsonApiResource<CmsNodeAttributes>): CmsT
   summary: item.attributes.field_summary,
   href: resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
 })
-
-export const mapCategoryDetails = (
-  response: JsonApiSingleResponse<CmsCategoryTermAttributes>,
-  language: string = 'en',
-) => {
-  const category = response.data
-  const { name } = category.attributes
-  const description = category.attributes.description?.processed
-  const featured = mapCategoryFeaturedContent(category.relationships, response.included)
-
-  return {
-    name,
-    description,
-    breadcrumbs: mapBreadcrumbs(category.attributes.breadcrumbs, language),
-    categoryFeaturedContent: featured,
-  }
-}
-
-export const mapCategoryMenuItem = (
-  item: JsonApiResource<CmsCategoryMenuAttributes>,
-  included: JsonApiResource[] | undefined,
-): CmsTagItem<CategoryMenuContent> => {
-  const thumbnailIdentifier = relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
-  const thumbnail =
-    included && thumbnailIdentifier ? findIncluded<CmsFileAttributes>(included, thumbnailIdentifier) : undefined
-
-  return {
-    id: `${item.attributes.drupal_internal__tid ?? item.id}`,
-    title: item.attributes.name ?? (item as JsonApiResource<CmsTaxonomyAttributes>).attributes.name ?? 'Untitled',
-    contentUrl: resolveTagHref(item.attributes.path, item.attributes.drupal_internal__tid),
-    thumbnailUrl: resolveFileUrl(thumbnail),
-    contentType: item.type === 'taxonomy_term--series' ? 'series' : 'category',
-  }
-}
-
-export const mapSeriesHeader = (response: JsonApiSingleResponse<CmsSeriesTermAttributes>, language: string = 'en') => {
-  const term = response.data
-  const thumbnailIdentifier = relationshipDataArray(term.relationships?.field_moj_thumbnail_image)[0]
-  const thumbnail = thumbnailIdentifier
-    ? findIncluded<CmsFileAttributes>(response.included ?? [], thumbnailIdentifier)
-    : undefined
-
-  return {
-    name: term.attributes.name,
-    description: term.attributes.description?.processed,
-    breadcrumbs: mapBreadcrumbs(term.attributes.breadcrumbs, language),
-    thumbnailUrl: resolveFileUrl(thumbnail),
-  }
-}
-
-export const mapTopicHeader = (response: JsonApiSingleResponse<CmsTopicHeaderAttributes>, language: string = 'en') => {
-  const term = response.data
-  const thumbnailIdentifier = relationshipDataArray(term.relationships?.field_moj_thumbnail_image)[0]
-  const thumbnail = thumbnailIdentifier
-    ? findIncluded<CmsFileAttributes>(response.included ?? [], thumbnailIdentifier)
-    : undefined
-
-  return {
-    name: term.attributes.name,
-    description: term.attributes.description?.processed,
-    breadcrumbs: mapBreadcrumbs(term.attributes.breadcrumbs, language),
-    thumbnailUrl: resolveFileUrl(thumbnail),
-  }
-}
-
-const mapContentItem = (
-  item: JsonApiResource<CmsNodeAttributes>,
-  included: JsonApiResource[] | undefined,
-): CmsTagItem<MediaContent> => {
-  const thumbnailIdentifier = relationshipDataArray(item.relationships?.field_moj_thumbnail_image)[0]
-  const thumbnail =
-    thumbnailIdentifier && included ? findIncluded<CmsFileAttributes>(included, thumbnailIdentifier) : undefined
-  const contentUrl = resolvePath(item.attributes.path, item.attributes.drupal_internal__nid)
-
-  const contentTypeByNodeType: Record<string, 'video' | 'radio'> = {
-    'node--moj_video_item': 'video',
-    'node--moj_radio_item': 'radio',
-  }
-  const contentType: 'video' | 'radio' | 'page' | 'link' =
-    contentTypeByNodeType[item.type] ?? (contentUrl.startsWith('/link/') ? 'link' : 'page')
-
-  return {
-    id: item.id,
-    title: item.attributes.title,
-    summary: item.attributes.field_summary,
-    contentUrl,
-    thumbnailUrl: resolveFileUrl(thumbnail),
-    contentType,
-  }
-}
-
-export const mapSeriesItem = (
-  item: JsonApiResource<CmsNodeAttributes>,
-  included: JsonApiResource[] | undefined,
-): CmsTagItem<MediaContent> => mapContentItem(item, included)
-
-export const mapTopicItem = (
-  item: JsonApiResource<CmsNodeAttributes>,
-  included: JsonApiResource[] | undefined,
-): CmsTagItem<MediaContent> => mapContentItem(item, included)
 
 export const mapCategoryFeaturedContent = (
   relationships?: JsonApiRelationships,

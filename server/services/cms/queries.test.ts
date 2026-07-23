@@ -1,19 +1,11 @@
 import {
   buildAudioContentQueryString,
-  buildCategoryContentQueryString,
-  buildCategoryMenuQueryString,
-  buildCategoryPageQueryString,
   buildContentLookupQueryString,
   buildExternalLinkQueryString,
   buildNextEpisodesQueryString,
   buildPageContentQueryString,
   buildPrimaryNavigationQueryString,
-  buildSeriesHeaderQueryString,
-  buildSeriesItemsQueryString,
   buildSuggestionsQueryString,
-  buildTagLookupQueryString,
-  buildTopicHeaderQueryString,
-  buildTopicItemsQueryString,
   buildTopicPageQueryString,
   buildTopicTermByTidQueryString,
   buildTopicsQueryString,
@@ -37,69 +29,6 @@ describe('cms queries', () => {
     const params = new URLSearchParams(buildPrimaryNavigationQueryString())
 
     expect(params.get('fields[menu_link_content--menu_link_content]')).toBe('id,title,url')
-  })
-
-  it('builds the tag lookup query string', () => {
-    const params = new URLSearchParams(buildTagLookupQueryString('99'))
-
-    expect(params.get('filter[drupal_internal__tid]')).toBe('99')
-    expect(params.get('page[limit]')).toBe('1')
-    expect(params.get('fields[taxonomy_term--series]')).toContain('drupal_internal__tid')
-  })
-
-  it('builds the category page query string', () => {
-    const params = new URLSearchParams(buildCategoryPageQueryString())
-
-    expect(params.get('fields[node--page]')).toContain('drupal_internal__nid')
-    expect(params.get('include')).toContain('field_featured_tiles.field_moj_thumbnail_image')
-    expect(params.get('fields[file--file]')).toBe('image_style_uri,uri,url')
-  })
-
-  it('builds the category menu query string', () => {
-    const params = new URLSearchParams(buildCategoryMenuQueryString())
-
-    expect(params.get('fields[taxonomy_term--series]')).toBe('drupal_internal__tid,name,path,field_moj_thumbnail_image')
-    expect(params.get('fields[taxonomy_term--moj_categories]')).toBe(
-      'drupal_internal__tid,name,path,field_moj_thumbnail_image',
-    )
-    expect(params.get('include')).toBe('field_moj_thumbnail_image')
-    expect(params.get('fields[file--file]')).toBe('image_style_uri,uri,url')
-  })
-
-  it('builds the series header query string', () => {
-    const params = new URLSearchParams(buildSeriesHeaderQueryString())
-
-    expect(params.get('fields[taxonomy_term--series]')).toContain('breadcrumbs')
-    expect(params.get('include')).toBe('field_moj_thumbnail_image')
-    expect(params.get('fields[file--file]')).toBe('image_style_uri,uri,url')
-  })
-
-  it('builds the topic header query string', () => {
-    const params = new URLSearchParams(buildTopicHeaderQueryString())
-
-    expect(params.get('fields[taxonomy_term--topics]')).toContain('breadcrumbs')
-    expect(params.get('include')).toBe('field_moj_thumbnail_image')
-    expect(params.get('fields[file--file]')).toBe('image_style_uri,uri,url')
-  })
-
-  it('builds the series items query string with pagination', () => {
-    const params = new URLSearchParams(buildSeriesItemsQueryString('series-1', 2))
-
-    expect(params.get('filter[field_moj_series.id]')).toBe('series-1')
-    expect(params.get('page[limit]')).toBe('40')
-    expect(params.get('page[offset]')).toBe('40')
-    expect(params.get('include')).toContain('field_moj_series.field_moj_thumbnail_image')
-    expect(params.get('sort')).toBe('series_sort_value,created')
-  })
-
-  it('builds the topic items query', () => {
-    const params = new URLSearchParams(buildTopicItemsQueryString('topic-1', 0))
-
-    expect(params.get('filter[field_topics.id]')).toBe('topic-1')
-    expect(params.get('page[limit]')).toBe('40')
-    expect(params.get('page[offset]')).toBe('0')
-    expect(params.get('include')).toContain('field_topics.field_moj_thumbnail_image')
-    expect(params.get('sort')).toBe('-created')
   })
 
   it('builds the topic page query string with sorting', () => {
@@ -178,17 +107,6 @@ describe('cms queries', () => {
     expect(params.get('fields[node--page]')).toContain('field_display_url')
     expect(params.get('include')).toBe('field_moj_thumbnail_image')
     expect(params.get('page[limit]')).toBe('10')
-  })
-
-  it('builds the category content query string', () => {
-    const params = new URLSearchParams(buildCategoryContentQueryString('category-1', 3, 10))
-
-    expect(params.get('filter[field_moj_top_level_categories.id]')).toBe('category-1')
-    expect(params.get('fields[node--page]')).toContain('field_summary')
-    expect(params.get('include')).toBe('field_moj_thumbnail_image')
-    expect(params.get('sort')).toBe('-created')
-    expect(params.get('page[limit]')).toBe('10')
-    expect(params.get('page[offset]')).toBe('20')
   })
 
   it('builds the urgent banner query string', () => {
