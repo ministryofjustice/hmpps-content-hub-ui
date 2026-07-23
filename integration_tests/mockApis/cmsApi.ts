@@ -420,7 +420,6 @@ export default {
     body: Record<string, unknown> = defaultHomepageContentResponse,
   ): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node/homepage.*',
@@ -437,7 +436,6 @@ export default {
     body: Record<string, unknown> = defaultHomepageCollectionResponse,
   ): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node\\?.*',
@@ -454,7 +452,6 @@ export default {
     body: Record<string, unknown> = defaultRecentlyAddedHomepageCollectionResponse,
   ): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/recently-added.*',
@@ -471,7 +468,6 @@ export default {
     body: Record<string, unknown> = defaultExploreHomepageCollectionResponse,
   ): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/explore/node.*',
@@ -488,7 +484,6 @@ export default {
     httpStatus = 200,
   ): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPathPattern: '/jsonapi/prison/[^/]+/index/content_for_search',
@@ -554,7 +549,6 @@ export default {
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPathPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/taxonomy_term',
@@ -597,7 +591,6 @@ export default {
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPathPattern: `/en/jsonapi/prison/[^/]+/taxonomy_term/topics/(?:${topicId}|${tid})`,
@@ -629,7 +622,6 @@ export default {
 
   stubTopicItemsById: ({ topicId, httpStatus = 200 }: { topicId: string; httpStatus?: number }): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPathPattern: '/en/jsonapi/prison/[^/]+/node',
@@ -658,7 +650,6 @@ export default {
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPathPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node',
@@ -693,7 +684,6 @@ export default {
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPathPattern: `/(?:en|cy)/jsonapi/prison/[^/]+/node/moj_pdf_item/${uuid}`,
@@ -740,7 +730,6 @@ export default {
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPathPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node',
@@ -770,7 +759,6 @@ export default {
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPattern: `/(?:en|cy)/jsonapi/prison/[^/]+/node\\?.*drupal_internal__nid%5D=${nid}.*`,
@@ -804,7 +792,6 @@ export default {
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
-      priority: 1,
       request: {
         method: 'GET',
         urlPathPattern: `/(?:en|cy)/jsonapi/prison/[^/]+/node/page/${uuid}`,
