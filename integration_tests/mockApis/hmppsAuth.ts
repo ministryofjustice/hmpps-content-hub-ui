@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
-import { stubFor, getMatchingRequests } from './wiremock'
+import type { SuperAgentRequest } from 'superagent'
+import { getMatchingRequests, stubFor, stubPing } from './wiremock'
 
 export interface UserToken {
   name?: string
@@ -35,46 +36,29 @@ function createIdToken(userToken: UserToken) {
 }
 
 export default {
-  getSignInUrl: async (): Promise<string> => {
-    const data = await getMatchingRequests({
+  getSignInUrl: (): Promise<string> =>
+    getMatchingRequests({
       method: 'GET',
       urlPath: '/auth/oauth/authorize',
-    })
+    }).then(requests => {
+      const stateValue = requests[requests.length - 1].queryParams.state.values[0]
+      return `/sign-in/callback?code=codexxxx&state=${stateValue}`
+    }),
 
-    const { requests = [] } = data.body as { requests?: Array<{ queryParams?: { state?: { values?: string[] } } }> }
-    const lastRequest = requests[requests.length - 1]
-    const stateValue = lastRequest?.queryParams?.state?.values?.[0]
-
-    if (stateValue) {
-      return `/sign-in/callback?code=codexxxx&state=${encodeURIComponent(stateValue)}`
-    }
-
-    throw new Error('Unable to determine HMPPS auth state')
-  },
-
-  favicon: () =>
+  favicon: (): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/favicon.ico',
+        urlPath: '/favicon.ico',
       },
       response: {
         status: 200,
       },
     }),
 
-  stubPing: () =>
-    stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: '/auth/health/ping',
-      },
-      response: {
-        status: 200,
-      },
-    }),
+  stubPing: (httpStatus = 200): SuperAgentRequest => stubPing('/auth', httpStatus),
 
-  stubSignInPage: () =>
+  stubSignInPage: (): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -90,7 +74,7 @@ export default {
       },
     }),
 
-  stubSignOutPage: () =>
+  stubSignOutPage: (): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -105,7 +89,7 @@ export default {
       },
     }),
 
-  stubManageDetailsPage: () =>
+  stubManageDetailsPage: (): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -120,11 +104,11 @@ export default {
       },
     }),
 
-  token: (userToken: UserToken) =>
+  token: (userToken: UserToken): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
-        urlPattern: '/auth/oauth/token',
+        urlPath: '/auth/oauth/token',
       },
       response: {
         status: 200,
