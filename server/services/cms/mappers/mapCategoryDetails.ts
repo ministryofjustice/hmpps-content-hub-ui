@@ -1,51 +1,34 @@
-import { JsonApiCollectionResponse, JsonApiRelationships, JsonApiResource } from '../../data/jsonApiClient'
+import { JsonApiRelationships, JsonApiResource, JsonApiSingleResponse } from '../../../data/jsonApiClient'
 import {
+  CategoryContent,
   CmsFileAttributes,
   CmsNodeAttributes,
-  CmsPath,
-  CmsPrimaryNavigationAttributes,
-  CmsPrimaryNavigationItem,
-  CmsTaxonomyAttributes,
-  CmsTopicAttributes,
-  CmsTopicItem,
-  CmsTopicPageItem,
-  CmsUrgentBanner,
-  CmsUrgentBannerAttributes,
+  CmsTagHeaderAttributes,
   CmsTagItem,
-  CategoryContent,
-  CmsSearchResult,
-  CmsSearchResultAttributes,
-} from './types'
+  CmsTaxonomyAttributes,
+} from '../types'
 import {
   findIncluded,
+  mapBreadcrumbs,
   relationshipDataArray,
   resolveFileUrl,
-  resolveLink,
   resolvePath,
   resolveTagHref,
-  stripLanguagePrefix,
-} from './utils'
+} from '../utils'
 
-export const mapTopic = (item: JsonApiResource<CmsTopicAttributes>): CmsTopicItem => ({
-  id: `${item.attributes.drupal_internal__tid}`,
-  linkText: item.attributes.name,
-  href: `/tags/${item.attributes.drupal_internal__tid}`,
-})
+const mapCategoryDetails = (response: JsonApiSingleResponse<CmsTagHeaderAttributes>, language: string = 'en') => {
+  const category = response.data
+  const { name } = category.attributes
+  const description = category.attributes.description?.processed
+  const featured = mapCategoryFeaturedContent(category.relationships, response.included)
 
-export const mapPrimaryNavigationItem = (
-  item: JsonApiResource<CmsPrimaryNavigationAttributes>,
-  language: string,
-): CmsPrimaryNavigationItem => ({
-  text: item.attributes.title,
-  href: stripLanguagePrefix(resolveLink(item.attributes.url), language),
-})
-
-export const mapTopicPageItem = (item: JsonApiResource<CmsNodeAttributes>): CmsTopicPageItem => ({
-  id: item.id,
-  title: item.attributes.title,
-  summary: item.attributes.field_summary,
-  href: resolvePath(item.attributes.path, item.attributes.drupal_internal__nid),
-})
+  return {
+    name,
+    description,
+    breadcrumbs: mapBreadcrumbs(category.attributes.breadcrumbs, language),
+    categoryFeaturedContent: featured,
+  }
+}
 
 export const mapCategoryFeaturedContent = (
   relationships?: JsonApiRelationships,
@@ -101,29 +84,4 @@ export const mapCategoryFeaturedContent = (
     })
 }
 
-export const mapUrgentBanner = (
-  item: JsonApiResource<CmsUrgentBannerAttributes>,
-  included: JsonApiResource[] | undefined,
-): CmsUrgentBanner => {
-  const moreInfoIdentifier = relationshipDataArray(item.relationships?.field_more_info_page)[0]
-  const moreInfoPage =
-    included && moreInfoIdentifier ? findIncluded<{ path?: CmsPath }>(included, moreInfoIdentifier) : undefined
-
-  return {
-    title: item.attributes.title,
-    moreInfoLink: moreInfoPage?.attributes.path?.alias ?? null,
-    unpublishOn: item.attributes.unpublish_on ? new Date(item.attributes.unpublish_on).getTime() : null,
-  }
-}
-
-export const mapSearchResponse = (
-  response: JsonApiCollectionResponse<CmsSearchResultAttributes>,
-): CmsSearchResult[] => {
-  return response.data.map(item => {
-    return {
-      title: item.attributes.title,
-      summary: item.attributes.field_summary || 'No summary available',
-      url: item.attributes.path?.alias || `/content/${item.attributes.drupal_internal__nid}`,
-    }
-  })
-}
+export default mapCategoryDetails
