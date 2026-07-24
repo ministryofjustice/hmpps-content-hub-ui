@@ -6,6 +6,9 @@ import cmsApi from '../mockApis/cmsApi'
 import { resetStubs } from '../testUtils'
 import prisonerAuth from '../mockApis/prisonerAuth'
 
+// NB: add new mock apis here:
+const mockApis = [hmppsAuth, prisonerAuth, tokenVerification, cmsApi]
+
 test.describe('Health', () => {
   test.beforeEach(async () => {
     await resetStubs()
@@ -13,12 +16,7 @@ test.describe('Health', () => {
 
   test.describe('All healthy', () => {
     test.beforeEach(async () => {
-      await Promise.all([
-        hmppsAuth.stubPing(),
-        prisonerAuth.stubPing(),
-        tokenVerification.stubPing(),
-        cmsApi.stubPing(),
-      ])
+      await Promise.all(mockApis.map(api => api.stubPing()))
     })
 
     test('Health check is accessible and status is UP', async ({ page }) => {
@@ -50,7 +48,7 @@ test.describe('Health', () => {
       ])
     })
 
-    test('Health check status is down', async ({ page }) => {
+    test('Health check status is down for 1 api', async ({ page }) => {
       const response = await page.request.get('/health')
       const payload = await response.json()
       expect(payload.components.hmppsAuth.status).toBe('UP')

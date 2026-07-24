@@ -1,45 +1,22 @@
 import JsonApiClient from '../data/jsonApiClient'
-import type { EpisodeTile, ContentTile } from '../@types/content'
+import type { ContentTile } from '../@types/content'
+import { mapPrimaryNavigationItem, mapTopic, mapTopicPageItem, mapUrgentBanner, mapSearchResponse } from './cms/mappers'
 import {
-  mapPrimaryNavigationItem,
-  mapTopic,
-  mapTopicPageItem,
-  mapPageContent,
-  mapVideoContent,
-  mapAudioContent,
-  mapNextEpisodes,
-  mapUrgentBanner,
-  mapPdfContent,
-  mapSearchResponse,
-} from './cms/mappers'
-import {
-  buildAudioContentQueryString,
-  buildContentLookupQueryString,
   buildExternalLinkQueryString,
-  buildNextEpisodesQueryString,
-  buildPageContentQueryString,
   buildPrimaryNavigationQueryString,
-  buildSuggestionsQueryString,
   buildTopicPageQueryString,
   buildTopicTermByTidQueryString,
   buildTopicsQueryString,
   buildUrgentBannerQueryString,
-  buildVideoContentQueryString,
-  buildPdfContentQueryString,
   buildSearchQueryString,
 } from './cms/queries'
 import {
-  CmsAudioNodeAttributes,
   CmsContent,
-  CmsEpisodeTileNodeAttributes,
   CmsLink,
   CmsLinkAttributes,
-  CmsMediaContent,
   CmsNodeAttributes,
-  CmsPageNodeAttributes,
   CmsPrimaryNavigationAttributes,
   CmsPrimaryNavigationItem,
-  CMSContentNodeAttributes,
   CmsTag,
   CmsTopicAttributes,
   CmsTopicItem,
@@ -48,14 +25,12 @@ import {
   CmsTopicTermItem,
   CmsUrgentBanner,
   CmsUrgentBannerAttributes,
-  CmsVideoNodeAttributes,
   UpdatesContent,
   HomePageContent,
   LookupType,
   MediaContent,
   CmsTagItem,
   CmsPaginatedContent,
-  CmsPdfNodeAttributes,
   CmsSearchResult,
   CmsSearchResultAttributes,
 } from './cms/types'
@@ -64,9 +39,9 @@ import getRecentlyAddedContent from './cms/queries/getRecentlyAddedContent'
 import getRecentlyAddedHomepageContent from './cms/queries/getRecentlyAddedHomepageContent'
 import getExploreContent from './cms/queries/getExploreContent'
 import getUpdatesContent from './cms/queries/getUpdatesContent'
-import mapContentToTiles from './cms/mappers/mapContentToTiles'
 import getTag from './cms/queries/getTag'
 import getTagPage from './cms/queries/getTagPage'
+import getContent from './cms/queries/getContent'
 
 export default class CmsService {
   constructor(private readonly jsonApiClient: JsonApiClient) {}
@@ -131,79 +106,7 @@ export default class CmsService {
   }
 
   async getContent(establishmentName: string, contentId: number, language: string): Promise<CmsContent | null> {
-    const lookupQs = buildContentLookupQueryString(`${contentId}`)
-    const lookupPath = `/${language}/jsonapi/prison/${establishmentName}/node?${lookupQs}`
-    const lookupResponse = await this.jsonApiClient.getCollectionByPath<CmsNodeAttributes>(lookupPath)
-    const match = lookupResponse.data[0]
-    if (!match) return null
-
-    const { id: uuid } = match
-
-    switch (match.type) {
-      case 'node--page': {
-        const qs = buildPageContentQueryString()
-        const path = `/${language}/jsonapi/prison/${establishmentName}/node/page/${uuid}?${qs}`
-        const response = await this.jsonApiClient.getSingleByPath<CmsPageNodeAttributes>(path)
-        return mapPageContent(response, language)
-      }
-      case 'node--moj_video_item': {
-        const qs = buildVideoContentQueryString()
-        const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_video_item/${uuid}?${qs}`
-        const response = await this.jsonApiClient.getSingleByPath<CmsVideoNodeAttributes>(path)
-        const content = mapVideoContent(response, language)
-        return this.enrichMediaContent(establishmentName, content, language)
-      }
-      case 'node--moj_radio_item': {
-        const qs = buildAudioContentQueryString()
-        const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_radio_item/${uuid}?${qs}`
-        const response = await this.jsonApiClient.getSingleByPath<CmsAudioNodeAttributes>(path)
-        const content = mapAudioContent(response, language)
-        return this.enrichMediaContent(establishmentName, content, language)
-      }
-      case 'node--moj_pdf_item': {
-        const qs = buildPdfContentQueryString()
-        const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_pdf_item/${uuid}?${qs}`
-        const response = await this.jsonApiClient.getSingleByPath<CmsPdfNodeAttributes>(path)
-        return mapPdfContent(response)
-      }
-      default:
-        return null
-    }
-  }
-
-  private async enrichMediaContent(
-    establishmentName: string,
-    content: CmsMediaContent,
-    language: string,
-  ): Promise<CmsMediaContent & { nextEpisodes: EpisodeTile[]; suggestedContent: ContentTile[] }> {
-    const [nextEpisodes, suggestedContent] = await Promise.all([
-      this.getNextEpisodes(establishmentName, content.seriesId, content.seriesSortValue, content.created, language),
-      this.getSuggestions(establishmentName, content.uuid, language),
-    ])
-
-    return { ...content, nextEpisodes, suggestedContent }
-  }
-
-  private async getNextEpisodes(
-    establishmentName: string,
-    seriesId: number | null,
-    seriesSortValue: number | null,
-    created: string | null,
-    language: string,
-  ): Promise<EpisodeTile[]> {
-    if (!seriesId) return []
-
-    const qs = buildNextEpisodesQueryString(seriesId, seriesSortValue, created)
-    const path = `/${language}/jsonapi/prison/${establishmentName}/node?${qs}`
-    const response = await this.jsonApiClient.getCollectionByPath<CmsEpisodeTileNodeAttributes>(path)
-    return mapNextEpisodes(response)
-  }
-
-  private async getSuggestions(establishmentName: string, uuid: string, language: string): Promise<ContentTile[]> {
-    const qs = buildSuggestionsQueryString()
-    const path = `/${language}/jsonapi/prison/${establishmentName}/node/moj_radio_item/${uuid}/suggestions?${qs}`
-    const response = await this.jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
-    return mapContentToTiles(response)
+    return getContent(establishmentName, contentId, language, this.jsonApiClient)
   }
 
   async getUrgentBanners(establishmentName: string, language: string): Promise<CmsUrgentBanner[]> {
