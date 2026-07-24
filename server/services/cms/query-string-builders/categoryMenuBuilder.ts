@@ -1,5 +1,5 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
-import { MENU_FIELDS, FILE_FIELDS } from '../constants'
+import { MENU_FIELDS, FILE_FIELDS } from './constants'
 
 const buildCategoryMenuQueryString = () =>
   new DrupalJsonApiParams()

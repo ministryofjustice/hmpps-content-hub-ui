@@ -1,5 +1,6 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
-import { PDF_CONTENT_FIELDS } from '../constants'
+
+const PDF_CONTENT_FIELDS = ['drupal_internal__nid', 'title', 'field_moj_pdf']
 
 const buildPdfContentQueryString = () =>
   new DrupalJsonApiParams()

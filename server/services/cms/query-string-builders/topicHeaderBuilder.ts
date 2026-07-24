@@ -1,5 +1,5 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
-import { HEADER_FIELDS, FILE_FIELDS } from '../constants'
+import { HEADER_FIELDS, FILE_FIELDS } from './constants'
 
 const buildTopicHeaderQueryString = () =>
   new DrupalJsonApiParams()

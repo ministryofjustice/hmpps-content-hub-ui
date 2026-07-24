@@ -1,5 +1,5 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
-import { CONTENT_TILE_FIELDS, FILE_FIELDS, MOJ_THUMBNAIL_IMAGE_INCLUDE } from '../constants'
+import { CONTENT_TILE_FIELDS, FILE_FIELDS } from './constants'
 import { calculatePageOffset } from '../utils'
 
 const buildCategoryContentQueryString = (categoryUuid: string, page: number = 1, limit: number = 40) =>
@@ -10,7 +10,7 @@ const buildCategoryContentQueryString = (categoryUuid: string, page: number = 1,
     .addFields('node--moj_radio_item', CONTENT_TILE_FIELDS)
     .addFields('node--moj_pdf_item', CONTENT_TILE_FIELDS)
     .addFields('file--file', FILE_FIELDS)
-    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
+    .addInclude(['field_moj_thumbnail_image'])
     .addSort('created', 'DESC')
     .addPageLimit(limit)
     .addPageOffset(calculatePageOffset(page, limit))

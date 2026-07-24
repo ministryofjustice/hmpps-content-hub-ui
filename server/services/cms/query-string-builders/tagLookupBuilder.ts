@@ -1,5 +1,6 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
-import { TAG_LOOKUP_FIELDS } from '../constants'
+
+const TAG_LOOKUP_FIELDS = ['drupal_internal__tid', 'name', 'description']
 
 const buildTagLookupQueryString = (tagId: string) =>
   new DrupalJsonApiParams()

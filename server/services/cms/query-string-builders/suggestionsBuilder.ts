@@ -1,5 +1,7 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
-import { FILE_FIELDS, MOJ_THUMBNAIL_IMAGE_INCLUDE, SUGGESTION_TILE_FIELDS } from '../constants'
+import { COMMON_TILE_FIELDS, FILE_FIELDS } from './constants'
+
+const SUGGESTION_TILE_FIELDS = [...COMMON_TILE_FIELDS, 'field_summary', 'field_display_url']
 
 const buildSuggestionsQueryString = (limit: number = 4) =>
   new DrupalJsonApiParams()
@@ -8,7 +10,7 @@ const buildSuggestionsQueryString = (limit: number = 4) =>
     .addFields('node--moj_radio_item', SUGGESTION_TILE_FIELDS)
     .addFields('node--moj_pdf_item', SUGGESTION_TILE_FIELDS)
     .addFields('file--file', FILE_FIELDS)
-    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
+    .addInclude(['field_moj_thumbnail_image'])
     .addPageLimit(limit)
     .getQueryString()
 
