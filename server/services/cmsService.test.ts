@@ -610,6 +610,26 @@ describe('content queries', () => {
     jest.resetAllMocks()
   })
 
+  it('should not return unexpected page content types', async () => {
+    const pageAttributes: CmsPageNodeAttributes = {
+      drupal_internal__nid: 42,
+      title: 'test-title',
+      created: 'created-date',
+      field_main_body_content: { processed: 'page description' },
+      field_moj_stand_first: 'stand-first',
+      field_exclude_feedback: true,
+      breadcrumbs: [{ title: 'a breadcrumb', url: 'breadcrumb-url' }],
+    }
+
+    jsonApiClient.getCollectionByPath.mockResolvedValue(mockContentWithType('node--unexpected'))
+    jsonApiClient.getSingleByPath.mockResolvedValue(
+      mockNodeWithType<CmsPageNodeAttributes>(pageAttributes, 'node--page'),
+    )
+
+    const response = (await cmsService.getContent('bullingdon', 42, 'en')) as CmsPageContent
+    expect(response).toBeNull()
+  })
+
   it('should fetch page content', async () => {
     const pageAttributes: CmsPageNodeAttributes = {
       drupal_internal__nid: 42,

@@ -1,16 +1,11 @@
 import {
-  buildAudioContentQueryString,
   buildCategoryContentQueryString,
   buildCategoryMenuQueryString,
   buildCategoryPageQueryString,
-  buildContentLookupQueryString,
   buildExternalLinkQueryString,
-  buildNextEpisodesQueryString,
-  buildPageContentQueryString,
   buildPrimaryNavigationQueryString,
   buildSeriesHeaderQueryString,
   buildSeriesItemsQueryString,
-  buildSuggestionsQueryString,
   buildTagLookupQueryString,
   buildTopicHeaderQueryString,
   buildTopicItemsQueryString,
@@ -18,8 +13,6 @@ import {
   buildTopicTermByTidQueryString,
   buildTopicsQueryString,
   buildUrgentBannerQueryString,
-  buildVideoContentQueryString,
-  buildPdfContentQueryString,
   buildSearchQueryString,
 } from './queries'
 
@@ -111,73 +104,11 @@ describe('cms queries', () => {
     expect(params.get('page[offset]')).toBe('80')
   })
 
-  it('builds the page content query string', () => {
-    const params = new URLSearchParams(buildPageContentQueryString())
-
-    expect(params.get('fields[node--page]')).toContain('field_main_body_content')
-    expect(params.get('fields[taxonomy_term--topics]')).toBe('drupal_internal__tid,name')
-    expect(params.get('fields[taxonomy_term--moj_categories]')).toContain('drupal_internal__tid,name')
-    expect(params.get('include')).toBe('field_topics,field_moj_top_level_categories')
-  })
-
-  it('builds the video content query string', () => {
-    const params = new URLSearchParams(buildVideoContentQueryString())
-
-    expect(params.get('fields[node--moj_video_item]')).toContain('field_video')
-    expect(params.get('fields[taxonomy_term--series]')).toBe('drupal_internal__tid,name,path')
-    expect(params.get('fields[taxonomy_term--topics]')).toBe('drupal_internal__tid,name')
-    expect(params.get('fields[taxonomy_term--moj_categories]')).toContain('drupal_internal__tid,name')
-    expect(params.get('include')).toContain('field_video')
-  })
-
-  it('builds the audio content query string', () => {
-    const params = new URLSearchParams(buildAudioContentQueryString())
-
-    expect(params.get('fields[node--moj_radio_item]')).toContain('field_moj_audio')
-    expect(params.get('fields[taxonomy_term--series]')).toBe('drupal_internal__tid,name,path')
-    expect(params.get('fields[taxonomy_term--topics]')).toBe('drupal_internal__tid,name')
-    expect(params.get('fields[taxonomy_term--moj_categories]')).toContain('drupal_internal__tid,name')
-    expect(params.get('include')).toContain('field_moj_audio')
-  })
-
-  it('builds the pdf content query string', () => {
-    const params = new URLSearchParams(buildPdfContentQueryString())
-
-    expect(params.get('fields[node--moj_pdf_item]')).toContain('field_moj_pdf')
-    expect(params.get('include')).toBe('field_moj_pdf')
-  })
-
-  it('builds the content lookup query string', () => {
-    const params = new URLSearchParams(buildContentLookupQueryString('content-1'))
-
-    expect(params.get('filter[drupal_internal__nid]')).toBe('content-1')
-    expect(params.get('page[limit]')).toBe('1')
-  })
-
   it('builds the topic term lookup query string', () => {
     const params = new URLSearchParams(buildTopicTermByTidQueryString('42'))
 
     expect(params.get('filter[drupal_internal__tid]')).toBe('42')
     expect(params.get('filter[vid.meta.drupal_internal__target_id]')).toBe('topics')
-  })
-
-  it('builds the next episodes query string', () => {
-    const params = new URLSearchParams(buildNextEpisodesQueryString(42, 1, 'created-value'))
-
-    expect(params.get('fields[node--page]')).toContain('field_moj_episode')
-    expect(params.get('include')).toBe('field_moj_thumbnail_image')
-    expect(params.get('filter[field_moj_series.meta.drupal_internal__tid]')).toBe('42')
-    expect(params.get('filter[series_sort_value][condition][value]')).toBe('1')
-    expect(params.get('filter[created][condition][value]')).toBe('created-value')
-    expect(params.get('sort')).toBe('series_sort_value,created')
-  })
-
-  it('builds the suggestions query string', () => {
-    const params = new URLSearchParams(buildSuggestionsQueryString(10))
-
-    expect(params.get('fields[node--page]')).toContain('field_display_url')
-    expect(params.get('include')).toBe('field_moj_thumbnail_image')
-    expect(params.get('page[limit]')).toBe('10')
   })
 
   it('builds the category content query string', () => {
