@@ -1,6 +1,9 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
-import { SERIES_ITEMS_TILE_FIELDS, FILE_FIELDS, SERIES_ITEMS_INCLUDE, PAGE_SIZE } from '../constants'
+import { FILE_FIELDS, PAGE_SIZE, CONTENT_TILE_FIELDS } from './constants'
 import { calculatePageOffset } from '../utils'
+
+const SERIES_ITEMS_INCLUDE = ['field_moj_thumbnail_image', 'field_moj_series.field_moj_thumbnail_image']
+const SERIES_ITEMS_TILE_FIELDS = [...CONTENT_TILE_FIELDS, 'field_moj_series']
 
 const buildSeriesItemsQueryString = (seriesUuid: string, page: number) =>
   new DrupalJsonApiParams()

@@ -1,6 +1,6 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
 import { calculatePageOffset, unixTimestamp } from '../utils'
-import { HOMEPAGE_CONTENT_TILE, HOMEPAGE_FILE_FIELDS, MOJ_THUMBNAIL_IMAGE_INCLUDE } from '../constants'
+import { HOMEPAGE_CONTENT_TILE, HOMEPAGE_FILE_FIELDS } from './constants'
 
 const buildUpdatesContentQueryString = (page = 1, limit = 5) =>
   new DrupalJsonApiParams()
@@ -9,7 +9,7 @@ const buildUpdatesContentQueryString = (page = 1, limit = 5) =>
     .addFields('node--moj_radio_item', HOMEPAGE_CONTENT_TILE)
     .addFields('node--moj_pdf_item', HOMEPAGE_CONTENT_TILE)
     .addFields('file--file', HOMEPAGE_FILE_FIELDS)
-    .addInclude(MOJ_THUMBNAIL_IMAGE_INCLUDE)
+    .addInclude(['field_moj_thumbnail_image'])
     .addGroup('parent_or_group', 'OR')
     .addGroup('categories_group', 'AND', 'parent_or_group')
     .addGroup('series_group', 'AND', 'parent_or_group')

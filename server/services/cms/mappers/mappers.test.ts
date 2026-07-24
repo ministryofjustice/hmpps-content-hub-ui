@@ -1,35 +1,19 @@
-import { JsonApiResource, JsonApiSingleResponse } from '../../data/jsonApiClient'
+import { JsonApiResource, JsonApiSingleResponse } from '../../../data/jsonApiClient'
 import {
-  mapCategoryFeaturedContent,
-  mapPrimaryNavigationItem,
-  mapSearchResponse,
-  mapTopic,
-  mapTopicPageItem,
-} from './mappers'
-import mapCategoryDetails from './mappers/mapCategoryDetails'
-import mapCategoryMenuItem from './mappers/mapCategoryMenuItem'
-import mapContentItem from './mappers/mapContentItem'
-import mapTagPageHeader from './mappers/mapTagPageHeader'
-import {
+  CmsPrimaryNavigationAttributes,
   CmsCategoryMenuAttributes,
   CmsFileAttributes,
-  CmsNodeAttributes,
-  CmsPrimaryNavigationAttributes,
   CmsTagHeaderAttributes,
-  CmsTopicAttributes,
-} from './types'
+  CmsNodeAttributes,
+} from '../types'
+import mapCategoryDetails, { mapCategoryFeaturedContent } from './mapCategoryDetails'
+import mapCategoryMenuItem from './mapCategoryMenuItem'
+import mapContentItem from './mapContentItem'
+import mapPrimaryNavigationItem from './mapPrimaryNavigationItem'
+import mapSearchResponse from './mapSearchResponse'
+import mapTagPageHeader from './mapTagPageHeader'
 
 describe('cms mappers', () => {
-  it('maps a topic into a tag link', () => {
-    const item: JsonApiResource<CmsTopicAttributes> = {
-      type: 'taxonomy_term--topics',
-      id: 'topic-1',
-      attributes: { drupal_internal__tid: 42, name: 'Education' },
-    }
-
-    expect(mapTopic(item)).toEqual({ id: '42', linkText: 'Education', href: '/tags/42' })
-  })
-
   it('maps primary navigation with language stripping', () => {
     const item: JsonApiResource<CmsPrimaryNavigationAttributes> = {
       type: 'menu_link_content--menu_link_content',
@@ -38,26 +22,6 @@ describe('cms mappers', () => {
     }
 
     expect(mapPrimaryNavigationItem(item, 'en')).toEqual({ text: 'Topics', href: '/tags/42' })
-  })
-
-  it('maps topic page items into card data', () => {
-    const item: JsonApiResource<CmsNodeAttributes> = {
-      type: 'node--page',
-      id: 'node-1',
-      attributes: {
-        title: 'Learning skills',
-        field_summary: 'Improve your skills',
-        path: { alias: '/content/123' },
-        drupal_internal__nid: 123,
-      },
-    }
-
-    expect(mapTopicPageItem(item)).toEqual({
-      id: 'node-1',
-      title: 'Learning skills',
-      summary: 'Improve your skills',
-      href: '/content/123',
-    })
   })
 
   it('maps category menu items with thumbnails', () => {

@@ -1,14 +1,10 @@
-import {
-  buildExternalLinkQueryString,
-  buildPrimaryNavigationQueryString,
-  buildTopicPageQueryString,
-  buildTopicTermByTidQueryString,
-  buildTopicsQueryString,
-  buildUrgentBannerQueryString,
-  buildSearchQueryString,
-} from './queries'
+import buildExternalLinkQueryString from './externalLinkBuilder'
+import buildPrimaryNavigationQueryString from './primaryNavigationBuilder'
+import buildSearchQueryString from './searchBuilder'
+import buildTopicsQueryString from './topicsBuilder'
+import buildUrgentBannerQueryString from './urgentBannersBuilder'
 
-describe('cms queries', () => {
+describe('cms query string builders', () => {
   it('builds the topics query string', () => {
     const params = new URLSearchParams(buildTopicsQueryString())
 
@@ -22,22 +18,6 @@ describe('cms queries', () => {
     const params = new URLSearchParams(buildPrimaryNavigationQueryString())
 
     expect(params.get('fields[menu_link_content--menu_link_content]')).toBe('id,title,url')
-  })
-
-  it('builds the topic page query string with sorting', () => {
-    const params = new URLSearchParams(buildTopicPageQueryString('topic-1', 3))
-
-    expect(params.get('filter[field_topics.id]')).toBe('topic-1')
-    expect(params.get('sort')).toBe('-created')
-    expect(params.get('page[limit]')).toBe('40')
-    expect(params.get('page[offset]')).toBe('80')
-  })
-
-  it('builds the topic term lookup query string', () => {
-    const params = new URLSearchParams(buildTopicTermByTidQueryString('42'))
-
-    expect(params.get('filter[drupal_internal__tid]')).toBe('42')
-    expect(params.get('filter[vid.meta.drupal_internal__target_id]')).toBe('topics')
   })
 
   it('builds the urgent banner query string', () => {

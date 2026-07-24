@@ -1,6 +1,9 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
-import { TOPIC_ITEMS_TILE_FIELDS, FILE_FIELDS, TOPIC_ITEMS_INCLUDE, PAGE_SIZE } from '../constants'
+import { CONTENT_TILE_FIELDS, FILE_FIELDS, PAGE_SIZE } from './constants'
 import { calculatePageOffset } from '../utils'
+
+const TOPIC_ITEMS_INCLUDE = ['field_moj_thumbnail_image', 'field_topics.field_moj_thumbnail_image']
+const TOPIC_ITEMS_TILE_FIELDS = [...CONTENT_TILE_FIELDS, 'field_topics']
 
 const buildTopicItemsQueryString = (topicUuid: string, page: number) =>
   new DrupalJsonApiParams()
