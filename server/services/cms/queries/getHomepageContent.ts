@@ -1,3 +1,4 @@
+import { minutes } from '@ministryofjustice/hmpps-prisoner-auth'
 import { JsonApiClient } from '../../../data'
 import mapHomePageContent from '../mappers/mapHomepageContent'
 import buildHomePageContentQueryString from '../query-string-builders/homepageContent'
@@ -10,7 +11,10 @@ const getHomepageContent = async (
 ): Promise<HomePageContent> => {
   const queryString = buildHomePageContentQueryString()
   const path = `/${language}/jsonapi/prison/${establishmentName}/node/homepage?${queryString}`
-  const response = await jsonApiClient.getCollectionByPath<CMSContentNodeAttributes, CmsHomePageRelationships>(path)
+  const response = await jsonApiClient.getCollectionByPath<CMSContentNodeAttributes, CmsHomePageRelationships>(
+    path,
+    minutes(1),
+  )
   return mapHomePageContent(response.data[0].relationships, response.included)
 }
 

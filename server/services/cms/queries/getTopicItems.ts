@@ -1,3 +1,4 @@
+import { minutes } from '@ministryofjustice/hmpps-prisoner-auth'
 import { JsonApiClient } from '../../../data'
 import mapContentItem from '../mappers/mapContentItem'
 import buildTopicItemsQueryString from '../query-string-builders/topicItemBuilder'
@@ -13,7 +14,7 @@ const getTopicItems = async (
 ) => {
   const queryString = buildTopicItemsQueryString(topicUuid, page)
   const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
-  const response = await jsonApiClient.getCollectionByPath<CmsNodeAttributes>(path)
+  const response = await jsonApiClient.getCollectionByPath<CmsNodeAttributes>(path, minutes(1))
   return { data: response.data.map(item => mapContentItem(item, response.included)), isLastPage: !response.links?.next }
 }
 

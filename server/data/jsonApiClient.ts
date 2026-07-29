@@ -1,5 +1,6 @@
 import { RestClient, asSystem } from '@ministryofjustice/hmpps-rest-client'
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
+import { TimeSpan } from '@ministryofjustice/hmpps-prisoner-auth'
 import config from '../config'
 import logger from '../../logger'
 import { Cache } from '../services/cache'
@@ -106,13 +107,20 @@ export default class JsonApiClient extends RestClient {
     })
   }
 
-  getCollectionByPath<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(path: string) {
-    return this.cache.cached(`getCollectionByPath:${encodeURI(path)}`, () => {
-      return this.get<JsonApiCollectionResponse<TAttributes, TRelationships>>(
-        { path: this.normalizePath(path) },
-        asSystem(),
-      )
-    })
+  getCollectionByPath<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(
+    path: string,
+    cacheTtl?: TimeSpan,
+  ) {
+    return this.cache.cached(
+      `getCollectionByPath:${encodeURI(path)}`,
+      () => {
+        return this.get<JsonApiCollectionResponse<TAttributes, TRelationships>>(
+          { path: this.normalizePath(path) },
+          asSystem(),
+        )
+      },
+      cacheTtl,
+    )
   }
 
   getSingle<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(resourcePath: string) {
@@ -124,13 +132,20 @@ export default class JsonApiClient extends RestClient {
     })
   }
 
-  getSingleByPath<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(path: string) {
-    return this.cache.cached(`getSingleByPath:${encodeURI(path)}`, () => {
-      return this.get<JsonApiSingleResponse<TAttributes, TRelationships>>(
-        { path: this.normalizePath(path) },
-        asSystem(),
-      )
-    })
+  getSingleByPath<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(
+    path: string,
+    cacheTtl?: TimeSpan,
+  ) {
+    return this.cache.cached(
+      `getSingleByPath:${encodeURI(path)}`,
+      () => {
+        return this.get<JsonApiSingleResponse<TAttributes, TRelationships>>(
+          { path: this.normalizePath(path) },
+          asSystem(),
+        )
+      },
+      cacheTtl,
+    )
   }
 
   getLookupByPath(path: string) {

@@ -1,3 +1,4 @@
+import { minutes } from '@ministryofjustice/hmpps-prisoner-auth'
 import { JsonApiClient } from '../../../data'
 import mapCategoryMenuItem from '../mappers/mapCategoryMenuItem'
 import buildCategoryMenuQueryString from '../query-string-builders/categoryMenuBuilder'
@@ -10,9 +11,8 @@ const getCategoryMenu = async (
   jsonApiClient: JsonApiClient,
 ) => {
   const queryString = buildCategoryMenuQueryString()
-  const response = await jsonApiClient.getCollectionByPath<CmsCategoryMenuAttributes>(
-    `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/moj_categories/${categoryUuid}/sub_terms?${queryString}`,
-  )
+  const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/moj_categories/${categoryUuid}/sub_terms?${queryString}`
+  const response = await jsonApiClient.getCollectionByPath<CmsCategoryMenuAttributes>(path, minutes(1))
   return response.data.map(item => mapCategoryMenuItem(item, response.included))
 }
 
