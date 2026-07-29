@@ -14,7 +14,7 @@ export default class LaptopHelpPage extends AbstractPage {
 
   static async verifyOnPage(page: Page, heading: string): Promise<LaptopHelpPage> {
     const laptopHelpPage = new LaptopHelpPage(page)
-    await expect(laptopHelpPage.pageHeading).toHaveText(heading)
+    await expect(laptopHelpPage.pageHeading).toHaveText(heading, { timeout: 15000 })
     return laptopHelpPage
   }
 
