@@ -1,13 +1,22 @@
 import { expect, test, type Page } from '@playwright/test'
-import { loginWithHmppsAuth, resetStubs, stubHomePageQueries } from '../../testUtils'
+import { loginWithHmppsAuth, resetStubs, stubHomePageQueries, stubTopicPage } from '../../testUtils'
 import cmsApi from '../../mockApis/cmsApi'
 import BasicPage from '../../pages/basicPage'
 import FeedbackWidget from '../../pages/feedbackWidget'
+import TagPage from '../../pages/tagPage'
 
 const FEEDBACK_PAGE_NID = 4857
 const FEEDBACK_PAGE_UUID = 'feedback-page-uuid-4857'
 const FEEDBACK_PAGE_TITLE = 'Privacy'
 const FEEDBACK_PAGE_DESCRIPTION = '<p>Feedback test content page.</p>'
+
+const LAPTOP_HELP_TOPIC = {
+  id: 'topic-1503',
+  attributes: {
+    drupal_internal__tid: 1503,
+    name: 'Laptop help',
+  },
+}
 
 const LIKE_REASONS = [
   'I enjoyed this',
@@ -33,6 +42,10 @@ const stubFeedbackContentPage = () =>
       description: FEEDBACK_PAGE_DESCRIPTION,
     }),
   ])
+
+const stubLaptopHelpPage = async () => {
+  await Promise.all(stubTopicPage(LAPTOP_HELP_TOPIC))
+}
 
 const openFeedbackPage = async (page: Page) => {
   await stubHomePageQueries()
@@ -119,5 +132,20 @@ test.describe('Staff feedback widget', () => {
         comment: reason,
       })
     })
+  })
+
+  test('Feedback confirmation link opens the laptop help page', async ({ page }) => {
+    const feedbackWidget = await openFeedbackPage(page)
+    await stubLaptopHelpPage()
+
+    await feedbackWidget.chooseSentiment('LIKE')
+    await feedbackWidget.submitReason(LIKE_REASONS[0])
+    await feedbackWidget.verifyConfirmation()
+    await expect(feedbackWidget.confirmationLink).toHaveAttribute('href', '/help')
+
+    await feedbackWidget.confirmationLink.click()
+
+    await expect(page).toHaveURL('/tags/1503')
+    await TagPage.verifyOnPage(page, LAPTOP_HELP_TOPIC.attributes.name)
   })
 })
