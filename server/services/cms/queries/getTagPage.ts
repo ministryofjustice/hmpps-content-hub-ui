@@ -33,8 +33,6 @@ const getTagPage = async (
     return seriesItems
   }
 
-  if (tagType !== 'category') return null
-
   const categoryContent = await getCategoryContent(establishmentName, match.id, language, jsonApiClient, page)
   return categoryContent
 }
