@@ -438,7 +438,8 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node\\?.*',
+        urlPattern:
+          '/(?:en|cy)/jsonapi/prison/[^/]+/node\\?.*(field_moj_top_level_categories.field_is_homepage_updates|field_moj_series.field_is_homepage_updates).*',
       },
       response: {
         status: httpStatus,
