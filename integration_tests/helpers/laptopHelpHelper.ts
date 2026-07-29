@@ -7,7 +7,7 @@ import {
   LAPTOP_HELP_UUID,
 } from '../fixtures/laptopHelpPageData'
 
-export const stubLaptopHelpPage = async () => {
+const stubLaptopHelpPage = async () => {
   await Promise.all([
     cmsApi.stubContentLookupByNid({ nid: LAPTOP_HELP_NID, uuid: LAPTOP_HELP_UUID }),
     cmsApi.stubPageContentByUuid({
@@ -19,3 +19,5 @@ export const stubLaptopHelpPage = async () => {
     }),
   ])
 }
+
+export default stubLaptopHelpPage

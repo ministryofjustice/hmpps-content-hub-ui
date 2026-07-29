@@ -8,7 +8,7 @@ import {
   LAPTOP_HELP_TITLE,
   SPECIFIC_APP_LINKS,
 } from '../../fixtures/laptopHelpPageData'
-import { stubLaptopHelpPage } from '../../helpers/laptopHelpHelper'
+import stubLaptopHelpPage from '../../helpers/laptopHelpHelper'
 import LaptopHelpPage from '../../pages/laptopHelpPage'
 
 test.describe('Staff laptop help page', () => {
