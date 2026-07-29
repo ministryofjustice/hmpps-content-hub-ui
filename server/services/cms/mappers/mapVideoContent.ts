@@ -11,11 +11,11 @@ const mapVideoContent = (
   response: JsonApiSingleResponse<CmsVideoNodeAttributes>,
   language: string,
 ): CmsVideoContent => {
-  const { data } = response
-  const series = mapSeriesInfo(data.relationships, response.included)
+  const { data, included } = response
+  const series = mapSeriesInfo(data.relationships, included)
   const thumbnailIdentifier = relationshipDataArray(data.relationships?.field_moj_thumbnail_image)[0]
   const thumbnail = thumbnailIdentifier
-    ? findIncluded<CmsFileAttributes>(response.included ?? [], thumbnailIdentifier)
+    ? findIncluded<CmsFileAttributes>(included ?? [], thumbnailIdentifier)
     : undefined
 
   return {
@@ -32,9 +32,9 @@ const mapVideoContent = (
     seriesPath: series.path,
     seriesName: series.name,
     seriesSortValue: data.attributes.series_sort_value ?? null,
-    media: mapMediaUrl(data.relationships, response.included, 'field_video'),
-    categories: mapContentCategory(data.relationships, response.included),
-    topics: mapContentTopics(data.relationships, response.included),
+    media: mapMediaUrl(data.relationships, included, 'field_video'),
+    categories: mapContentCategory(data.relationships, included),
+    topics: mapContentTopics(data.relationships, included),
     image: resolveFileUrl(thumbnail) ?? null,
     excludeFeedback: data.attributes.field_exclude_feedback ?? false,
   }

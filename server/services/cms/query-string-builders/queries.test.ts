@@ -148,7 +148,7 @@ describe('cms queries', () => {
   })
 
   it('builds the next episodes query string', () => {
-    const params = new URLSearchParams(buildNextEpisodesQueryString(42, 1, 'created-value'))
+    let params = new URLSearchParams(buildNextEpisodesQueryString(42, 1, 'created-value'))
 
     expect(params.get('fields[node--page]')).toContain('field_moj_episode')
     expect(params.get('include')).toBe('field_moj_thumbnail_image')
@@ -156,6 +156,9 @@ describe('cms queries', () => {
     expect(params.get('filter[series_sort_value][condition][value]')).toBe('1')
     expect(params.get('filter[created][condition][value]')).toBe('created-value')
     expect(params.get('sort')).toBe('series_sort_value,created')
+
+    params = new URLSearchParams(buildNextEpisodesQueryString(42, null, 'created-value'))
+    expect(params.get('filter[series_sort_value][condition][value]')).toBe('0')
   })
 
   it('builds the suggestions query string', () => {
@@ -167,7 +170,7 @@ describe('cms queries', () => {
   })
 
   it('builds the category content query string', () => {
-    const params = new URLSearchParams(buildCategoryContentQueryString('category-1', 3, 10))
+    let params = new URLSearchParams(buildCategoryContentQueryString('category-1', 3, 10))
 
     expect(params.get('filter[field_moj_top_level_categories.id]')).toBe('category-1')
     expect(params.get('fields[node--page]')).toContain('field_summary')
@@ -175,6 +178,10 @@ describe('cms queries', () => {
     expect(params.get('sort')).toBe('-created')
     expect(params.get('page[limit]')).toBe('10')
     expect(params.get('page[offset]')).toBe('20')
+
+    params = new URLSearchParams(buildCategoryContentQueryString('category-1'))
+    expect(params.get('page[limit]')).toBe('40')
+    expect(params.get('page[offset]')).toBe('0')
   })
 
   it('builds the urgent banner query string', () => {
@@ -194,10 +201,14 @@ describe('cms queries', () => {
   it('builds search query strings', () => {
     const TEST_SEARCH_TERM = 'test-search'
     const TEST_PAGE_LIMIT = 10
-    const params = new URLSearchParams(buildSearchQueryString(TEST_SEARCH_TERM, TEST_PAGE_LIMIT))
+    let params = new URLSearchParams(buildSearchQueryString(TEST_SEARCH_TERM, TEST_PAGE_LIMIT))
 
     expect(params.get('filter[fulltext]')).toEqual(TEST_SEARCH_TERM)
     expect(params.get('page[limit]')).toEqual(`${TEST_PAGE_LIMIT}`)
+
+    params = new URLSearchParams(buildSearchQueryString(TEST_SEARCH_TERM))
+
+    expect(params.get('page[limit]')).toEqual('5')
   })
 })
 

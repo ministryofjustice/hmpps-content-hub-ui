@@ -68,8 +68,6 @@ const getTag = async (
     }
   }
 
-  if (tagType !== 'category') return baseTag
-
   const [categoryDetails, categoryMenu, categoryContent] = await Promise.all([
     getCategoryDetails(establishmentName, match.id, language, jsonApiClient),
     getCategoryMenu(establishmentName, match.id, language, jsonApiClient),
