@@ -107,10 +107,10 @@ export default {
       url: get('CMS_API_URL', 'http://localhost:8888', requiredInProduction),
       healthPath: '/jsonapi',
       timeout: {
-        response: Number(get('CMS_API_TIMEOUT_RESPONSE', 20000)),
-        deadline: Number(get('CMS_API_TIMEOUT_DEADLINE', 20000)),
+        response: Number(get('CMS_API_TIMEOUT_RESPONSE', 30000)),
+        deadline: Number(get('CMS_API_TIMEOUT_DEADLINE', 30000)),
       },
-      agent: new AgentConfig(Number(get('CMS_API_TIMEOUT_RESPONSE', 20000))),
+      agent: new AgentConfig(Number(get('CMS_API_TIMEOUT_RESPONSE', 30000))),
     },
   },
   establishments: [
