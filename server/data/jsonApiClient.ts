@@ -100,7 +100,7 @@ export default class JsonApiClient extends RestClient {
   getCollection<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(resourcePath: string) {
     return this.cache.cached(`getCollection:${encodeURI(resourcePath)}`, () => {
       return this.get<JsonApiCollectionResponse<TAttributes, TRelationships>>(
-        { path: this.buildPath(resourcePath) },
+        { path: this.buildPath(resourcePath), retries: 0 },
         asSystem(),
       )
     })
@@ -109,7 +109,7 @@ export default class JsonApiClient extends RestClient {
   getCollectionByPath<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(path: string) {
     return this.cache.cached(`getCollectionByPath:${encodeURI(path)}`, () => {
       return this.get<JsonApiCollectionResponse<TAttributes, TRelationships>>(
-        { path: this.normalizePath(path) },
+        { path: this.normalizePath(path), retries: 0 },
         asSystem(),
       )
     })
@@ -118,7 +118,7 @@ export default class JsonApiClient extends RestClient {
   getSingle<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(resourcePath: string) {
     return this.cache.cached(`getSingle:${encodeURI(resourcePath)}`, () => {
       return this.get<JsonApiSingleResponse<TAttributes, TRelationships>>(
-        { path: this.buildPath(resourcePath) },
+        { path: this.buildPath(resourcePath), retries: 0 },
         asSystem(),
       )
     })
@@ -127,7 +127,7 @@ export default class JsonApiClient extends RestClient {
   getSingleByPath<TAttributes, TRelationships extends JsonApiRelationships = JsonApiRelationships>(path: string) {
     return this.cache.cached(`getSingleByPath:${encodeURI(path)}`, () => {
       return this.get<JsonApiSingleResponse<TAttributes, TRelationships>>(
-        { path: this.normalizePath(path) },
+        { path: this.normalizePath(path), retries: 0 },
         asSystem(),
       )
     })
@@ -135,7 +135,7 @@ export default class JsonApiClient extends RestClient {
 
   getLookupByPath(path: string) {
     return this.cache.cached(`getLookupByPath:${encodeURI(path)}`, () => {
-      return this.get<JsonApiLookupResponse>({ path: this.normalizePath(path) }, asSystem())
+      return this.get<JsonApiLookupResponse>({ path: this.normalizePath(path), retries: 0 }, asSystem())
     })
   }
 }
