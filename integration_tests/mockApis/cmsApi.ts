@@ -647,7 +647,7 @@ export default {
   }: {
     nid: number
     uuid: string
-    nodeType?: 'node--page' | 'node--moj_pdf_item'
+    nodeType?: 'node--page' | 'node--moj_pdf_item' | 'node--moj_radio_item'
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
@@ -669,6 +669,84 @@ export default {
               attributes: { drupal_internal__nid: nid },
             },
           ],
+        },
+      },
+    }),
+
+  stubAudioContentByUuid: ({
+    uuid,
+    nid,
+    title,
+    description = '<p>Audio content page.</p>',
+    programmeCode = 'RADIO_TEST',
+    mediaUrl = '/assets/audio/test.mp3',
+    httpStatus = 200,
+  }: {
+    uuid: string
+    nid: number
+    title: string
+    description?: string
+    programmeCode?: string
+    mediaUrl?: string
+    httpStatus?: number
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPathPattern: `/(?:en|cy)/jsonapi/prison/[^/]+/node/moj_radio_item/${uuid}`,
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          data: {
+            type: 'node--moj_radio_item',
+            id: uuid,
+            attributes: {
+              drupal_internal__nid: nid,
+              title,
+              field_description: { processed: description },
+              field_moj_programme_code: programmeCode,
+              breadcrumbs: [{ text: 'Home', uri: '/' }, { text: title }],
+            },
+            relationships: {
+              field_moj_audio: {
+                data: [{ type: 'file--file', id: `${uuid}-audio-file` }],
+              },
+              field_moj_thumbnail_image: { data: [] },
+              field_topics: { data: [] },
+              field_moj_top_level_categories: { data: [] },
+              field_moj_series: { data: [] },
+            },
+          },
+          included: [
+            {
+              type: 'file--file',
+              id: `${uuid}-audio-file`,
+              attributes: {
+                uri: {
+                  url: mediaUrl,
+                },
+              },
+            },
+          ],
+        },
+      },
+    }),
+
+  stubAudioSuggestionsByUuid: ({ uuid, httpStatus = 200 }: { uuid: string; httpStatus?: number }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPathPattern: `/(?:en|cy)/jsonapi/prison/[^/]+/node/moj_radio_item/${uuid}/suggestions`,
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          data: [],
+          included: [],
+          links: {},
         },
       },
     }),
