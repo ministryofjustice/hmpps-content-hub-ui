@@ -438,7 +438,8 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/(?:en|cy)/jsonapi/prison/[^/]+/node\\?.*',
+        urlPattern:
+          '/(?:en|cy)/jsonapi/prison/[^/]+/node\\?.*(field_moj_top_level_categories.field_is_homepage_updates|field_moj_series.field_is_homepage_updates).*',
       },
       response: {
         status: httpStatus,
@@ -783,12 +784,14 @@ export default {
     nid,
     title,
     description = '<p>Page content.</p>',
+    breadcrumbs,
     httpStatus = 200,
   }: {
     uuid: string
     nid: number
     title: string
     description?: string
+    breadcrumbs?: Array<{ text: string; href?: string }>
     httpStatus?: number
   }): SuperAgentRequest =>
     stubFor({
@@ -807,7 +810,7 @@ export default {
               drupal_internal__nid: nid,
               title,
               field_main_body_content: { processed: description },
-              breadcrumbs: [{ text: 'Home', uri: '/' }, { text: title }],
+              breadcrumbs: breadcrumbs || [{ text: 'Home', uri: '/' }, { text: title }],
               field_topics: null,
               field_moj_top_level_categories: null,
             },
