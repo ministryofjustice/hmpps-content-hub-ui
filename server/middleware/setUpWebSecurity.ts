@@ -20,10 +20,14 @@ export default function setUpWebSecurity(): Router {
         directives: DEFAULT_CSP_DIRECTIVES,
       },
       crossOriginEmbedderPolicy: false,
+      referrerPolicy: { policy: ['no-referrer', 'same-origin'] },
     }),
   )
   return router
 }
+
+const s3Address = `${config.s3.bucket}.s3.${config.s3.region}.amazonaws.com`
+const mediaSources = ["'self'", s3Address, config.nprStream]
 
 export const DEFAULT_CSP_DIRECTIVES = {
   defaultSrc: ["'self'"],
@@ -40,8 +44,8 @@ export const DEFAULT_CSP_DIRECTIVES = {
     (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
   ],
   fontSrc: ["'self'", 'data:'],
-  imgSrc: ["'self'", 'data:', 'https:'],
-  mediaSrc: ["'self'", 'https:'],
+  imgSrc: ["'self'", s3Address],
+  mediaSrc: mediaSources,
   formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
   ...(config.production ? {} : { upgradeInsecureRequests: null }),
 }

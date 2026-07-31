@@ -142,6 +142,10 @@ export default {
     prisonerAudit: auditConfig('PRISONER_AUDIT_SQS_QUEUE_URL'),
     staffAudit: auditConfig('STAFF_AUDIT_SQS_QUEUE_URL'),
   },
+  s3: {
+    region: get('S3_REGION', 'aws-west-2', requiredInProduction),
+    bucket: get('S3_BUCKET', '', requiredInProduction),
+  },
   feedback: {
     searchEndpoint: get('FEEDBACK_SEARCH_ENDPOINT', 'http://localhost:9200/feedback', requiredInProduction),
     connection: {

@@ -32,6 +32,7 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: "true"
     AUDIT_SQS_REGION: "eu-west-2"
     AUDIT_SERVICE_NAME: "hmpps-content-hub" # Your audit service name
+    S3_REGION: "eu-west-2"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -40,6 +41,8 @@ generic-service:
 
   namespace_secrets:
     # These secrets are created by terraform.
+    drupal-s3-2:
+      S3_BUCKET: "bucket_name"
     hmpps-content-hub-ui-client-creds:
       CLIENT_CREDS_CLIENT_ID: "CLIENT_CREDS_CLIENT_ID"
       CLIENT_CREDS_CLIENT_SECRET: "CLIENT_CREDS_CLIENT_SECRET"
