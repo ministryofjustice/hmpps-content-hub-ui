@@ -1,16 +1,15 @@
-import { createClient, type RedisClientType } from 'redis'
+import { createClient } from 'redis'
 
+import { RedisClient } from '@ministryofjustice/hmpps-auth-clients/src/main/types/RedisClient'
 import logger from '../../logger'
 import config from '../config'
-
-export type RedisClient = RedisClientType
 
 const url =
   config.redis.tls_enabled === 'true'
     ? `rediss://${config.redis.host}:${config.redis.port}`
     : `redis://${config.redis.host}:${config.redis.port}`
 
-export const createRedisClient = (): RedisClient => {
+const createRedisClient = (): RedisClient => {
   const client = createClient({
     url,
     password: config.redis.password,
@@ -28,3 +27,5 @@ export const createRedisClient = (): RedisClient => {
 
   return client
 }
+
+export default createRedisClient

@@ -1,3 +1,4 @@
+import { minutes } from '@ministryofjustice/hmpps-prisoner-auth'
 import { JsonApiClient } from '../../../data'
 import { JsonApiResource } from '../../../data/jsonApiClient'
 import buildTopicsQueryString from '../query-string-builders/topicsBuilder'
@@ -16,7 +17,7 @@ const getTopics = async (
 ): Promise<CmsTopicItem[]> => {
   const queryString = buildTopicsQueryString()
   const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term?${queryString}`
-  const response = await jsonApiClient.getCollectionByPath<CmsTopicAttributes>(path)
+  const response = await jsonApiClient.getCollectionByPath<CmsTopicAttributes>(path, minutes(1440))
 
   return response.data.map(mapTopic).sort((left, right) => left.linkText.localeCompare(right.linkText))
 }
