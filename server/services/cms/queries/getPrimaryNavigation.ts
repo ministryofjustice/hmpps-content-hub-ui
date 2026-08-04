@@ -1,3 +1,4 @@
+import { minutes } from '@ministryofjustice/hmpps-prisoner-auth'
 import { JsonApiClient } from '../../../data'
 import mapPrimaryNavigationItem from '../mappers/mapPrimaryNavigationItem'
 import buildPrimaryNavigationQueryString from '../query-string-builders/primaryNavigationBuilder'
@@ -10,7 +11,7 @@ const getPrimaryNavigation = async (
 ): Promise<CmsPrimaryNavigationItem[]> => {
   const queryString = buildPrimaryNavigationQueryString()
   const path = `/${language}/jsonapi/prison/${establishmentName}/primary_navigation?${queryString}`
-  const response = await jsonApiClient.getCollectionByPath<CmsPrimaryNavigationAttributes>(path)
+  const response = await jsonApiClient.getCollectionByPath<CmsPrimaryNavigationAttributes>(path, minutes(1440))
 
   return response.data.map(item => mapPrimaryNavigationItem(item, language))
 }

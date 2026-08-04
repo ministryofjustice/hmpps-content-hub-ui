@@ -79,7 +79,7 @@ The docker compose file does not currently support running Redis via Docker.
 
 Create an environment file by copying `.env.example` -> `.env`
 
-Set the values in .env as detailed in the above sections.
+Environment variables sources from secrets in .env.example contain instructions on how to source the actual value.
 
 Environment variables set in here will be available when running `start:dev`
 

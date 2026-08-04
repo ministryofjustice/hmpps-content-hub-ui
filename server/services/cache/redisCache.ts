@@ -2,8 +2,7 @@ import { RedisClient } from '@ministryofjustice/hmpps-auth-clients/src/main/type
 import { TimeSpan } from '@ministryofjustice/hmpps-prisoner-auth'
 import { Cache } from '../cache'
 
-// eslint-disable-next-line import/prefer-default-export
-export class RedisCache implements Cache {
+class RedisCache implements Cache {
   private readonly redisClient: RedisClient
 
   private readonly cacheTtl: TimeSpan
@@ -13,7 +12,11 @@ export class RedisCache implements Cache {
     this.cacheTtl = cacheTtl
   }
 
-  async cached<ValueType>(key: string, generateNewValue: () => Promise<ValueType>): Promise<ValueType> {
+  async cached<ValueType>(
+    key: string,
+    generateNewValue: () => Promise<ValueType>,
+    ttlOverride?: TimeSpan,
+  ): Promise<ValueType> {
     await this.ensureRedisConnected()
 
     const existingValue = await this.redisClient.get(key)
@@ -23,7 +26,10 @@ export class RedisCache implements Cache {
 
     const newValue = await generateNewValue()
     await this.redisClient.set(key, JSON.stringify(newValue), {
-      EX: this.cacheTtl.seconds,
+      expiration: {
+        type: 'EX',
+        value: ttlOverride ? ttlOverride.seconds : this.cacheTtl.seconds,
+      },
     })
     return newValue
   }
@@ -34,3 +40,5 @@ export class RedisCache implements Cache {
     }
   }
 }
+
+export default RedisCache

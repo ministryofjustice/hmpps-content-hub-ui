@@ -1,3 +1,4 @@
+import { minutes } from '@ministryofjustice/hmpps-prisoner-auth'
 import { JsonApiClient } from '../../../data'
 import mapTagPageHeader from '../mappers/mapTagPageHeader'
 import buildSeriesHeaderQueryString from '../query-string-builders/seriesHeaderBuilder'
@@ -11,7 +12,7 @@ const getSeriesHeader = async (
 ) => {
   const queryString = buildSeriesHeaderQueryString()
   const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/series/${seriesUuid}?${queryString}`
-  const response = await jsonApiClient.getSingleByPath<CmsTagHeaderAttributes>(path)
+  const response = await jsonApiClient.getSingleByPath<CmsTagHeaderAttributes>(path, minutes(1))
   return mapTagPageHeader(response, language)
 }
 

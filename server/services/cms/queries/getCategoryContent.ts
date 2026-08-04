@@ -1,3 +1,4 @@
+import { minutes } from '@ministryofjustice/hmpps-prisoner-auth'
 import { JsonApiClient } from '../../../data'
 import mapContentToTiles from '../mappers/mapContentToTiles'
 import buildCategoryContentQueryString from '../query-string-builders/categoryContentBuilder'
@@ -12,7 +13,7 @@ const getCategoryContent = async (
 ) => {
   const queryString = buildCategoryContentQueryString(categoryUuid, page)
   const path = `/${language}/jsonapi/prison/${establishmentName}/node?${queryString}`
-  const response = await jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path)
+  const response = await jsonApiClient.getCollectionByPath<CMSContentNodeAttributes>(path, minutes(1))
   return { data: mapContentToTiles(response), isLastPage: !response.links?.next }
 }
 
