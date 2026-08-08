@@ -1,14 +1,6 @@
 export const COMMON_TILE_FIELDS = ['drupal_internal__nid', 'title', 'field_moj_thumbnail_image', 'path', 'published_at']
 
-export const HEADER_FIELDS = [
-  'name',
-  'description',
-  'breadcrumbs',
-  'drupal_internal__tid',
-  'field_moj_thumbnail_image',
-  'path',
-  'published_at',
-]
+export const HEADER_FIELDS = ['name', 'description', 'breadcrumbs', 'field_moj_thumbnail_image']
 
 export const MENU_FIELDS = ['drupal_internal__tid', 'name', 'path', 'field_moj_thumbnail_image']
 

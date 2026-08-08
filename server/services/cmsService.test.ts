@@ -80,7 +80,7 @@ describe('CmsService', () => {
     const result = await cmsService.getPrimaryNavigation('bullingdon', 'en')
 
     expect(jsonApiClient.getCollectionByPath).toHaveBeenCalledWith(
-      '/en/jsonapi/prison/bullingdon/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl',
+      '/en/jsonapi/prison/bullingdon/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=title%2Curl',
       expect.objectContaining({ minutes: 1440 }),
     )
     expect(result).toEqual([
