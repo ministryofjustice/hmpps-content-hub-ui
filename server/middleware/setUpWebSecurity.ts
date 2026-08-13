@@ -26,7 +26,8 @@ export default function setUpWebSecurity(): Router {
   return router
 }
 
-const s3Address = `${config.s3.bucket}.s3.${config.s3.region}.amazonaws.com`
+const { cname } = config.s3
+const s3Address = cname || `${config.s3.bucket}.s3.${config.s3.region}.amazonaws.com`
 const mediaSources = ["'self'", s3Address, config.nprStream]
 
 export const DEFAULT_CSP_DIRECTIVES = {

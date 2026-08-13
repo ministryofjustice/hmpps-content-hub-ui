@@ -166,6 +166,7 @@ export default {
   s3: {
     region: get('S3_REGION', 'aws-west-2', requiredInProduction),
     bucket: get('S3_BUCKET', '', requiredInProduction),
+    cname: get('S3_CNAME', ''),
   },
   feedback: {
     searchEndpoint: get('FEEDBACK_SEARCH_ENDPOINT', 'http://localhost:9200/feedback', requiredInProduction),
