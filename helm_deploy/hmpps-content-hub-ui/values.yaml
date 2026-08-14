@@ -15,6 +15,14 @@ generic-service:
   ingress:
     enabled: true
     tlsSecretName: hmpps-content-hub-ui-cert
+    modsecurity_enabled: true
+    modsecurity_github_team: "Prisoner Content Hub Developers"
+    modsecurity_snippet: |
+      SecAuditEngine On
+      SecRuleEngine On
+      SecDefaultAction "phase:2,pass,log,tag:github_team=Prisoner Content Hub Developers,tag:namespace={{ .Release.Namespace }}"
+      # Default is only GET HEAD POST OPTIONS so need to include PUT.
+      SecAction "id:900200,phase:1,nolog,pass,t:none,setvar:tx.allowed_methods=GET HEAD POST OPTIONS PUT"
 
   livenessProbe:
     httpGet:
