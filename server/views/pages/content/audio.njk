@@ -57,6 +57,10 @@
             >
               <source src="{{ data.media }}" type="audio/mp3"/>
             </audio>
+
+          <script nonce="{{ cspNonce }}" src="/assets/video.min.js"></script>
+          <script nonce="{{ cspNonce }}">videojs('hub-audio');</script>
+
           </div>
         {% endif %}
 
