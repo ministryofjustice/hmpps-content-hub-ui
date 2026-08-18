@@ -44,6 +44,9 @@ const getAssetsConfig = buildConfig => ({
     }),
     buildNotificationPlugin('Assets', buildConfig.isWatchMode),
   ],
+  loader: {
+    '.png': 'file',
+  },
 })
 
 module.exports = { getAssetsConfig, getAdditionalAssetsConfig }

@@ -13,7 +13,3 @@ declare module '*/components/lazyLoading' {
 declare module '*/components/feedbackWidget' {
   export default function initFeedbackWidget(): void
 }
-
-interface Window {
-  gtag?: (...args: unknown[]) => void
-}

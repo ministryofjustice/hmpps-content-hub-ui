@@ -39,11 +39,7 @@ export const DEFAULT_CSP_DIRECTIVES = {
   // This ensures only scripts we trust are loaded, and not anything injected into the
   // page by an attacker.
   scriptSrc: ["'self'", (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`],
-  styleSrc: [
-    "'self'",
-    "'unsafe-inline'",
-    (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
-  ],
+  styleSrc: ["'self'", (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`],
   fontSrc: ["'self'", 'data:'],
   imgSrc: ["'self'", s3Address],
   mediaSrc: mediaSources,
