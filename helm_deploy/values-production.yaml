@@ -16,5 +16,13 @@ generic-service:
     AUDIT_ENABLED: "false"
     NPR_STREAM_URL: "https://proxy.content-hub.prisoner.service.justice.gov.uk/npr-live/stream.ogg"
 
+  namespace_secrets:
+    # This secret will need to be created in your namespace (note it isn't in hmpps-templates-dev)
+    # IRSA configuration in your namespace will also be required, and then uncomment serviceAccountName above.
+    sqs-hmpps-audit-secret:
+      STAFF_AUDIT_SQS_QUEUE_URL: 'sqs_queue_url'
+    sqs-hmpps-prisoner-audit-secret:
+      PRISONER_AUDIT_SQS_QUEUE_URL: 'sqs_queue_url'
+
 generic-prometheus-alerts:
   alertSeverity: hmpps-launchpad

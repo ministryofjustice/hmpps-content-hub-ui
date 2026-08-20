@@ -18,9 +18,5 @@ generic-service:
     AUDIT_ENABLED: "false"
     NPR_STREAM_URL: "https://proxy-prisoner-content-hub-staging.apps.live.cloud-platform.service.justice.gov.uk/npr-live/stream.ogg"
 
-  # Disable audit and need for audit setup in staging
-  namespace_secrets.sqs-hmpps-audit-secret: null
-  namespace_secrets.sqs-hmpps-prisoner-audit-secret: null
-
 generic-prometheus-alerts:
   alertSeverity: hmpps-launchpad-nonprod
