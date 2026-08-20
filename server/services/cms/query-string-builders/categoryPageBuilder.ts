@@ -1,14 +1,7 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
 import { MENU_FIELDS, FILE_FIELDS, COMMON_TILE_FIELDS } from './constants'
 
-const CATEGORY_PAGE_FIELDS = [
-  'name',
-  'description',
-  'field_exclude_feedback',
-  'field_featured_tiles',
-  'breadcrumbs',
-  'child_term_count',
-]
+const CATEGORY_PAGE_FIELDS = ['name', 'description', 'field_featured_tiles', 'breadcrumbs']
 
 const CATEGORY_PAGE_INCLUDE = [
   'field_featured_tiles',

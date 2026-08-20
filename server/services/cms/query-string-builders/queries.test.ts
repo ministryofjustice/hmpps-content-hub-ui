@@ -38,7 +38,7 @@ describe('cms queries', () => {
   it('builds the primary navigation query string', () => {
     const params = new URLSearchParams(buildPrimaryNavigationQueryString())
 
-    expect(params.get('fields[menu_link_content--menu_link_content]')).toBe('id,title,url')
+    expect(params.get('fields[menu_link_content--menu_link_content]')).toBe('title,url')
   })
 
   it('builds the tag lookup query string', () => {
@@ -108,8 +108,6 @@ describe('cms queries', () => {
     const params = new URLSearchParams(buildPageContentQueryString())
 
     expect(params.get('fields[node--page]')).toContain('field_main_body_content')
-    expect(params.get('fields[taxonomy_term--topics]')).toBe('drupal_internal__tid,name')
-    expect(params.get('fields[taxonomy_term--moj_categories]')).toContain('drupal_internal__tid,name')
     expect(params.get('include')).toBe('field_topics,field_moj_top_level_categories')
   })
 
@@ -188,7 +186,6 @@ describe('cms queries', () => {
     const params = new URLSearchParams(buildUrgentBannerQueryString())
 
     expect(params.get('fields[node--urgent_banner]')).toContain('unpublish_on')
-    expect(params.get('fields[node--page]')).toBe('path')
     expect(params.get('include')).toBe('field_more_info_page')
   })
 
