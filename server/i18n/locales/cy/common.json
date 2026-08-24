@@ -2,7 +2,8 @@
   "skipToMainContent": "Neidio i’r prif gynnwys",
   "header": {
     "title": "Hwb Cynnwys",
-    "logoAlt": "Logo Hwb Cynnwys"
+    "logoAlt": "Logo Hwb Cynnwys",
+    "navigationLabel": "Llywio Hwb Cynnwys"
   },
   "search":{
     "label": "Chwilio",
