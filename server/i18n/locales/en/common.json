@@ -2,7 +2,8 @@
   "skipToMainContent": "Skip to main content",
   "header": {
     "title": "Content Hub",
-    "logoAlt": "Content Hub logo"
+    "logoAlt": "Content Hub logo",
+    "navigationLabel": "Content Hub Navigation"
   },
   "search": {
     "label": "Search",
