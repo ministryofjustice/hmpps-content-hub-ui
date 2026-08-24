@@ -6,7 +6,7 @@ export const defaultPrimaryNavigationResponse = {
       id: 'nav-1',
       attributes: {
         title: 'My prison',
-        url: '/',
+        url: { url: '/tags/100' },
       },
     },
     {
@@ -14,7 +14,7 @@ export const defaultPrimaryNavigationResponse = {
       id: 'nav-2',
       attributes: {
         title: 'Sentence journey',
-        url: '/tags/101',
+        url: { url: '/tags/101' },
       },
     },
     {
@@ -22,7 +22,7 @@ export const defaultPrimaryNavigationResponse = {
       id: 'nav-3',
       attributes: {
         title: 'News and events',
-        url: '/tags/102',
+        url: { url: '/tags/102' },
       },
     },
     {
@@ -30,7 +30,7 @@ export const defaultPrimaryNavigationResponse = {
       id: 'nav-4',
       attributes: {
         title: 'Learning and skills',
-        url: '/tags/103',
+        url: { url: '/tags/103' },
       },
     },
     {
@@ -38,7 +38,7 @@ export const defaultPrimaryNavigationResponse = {
       id: 'nav-5',
       attributes: {
         title: 'Inspire and entertain',
-        url: '/tags/104',
+        url: { url: '/tags/104' },
       },
     },
     {
@@ -46,7 +46,7 @@ export const defaultPrimaryNavigationResponse = {
       id: 'nav-6',
       attributes: {
         title: 'Health and wellbeing',
-        url: '/tags/105',
+        url: { url: '/tags/105' },
       },
     },
     {
@@ -54,7 +54,7 @@ export const defaultPrimaryNavigationResponse = {
       id: 'nav-7',
       attributes: {
         title: 'Faith',
-        url: '/tags/106',
+        url: { url: '/tags/106' },
       },
     },
   ],

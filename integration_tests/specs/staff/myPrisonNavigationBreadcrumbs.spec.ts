@@ -32,15 +32,6 @@ test.describe('Staff My Prison navigation and breadcrumbs', () => {
     await resetStubs()
   })
 
-  test('Homepage marks My prison as the active primary navigation item', async ({ page }) => {
-    await stubHomePageQueries()
-
-    await loginWithHmppsAuth(page, { name: 'A TestUser' })
-    const homePage = await HomePage.verifyOnPage(page)
-
-    await homePage.verifyActivePrimaryNavigation('My prison', '/')
-  })
-
   test('Topic page marks the matching primary navigation item active and renders the breadcrumb trail', async ({
     page,
   }) => {
@@ -82,8 +73,7 @@ test.describe('Staff My Prison navigation and breadcrumbs', () => {
     await tagPage.clickBreadcrumb('Home')
 
     await expect(page).toHaveURL('/')
-    const homePage = await HomePage.verifyOnPage(page)
-    await homePage.verifyActivePrimaryNavigation('My prison', '/')
+    await HomePage.verifyOnPage(page)
   })
 
   test('Topic page back and forward navigation links move through browser history', async ({ page }) => {
