@@ -10,7 +10,7 @@
     {{ breadcrumb(data.breadcrumbs) }}
   {% endif %}
 
-  <section class="hmpps-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6">
+  <section class="hmpps-section--dark govuk-!-padding-top-5 govuk-!-padding-bottom-6">
     <div class="govuk-width-container">
       <div class="hmpps-content-main">
         <header class="hmpps-content-header">
@@ -110,8 +110,8 @@
     </div>
 
     {% if data.suggestedContent and data.suggestedContent.length %}
-      <div class="govuk-width-container govuk-!-margin-top-8">
-        <h2 class="govuk-heading-m">{{ "features:suggestedContent.youMightLike" | t }}</h2>
+      <div class="govuk-body govuk-width-container govuk-!-margin-top-8">
+        <h2>{{ "features:suggestedContent.youMightLike" | t }}</h2>
         <div class="govuk-grid-row hmpps-category-grid">
           {% for item in data.suggestedContent %}
             <div class="govuk-grid-column-one-quarter">

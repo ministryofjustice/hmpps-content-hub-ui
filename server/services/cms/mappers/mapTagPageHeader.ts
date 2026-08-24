@@ -13,7 +13,7 @@ const mapTagPageHeader = (response: JsonApiSingleResponse<CmsTagHeaderAttributes
     name: term.attributes.name,
     description: term.attributes.description?.processed,
     breadcrumbs: mapBreadcrumbs(term.attributes.breadcrumbs, language),
-    thumbnailUrl: resolveFileUrl(thumbnail),
+    thumbnailUrl: resolveFileUrl(thumbnail, 'large'),
   }
 }
 

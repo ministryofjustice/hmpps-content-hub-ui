@@ -36,7 +36,7 @@
     {% block feedbackWidget %}
       {% if not excludeFeedback and feedbackId %}
       {% set feedbackBlackBackground = feedbackBlackBackground | default(true) %}
-        <section class="{{'hmpps-section--dark' if feedbackBlackBackground}} govuk-!-padding-top-4 govuk-!-padding-bottom-4">
+        <section class="{{'hmpps-section--dark' if feedbackBlackBackground}} govuk-!-padding-top-5 govuk-!-padding-bottom-7">
           <div class="govuk-width-container">
             <hr>
             {{ feedbackWidget({

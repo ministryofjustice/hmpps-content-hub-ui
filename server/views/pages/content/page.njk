@@ -11,19 +11,20 @@
     {{ breadcrumb(data.breadcrumbs) }}
   {% endif %}
 
-  <h1 class="govuk-heading-xl">{{ data.title }}</h1>
+  <h1 class="govuk-heading-xl hmpps-page-content__title">{{ data.title }}</h1>
 
-  {% if data.standFirst %}
-    <p class="govuk-body-l">{{ data.standFirst }}</p>
-  {% endif %}
+  <div class="hmpps-dynamic-content">
+    <div class="govuk-grid-column-two-thirds hmpps-page-content__description">
+      {% if data.standFirst %}
+        <p class="hmpps-dynamic-content__heading">{{ data.standFirst }}</p>
+      {% endif %}
 
-  {% if data.description %}
-    <div class="hmpps-dynamic-content">
-      <div class="govuk-grid-column-two-thirds">
+      {% if data.description %}
         {{ data.description | safe }}
-      </div>
+      {% endif %}
     </div>
-  {% endif %}
+  </div>
+
 
   {% if data.topics and data.topics.length %}
     <div class="hmpps-related-topics govuk-!-margin-top-6 govuk-!-padding-5">

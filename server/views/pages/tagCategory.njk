@@ -1,8 +1,8 @@
-<section class="hmpps-section--dark govuk-!-padding-top-6 govuk-!-padding-bottom-6 govuk-!-margin-top-6">
-	<div class="govuk-width-container">
+<section class="hmpps-section--dark govuk-!-padding-top-5 govuk-!-padding-bottom-6 govuk-!-margin-top-6">
+	<div class="govuk-width-container govuk-!-margin-top-5">
 		{% if tag.categoryFeaturedContent and tag.categoryFeaturedContent.length %}
 			<h2 class="govuk-heading-l">{{ t("pages:home.featured") }}</h2>
-			<div class="govuk-grid-row hmpps-category-grid">
+			<div>
 				{% set gridItems = tag.categoryFeaturedContent %}
 				{% set showContentTag = false %}
 				{% set showItemSummary = true %}
@@ -12,7 +12,7 @@
 
 		{% if tag.categoryMenu and tag.categoryMenu.length %}
 			<h2 class="govuk-heading-l">{{ t("features:category.inThisSection") }}</h2>
-			<div class="govuk-grid-row hmpps-category-grid">
+			<div>
 				{% set gridItems = tag.categoryMenu %}
 				{% set showContentTag = false %}
 				{% include '../partials/category/category-grid.njk' %}
@@ -21,7 +21,7 @@
 
 		{% if tag.categoryContent and tag.categoryContent.length %}
 			<h2 class="govuk-heading-l">{{ t("features:category.content") }}</h2>
-			<div class="govuk-grid-row hmpps-category-grid">
+			<div>
 				{% set gridItems = tag.categoryContent %}
 				{% set showSeriesTag = false %}
 				{% include '../partials/category/category-grid.njk' %}

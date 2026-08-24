@@ -5,6 +5,10 @@
     @extend .govuk-body;
   }
 
+  p.hmpps-dynamic-content__heading {
+    @extend .govuk-body-l;
+  }
+
   h2 {
     @extend .govuk-heading-l;
   }
