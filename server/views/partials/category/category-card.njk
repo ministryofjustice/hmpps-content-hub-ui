@@ -14,7 +14,9 @@
         <span class="hmpps-category-card__content-label hmpps-category-card__content-label--small hmpps-category-card__content-label--read">{{ t("features:contentTile.read") }}</span>
       {% endif %}
     {% endif %}
-    {% if showSeriesTag and cardItem.contentType == "series" %}
+    {% if cardItem.isNew %}
+      <strong class="govuk-tag govuk-tag--green hmpps-category-card__tag">{{ t("features:contentTile.new") }}</strong>
+    {% elif showSeriesTag and cardItem.contentType == "series" %}
       <strong class="govuk-tag govuk-tag--purple hmpps-category-card__tag">{{ t("features:contentTile.series") }}</strong>
     {% endif %}
   </div>

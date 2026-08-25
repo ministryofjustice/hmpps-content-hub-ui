@@ -26,6 +26,7 @@ $hmpps-category-grid-gap: 5px;
   p,
   li,
   a,
+  h2,
   .govuk-link {
     color: govuk-colour('white');
   }
@@ -152,7 +153,6 @@ $hmpps-read-colour: govuk-colour('blue');
   margin-top: $hmpps-category-tag-offset-y;
   position: absolute;
   right: 0;
-  text-transform: uppercase;
   top: 0;
 }
 
@@ -225,10 +225,9 @@ $hmpps-read-colour: govuk-colour('blue');
 .hmpps-content-header__thumbnail {
   flex-shrink: 0;
   margin-right: 20px;
-  width: 85px;
+  width: 100px;
 
   .hmpps-content-header__image {
-    display: block;
     height: auto;
     width: 100%;
   }

@@ -75,11 +75,15 @@ export default function initFeedbackWidget() {
     }
   }
 
+  function removeHtmlEncoding(text) {
+    return text.replace(/&#39;/g, "'")
+  }
+
   function updateSentimentText(sentiment) {
     if (!sentimentTextEl) return
     const contentTypeKey = feedbackData.contentType
     const typeText = i18n[contentTypeKey] || ''
-    const sentimentText = sentiment === 'LIKE' ? i18n.iLikeThis : i18n.iDontLikeThis
+    const sentimentText = sentiment === 'LIKE' ? i18n.iLikeThis : removeHtmlEncoding(i18n.iDontLikeThis)
     sentimentTextEl.textContent = `${sentimentText || ''} ${typeText}`.trim()
     sentimentTextEl.classList.add('govuk-!-font-weight-bold')
   }

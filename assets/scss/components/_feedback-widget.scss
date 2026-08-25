@@ -11,11 +11,17 @@
     color: govuk-colour('light-grey');
   }
 
+  .feedback-widget__thumb--focus {
+    box-shadow: 0 -2px govuk-colour('yellow') ,0 4px govuk-colour('black');
+    background: govuk-colour('black');
+  }
+
   .feedback-widget__thumb {
     &--up {
       background-image: url('#{$path}icons/thumbs/thumbs-up-white.svg');
       &:focus {
-        background-image: url('#{$path}icons/thumbs/thumbs-up-black.svg');
+        background-image: url('#{$path}icons/thumbs/thumbs-up-selected.svg');
+        @extend .feedback-widget__thumb--focus
       }
     }
 
@@ -23,7 +29,8 @@
       background-image: url('#{$path}icons/thumbs/thumbs-down-white.svg');
 
       &:focus {
-        background-image: url('#{$path}icons/thumbs/thumbs-down-black.svg');
+        background-image: url('#{$path}icons/thumbs/thumbs-down-selected.svg');
+        @extend .feedback-widget__thumb--focus
       }
     }
   }
@@ -52,15 +59,14 @@
     &--up {
       background-image: url('#{$path}icons/thumbs/thumbs-up-grey.svg');
       &:focus {
-        background-image: url('#{$path}icons/thumbs/thumbs-up-black.svg');
+        background-image: url('#{$path}icons/thumbs/thumbs-up-selected.svg');
       }
     }
 
     &--down {
       background-image: url('#{$path}icons/thumbs/thumbs-down-grey.svg');
-
       &:focus {
-        background-image: url('#{$path}icons/thumbs/thumbs-down-black.svg');
+        background-image: url('#{$path}icons/thumbs/thumbs-down-selected.svg');
       }
     }
   }
@@ -79,7 +85,7 @@
 
 .feedback-widget__heading {
   @include govuk-font($size: 19);
-  margin-bottom: govuk-spacing(2);
+  margin-bottom: govuk-spacing(4);
 }
 
 .feedback-widget__buttons {
@@ -120,12 +126,16 @@
   }
 }
 
-.feedback-widget__sentiment-text {
-  @include govuk-font($size: 19);
-  margin-bottom: govuk-spacing(3);
+.feedback-widget__ui {
+  margin-top: govuk-spacing(5);
 }
 
-.feedback-widget__form {
+.feedback-widget__thumb--down {
+  margin-top: 12px;
+}
+
+.feedback-widget__sentiment-text {
+  @include govuk-font($size: 19);
   margin-bottom: govuk-spacing(4);
 }
 
@@ -133,16 +143,8 @@
   margin-bottom: govuk-spacing(2);
 }
 
-.feedback-widget__submit {
-  margin-top: govuk-spacing(2);
-}
-
 .feedback-widget__confirmation {
   padding: govuk-spacing(3) 0;
-}
-
-.feedback-widget__contact {
-  margin-top: govuk-spacing(4);
 }
 
 .govuk-u-hidden {

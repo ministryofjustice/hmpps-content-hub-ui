@@ -1,3 +1,7 @@
+.govuk-breadcrumbs {
+  margin-bottom: govuk-spacing(4);
+}
+
 .govuk-breadcrumbs li {
   @extend .govuk-body;
   @include govuk-font(19);

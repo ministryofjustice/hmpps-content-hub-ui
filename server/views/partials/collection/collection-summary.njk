@@ -2,7 +2,9 @@
 	<div class="govuk-grid-column-one-half">
 		<h1 class="govuk-heading-xl">{{ summaryHeader }}</h1>
 		{% if summaryDescription %}
+		<div class="govuk-body-l">
 			<p>{{ summaryDescription | safe }}</p>
+		<div>
 		{% endif %}
 	</div>
 	<div class="govuk-grid-column-one-half">

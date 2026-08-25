@@ -53,5 +53,12 @@
       background-color: transparent;
       opacity: 0.6;
     }
+
+    & .vjs-icon-placeholder {
+      &:before {
+        content: '';
+        display: none;
+      }
+    }
   }
 }

@@ -15,15 +15,15 @@
   {% elif tag.type == "topic" %}
     {% set feedbackTopics = tag.name or '' %}
   {% endif %}
-
+  {% set breadcrumbs = tag.breadcrumbs %}
   {% set isLastPage = tag.isLastPage %}
 {% endif %}
 
 {% block content %}
   {% if tag %}
     {{ breadcrumbNavigation(t) }}
-    {% if tag.breadcrumbs and tag.breadcrumbs.length %}
-      {{ breadcrumb(tag.breadcrumbs) }}
+    {% if breadcrumbs and breadcrumbs.length %}
+      {{ breadcrumb(breadcrumbs) }}
     {% endif %}
 
     {% if tag.type == "category" %}

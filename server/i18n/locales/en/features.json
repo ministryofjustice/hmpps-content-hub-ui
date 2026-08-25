@@ -1,9 +1,9 @@
 {
   "contentTile": {
     "listen": "Listen",
-    "new": "NEW",
+    "new": "New",
     "read": "Read",
-    "series": "SERIES",
+    "series": "Series",
     "watch": "Watch"
   },
   "category": {
