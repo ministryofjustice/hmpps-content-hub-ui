@@ -19,5 +19,10 @@ generic-service:
     AUDIT_ENABLED: "false"
     NPR_STREAM_URL: "https://proxy-prisoner-content-hub-staging.apps.live.cloud-platform.service.justice.gov.uk/npr-live/stream.ogg"
 
+  allowlist:
+    kpmg-it-health-check: "195.68.59.72/29"
+    groups:
+      - internal
+
 generic-prometheus-alerts:
   alertSeverity: hmpps-launchpad-nonprod
