@@ -4,7 +4,7 @@
 
 <div class="govuk-grid-row hmpps-category-grid">
 	{% for item in gridItems %}
-		<div class="govuk-grid-column-one-quarter">
+		<div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-desktop">
 			{% set cardItem = { href: item.contentUrl, title: item.title, thumbnailUrl: item.thumbnailUrl, contentType: item.contentType, isNew: item.isNew } %}
 			{% include "./category-card.njk" %}
 			{% if item.summary and showItemSummary %}

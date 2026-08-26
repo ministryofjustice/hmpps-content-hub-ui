@@ -123,16 +123,10 @@
     {% if data.suggestedContent and data.suggestedContent.length %}
       <div class="govuk-body govuk-width-container govuk-!-margin-top-8">
         <h2>{{ "features:suggestedContent.youMightLike" | t }}</h2>
-        <div class="govuk-grid-row hmpps-category-grid">
-          {% for item in data.suggestedContent %}
-            <div class="govuk-grid-column-one-quarter">
-              {% set cardItem = { href: item.contentUrl, title: item.title, thumbnailUrl: item.thumbnailUrl, contentType: item.contentType } %}
-              {% set showContentTag = true %}
-              {% set showSeriesTag = false %}
-              {% include "../../partials/category/category-card.njk" %}
-            </div>
-          {% endfor %}
-        </div>
+        {% set showContentTag = true %}
+        {% set showSeriesTag = false %}
+        {% set gridItems = data.suggestedContent %}
+        {% include "../../partials/category/category-grid.njk" %}
       </div>
     {% endif %}
   </section>
