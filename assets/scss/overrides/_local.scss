@@ -5,6 +5,19 @@ $hmpps-category-tag-offset-x: 15px;
 $hmpps-category-tag-offset-y: 10px;
 $hmpps-category-grid-gap: 5px;
 
+%category-grid-column-override {
+  box-sizing: border-box;
+  display: flex;
+  float: none;
+  margin-bottom: $hmpps-category-grid-gap;
+  padding-left: calc($hmpps-category-grid-gap / 2);
+  padding-right: calc($hmpps-category-grid-gap / 2);
+
+  @include govuk-media-query($until: tablet) {
+    max-width: 100%;
+  }
+}
+
 .govuk-main-wrapper {
   margin-bottom: 0;
   padding: 0;
@@ -162,46 +175,22 @@ $hmpps-read-colour: govuk-colour('blue');
   margin-left: calc($hmpps-category-grid-gap / -2);
   margin-right: calc($hmpps-category-grid-gap / -2);
 
-  > .govuk-grid-column-one-quarter {
-    box-sizing: border-box;
-    display: flex;
-    float: none;
-    margin-bottom: $hmpps-category-grid-gap;
-    padding-left: calc($hmpps-category-grid-gap / 2);
-    padding-right: calc($hmpps-category-grid-gap / 2);
-    width: 25%;
+  > .govuk-grid-column-one-quarter,
+    .govuk-grid-column-one-quarter-from-desktop,
+    .govuk-grid-column-one-third,
+    .govuk-grid-column-one-half,
+    .govuk-grid-column-three-quarters,
+    .govuk-grid-column-three-quarters-from-desktop,
+    .govuk-grid-column-full   {
+    @extend %category-grid-column-override ;
   }
 
-  > .govuk-grid-column-one-third {
-    box-sizing: border-box;
-    display: flex;
-    float: none;
-    margin-bottom: $hmpps-category-grid-gap;
-    padding-left: calc($hmpps-category-grid-gap / 2);
-    padding-right: calc($hmpps-category-grid-gap / 2);
-    width: 33.3333%;
+  .hmpps-grid-column-full-to-tablet {
+    @include govuk-media-query($until: tablet) {
+      flex-direction: column;
+      max-width: 100%;
+    }
   }
-
-  .govuk-grid-column-one-half {
-    box-sizing: border-box;
-    display: flex;
-    float: none;
-    margin-bottom: $hmpps-category-grid-gap;
-    padding-left: calc($hmpps-category-grid-gap / 2);
-    padding-right: calc($hmpps-category-grid-gap / 2);
-    width: 50%;
-  }
-
-  > .govuk-grid-column-three-quarters {
-    box-sizing: border-box;
-    display: flex;
-    float: none;
-    margin-bottom: $hmpps-category-grid-gap;
-    padding-left: calc($hmpps-category-grid-gap / 2);
-    padding-right: calc($hmpps-category-grid-gap / 2);
-    width: 75%;
-  }
-
 }
 
 .hmpps-series-header__image {
