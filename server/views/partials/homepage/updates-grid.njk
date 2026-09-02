@@ -2,7 +2,7 @@
   <span class="hmpps-updates-grid-header__title govuk-!-padding-right-2">{{ t("pages:home.updates") }}</span>
 </h2>
 <div class="govuk-grid-row hmpps-category-grid">
-  <div class="govuk-grid-column-three-quarters">
+  <div class="govuk-grid-column-three-quarters-from-desktop govuk-grid-column-full hmpps-grid-column-full-to-tablet">
     <div class="govuk-grid-column-one-half">
       {% if largeUpdateTile %}
         {% include './largeUpdateTile.njk' %}
@@ -14,7 +14,7 @@
       {% endif %}
     </div>
   </div>
-  <div class="govuk-grid-column-one-quarter">
+  <div class="govuk-grid-column-one-quarter-from-desktop govuk-grid-column-full">
     {% if keyInfo.data | length %}
       {% include './keyInfo.njk' %}
     {% endif %}

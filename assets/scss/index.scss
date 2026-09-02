@@ -3,12 +3,19 @@ $path: "/assets/images/";
 
 $moj-page-width: 1200px;
 $govuk-page-width: $moj-page-width;
+$govuk-breakpoints: (
+  mobile: 320px,
+  tablet: 641px,
+  desktop: $moj-page-width,
+  large-desktop: 1000px
+);
 
 @import "govuk-frontend/dist/govuk/index";
 @import "@ministryofjustice/frontend/moj/all";
 
 @import './mixins/tile-hover';
 
+@import './components/content';
 @import './components/crossword';
 @import './components/dynamic-content';
 @import './components/external-link';

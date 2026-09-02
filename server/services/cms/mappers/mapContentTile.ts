@@ -7,6 +7,7 @@ const mapNodeTypeToContentType = (type: string): string => {
   const match = type.match(/(?<=--)(.*)/)?.[0] ?? ''
   if (match === 'moj_radio_item') return 'radio'
   if (match === 'moj_video_item') return 'video'
+  if (match === 'moj_categories') return 'category'
   return match
 }
 
@@ -33,11 +34,11 @@ const mapContentTile = (
     displayUrl: item.attributes.field_display_url ?? '',
     thumbnailUrl: resolveFileUrl(thumbnail, size) ?? '',
     thumbnailAlt: '',
-    isNew: publishedAt ? (Date.now() - new Date(publishedAt).getTime()) / 86_400_000 <= 2 : false,
+    isNew: publishedAt ? (Date.now() - new Date(publishedAt).getTime()) / 86_400_000 < 3 : false,
     publishedAt: publishedAt
       ? Intl.DateTimeFormat('en-GB', {
           weekday: 'long',
-          day: '2-digit',
+          day: 'numeric',
           month: 'long',
         }).format(new Date(publishedAt))
       : undefined,

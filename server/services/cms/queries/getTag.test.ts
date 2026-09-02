@@ -210,7 +210,7 @@ describe('getTagPage', () => {
           externalContent: false,
           id: 1,
           isNew: false,
-          publishedAt: 'Thursday 01 January',
+          publishedAt: 'Thursday 1 January',
           summary: 'content-summary',
           thumbnailAlt: '',
           thumbnailUrl: '',

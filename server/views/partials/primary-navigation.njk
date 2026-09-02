@@ -1,6 +1,7 @@
 {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
+{% set breadcrumbs = data.breadcrumbs | default(breadcrumbs) %}
 
 {{ mojPrimaryNavigation({
   label: 'Primary navigation',
-  items: primaryNavigation | makeCurrentPrimaryCategoryActive(originalUrl, data.breadcrumbs)
+  items: primaryNavigation | makeCurrentPrimaryCategoryActive(originalUrl, breadcrumbs)
 }) }}

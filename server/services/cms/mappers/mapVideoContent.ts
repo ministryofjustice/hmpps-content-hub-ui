@@ -35,7 +35,7 @@ const mapVideoContent = (
     media: mapMediaUrl(data.relationships, included, 'field_video'),
     categories: mapContentCategory(data.relationships, included),
     topics: mapContentTopics(data.relationships, included),
-    image: resolveFileUrl(thumbnail) ?? null,
+    image: resolveFileUrl(thumbnail, 'large') ?? null,
     excludeFeedback: data.attributes.field_exclude_feedback ?? false,
   }
 }

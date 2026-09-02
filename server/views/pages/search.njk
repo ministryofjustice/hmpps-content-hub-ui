@@ -3,11 +3,12 @@
 
 
 {% set pageTitle = applicationName + " - Search" %}
+{% set feedbackBlackBackground = false %}
 
 {% block content %}
   {{ breadcrumbNavigation(t, true) }}
 
-  <h1 class="govuk-heading-xl">{{ t('common:search.label') }}</h1>
+  <h1 class="govuk-heading-xl govuk-!-margin-top-3">{{ t('common:search.label') }}</h1>
 
   <div class="hmpps-search-results">
     {% if results.length %}

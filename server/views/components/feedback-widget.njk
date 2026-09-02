@@ -9,7 +9,7 @@
       fieldset: {
         legend: {
           text: "features:feedback.select" | t,
-          classes: "govuk-fieldset__legend--s"
+          classes: "govuk-fieldset__legend--m"
         }
       },
       items: feedbackTexts
@@ -19,7 +19,7 @@
 
 {% macro feedbackWidget(params) %}
   <div id="feedback-widget"
-       class="{{ 'feedback-widget--dark' if params.blackBackground else 'feedback-widget' }}"
+       class="{{ 'feedback-widget--dark' if params.blackBackground else 'feedback-widget' }} govuk-body"
        data-content-type="{{ params.contentType }}"
        data-title="{{ params.title }}"
        data-series="{{ params.series }}"
@@ -50,7 +50,7 @@
 
       <div class="feedback-widget__sentiment-text"></div>
 
-      <form class="feedback-widget__form govuk-u-hidden" data-feedback-form>
+      <form class="govuk-u-hidden" data-feedback-form>
         {% set likeText1 = "features:feedback.like.1" | t %}
         {% set likeText2 = "features:feedback.like.2" | t %}
         {% set likeText3 = "features:feedback.like.3" | t %}
@@ -87,8 +87,8 @@
     </div>
 
     <div class="feedback-widget__contact govuk-u-hidden">
-      <p>{{ "features:feedback.contact.preamble" | t }}</p>
-      <ul class="govuk-list govuk-list--bullet">
+      {{ "features:feedback.contact.preamble" | t }}
+      <ul>
         <li>{{ "features:feedback.contact.1" | t }}</li>
         <li>{{ "features:feedback.contact.2" | t }}</li>
         <li><a href="/help" class="govuk-link">{{ "features:feedback.contact.3" | t }}</a></li>
