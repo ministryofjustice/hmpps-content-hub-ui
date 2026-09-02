@@ -23,6 +23,11 @@ describe('getCategoryMenu', () => {
         },
       },
     ],
+    links: {
+      next: {
+        href: 'next',
+      },
+    },
   }
 
   it('should fetch category menu', async () => {
@@ -30,8 +35,17 @@ describe('getCategoryMenu', () => {
 
     const result = await getCategoryMenu('bullingdon', 'category-uuid', 'en', jsonApiClient)
 
-    expect(result).toEqual([
-      { contentType: 'category', contentUrl: '/tags/1', id: '1', thumbnailUrl: undefined, title: 'category-menu' },
-    ])
+    expect(result).toEqual({
+      data: [
+        {
+          contentType: 'category',
+          contentUrl: '/tags/1',
+          id: '1',
+          thumbnailUrl: undefined,
+          title: 'category-menu',
+        },
+      ],
+      isLastPage: false,
+    })
   })
 })

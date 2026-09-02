@@ -13,6 +13,8 @@ import {
   CmsTagItem,
   CmsPaginatedContent,
   CmsSearchResult,
+  CategoryMenuContent,
+  CategoryType,
 } from './cms/types'
 import getHomepageContent from './cms/queries/getHomepageContent'
 import getRecentlyAddedContent from './cms/queries/getRecentlyAddedContent'
@@ -48,8 +50,9 @@ export default class CmsService {
     tagId: string,
     language: string,
     page: number,
-  ): Promise<CmsPaginatedContent<CmsTagItem<MediaContent> | ContentTile>> {
-    return getTagPage(establishmentName, tagId, language, page, this.jsonApiClient)
+    categoryType?: CategoryType,
+  ): Promise<CmsPaginatedContent<CmsTagItem<MediaContent> | ContentTile | CmsTagItem<CategoryMenuContent>>> {
+    return getTagPage(establishmentName, tagId, language, page, this.jsonApiClient, categoryType)
   }
 
   async getContent(establishmentName: string, contentId: number, language: string): Promise<CmsContent | null> {

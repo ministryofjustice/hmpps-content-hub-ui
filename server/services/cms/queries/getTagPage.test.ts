@@ -57,6 +57,24 @@ describe('getTagPage', () => {
     links: { next: 'Indicates we are not the last page' },
   }
 
+  const menuContentResponse = {
+    ...contentResponse,
+    data: [
+      {
+        type: 'taxonomy_term--series',
+        id: 'series-id',
+        attributes: {
+          name: 'series-title',
+          drupal_internal__tid: 99,
+          path: { url: 'menu-item-url' },
+        },
+        relationships: {
+          field_moj_thumbnail_image: { data: { type: 'file--file', id: 'thumbnail-1' } },
+        },
+      },
+    ],
+  }
+
   it('should resolve additional page request for series content', async () => {
     jsonApiClient.getCollectionByPath
       .mockResolvedValueOnce(generateTagWithTaxonomyType('series'))
@@ -106,7 +124,7 @@ describe('getTagPage', () => {
       .mockResolvedValueOnce(generateTagWithTaxonomyType('moj_categories'))
       .mockResolvedValueOnce(contentResponse)
 
-    const result = await getTagPage('bullingdon', '99', 'en', 2, jsonApiClient)
+    const result = await getTagPage('bullingdon', '99', 'en', 2, jsonApiClient, 'content')
 
     expect(result).toEqual({
       data: [
@@ -120,6 +138,27 @@ describe('getTagPage', () => {
           publishedAt: undefined,
           summary: 'series-summary',
           thumbnailAlt: '',
+          thumbnailUrl: 'series-small-image',
+          title: 'series-title',
+        },
+      ],
+      isLastPage: false,
+    })
+  })
+
+  it('should resolve additional page request for category menu items', async () => {
+    jsonApiClient.getCollectionByPath
+      .mockResolvedValueOnce(generateTagWithTaxonomyType('moj_categories'))
+      .mockResolvedValueOnce(menuContentResponse)
+
+    const result = await getTagPage('bullingdon', '99', 'en', 2, jsonApiClient, 'menu')
+
+    expect(result).toEqual({
+      data: [
+        {
+          contentType: 'series',
+          contentUrl: '/tags/99',
+          id: '99',
           thumbnailUrl: 'series-small-image',
           title: 'series-title',
         },

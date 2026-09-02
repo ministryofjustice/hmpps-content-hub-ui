@@ -9,11 +9,15 @@ const getCategoryMenu = async (
   categoryUuid: string,
   language: string,
   jsonApiClient: JsonApiClient,
+  page?: number,
 ) => {
-  const queryString = buildCategoryMenuQueryString()
+  const queryString = buildCategoryMenuQueryString(page)
   const path = `/${language}/jsonapi/prison/${establishmentName}/taxonomy_term/moj_categories/${categoryUuid}/sub_terms?${queryString}`
   const response = await jsonApiClient.getCollectionByPath<CmsCategoryMenuAttributes>(path, minutes(1))
-  return response.data.map(item => mapCategoryMenuItem(item, response.included))
+  return {
+    data: response.data.map(item => mapCategoryMenuItem(item, response.included)),
+    isLastPage: !response.links?.next,
+  }
 }
 
 export default getCategoryMenu

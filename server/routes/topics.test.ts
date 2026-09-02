@@ -190,16 +190,19 @@ describe('Topics Routes', () => {
             contentType: 'category',
           },
         ],
-        categoryMenu: [
-          {
-            id: 'menu-item-id',
-            title: 'menu-item-title',
-            summary: 'menu-item-summary',
-            contentUrl: 'menu-item-content-url',
-            thumbnailUrl: 'menu-item-thumbnail-url',
-            contentType: 'series',
-          },
-        ],
+        categoryMenu: {
+          data: [
+            {
+              id: 'menu-item-id',
+              title: 'menu-item-title',
+              summary: 'menu-item-summary',
+              contentUrl: 'menu-item-content-url',
+              thumbnailUrl: 'menu-item-thumbnail-url',
+              contentType: 'series',
+            },
+          ],
+          isLastPage: true,
+        },
       })
       return request(app)
         .get('/tags/123')

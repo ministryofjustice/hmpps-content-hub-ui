@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
 import config from '../config'
+import { CategoryType } from '../services/cms/types'
 
 type TopicGroup = {
   letter: string
@@ -81,12 +82,13 @@ export default function topicsRoutes({ auditServiceSource, cmsService }: Service
         correlationId: req.id,
       })
 
-      const { page } = req.query
+      const { page, categoryType } = req.query
       const { data, isLastPage } = await cmsService.getTagPage(
         establishment.name,
         req.params.id,
         language,
         Number(page),
+        categoryType as CategoryType,
       )
 
       res.render('partials/category/category-grid', { gridItems: data }, (_, html) => {
