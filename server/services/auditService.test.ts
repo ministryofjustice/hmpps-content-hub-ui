@@ -1,4 +1,4 @@
-import AuditService, { Page } from './auditService'
+import AuditService, { ErrorCode, Page } from './auditService'
 import HmppsAuditClient from '../data/hmppsAuditClient'
 
 jest.mock('../data/hmppsAuditClient')
@@ -41,7 +41,7 @@ describe('Audit service', () => {
 
   describe('logPageView', () => {
     it('sends page view event audit message using audit client', async () => {
-      await auditService.logPageView(Page.EXAMPLE_PAGE, {
+      await auditService.logPageView(Page.HOMEPAGE, {
         who: 'user1',
         subjectId: 'subject123',
         subjectType: 'exampleType',
@@ -50,7 +50,28 @@ describe('Audit service', () => {
       })
 
       expect(hmppsAuditClient.sendMessage).toHaveBeenCalledWith({
-        what: 'PAGE_VIEW_EXAMPLE_PAGE',
+        what: 'PAGE_VIEW_HOMEPAGE',
+        who: 'user1',
+        subjectId: 'subject123',
+        subjectType: 'exampleType',
+        correlationId: 'request123',
+        details: { extraDetails: 'example' },
+      })
+    })
+  })
+
+  describe('logError', () => {
+    it('sends error event audit message using audit client', async () => {
+      await auditService.logError(ErrorCode.FORBIDDEN, {
+        who: 'user1',
+        subjectId: 'subject123',
+        subjectType: 'exampleType',
+        correlationId: 'request123',
+        details: { extraDetails: 'example' },
+      })
+
+      expect(hmppsAuditClient.sendMessage).toHaveBeenCalledWith({
+        what: 'ERROR_403_FORBIDDEN',
         who: 'user1',
         subjectId: 'subject123',
         subjectType: 'exampleType',

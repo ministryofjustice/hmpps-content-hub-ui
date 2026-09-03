@@ -66,7 +66,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(routes(services))
 
-  app.use(errorHandler(process.env.NODE_ENV === 'production'))
+  app.use(errorHandler(process.env.NODE_ENV === 'production', services.auditServiceSource))
 
   return app
 }

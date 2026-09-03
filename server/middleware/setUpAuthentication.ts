@@ -31,17 +31,12 @@ export default function setupAuthentication() {
     next()
   })
 
-  router.get('/autherror', (_req, res) => {
-    res.status(401)
-    return res.render('autherror')
-  })
-
   router.get('/sign-in', (req, res, next) => passport.authenticate(req.authStrategy.name)(req, res, next))
 
   router.get('/sign-in/callback', (req, res, next) =>
     passport.authenticate(req.authStrategy.name, {
       successReturnToOrRedirect: req.session.returnTo || '/',
-      failureRedirect: '/autherror',
+      failureRedirect: '/sign-out',
     })(req, res, next),
   )
 

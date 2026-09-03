@@ -77,7 +77,7 @@ function appSetup(
   app.use(routes(mergedServices))
   app.use((_req, _res, next) => i18next.on('initialized', next))
   app.use((_req, _res, next) => next(new NotFound()))
-  app.use(errorHandler(production))
+  app.use(errorHandler(production, mergedServices.auditServiceSource))
 
   return app
 }
@@ -105,6 +105,7 @@ export const defaultServices = (): Partial<MockedServices> => {
       get: jest.fn().mockReturnValue({
         logAuditEvent: jest.fn(),
         logPageView: jest.fn(),
+        logError: jest.fn(),
       }),
     },
     cmsService: {
