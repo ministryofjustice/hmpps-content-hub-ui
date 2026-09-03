@@ -1,16 +1,21 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set buttonText = {enabled: t("features:showMore.enabled"), disabled: t("features:showMore.disabled")} %}
+{% set buttonLocator = buttonLocatorOverride | default('show-more-tiles') %}
+{% set containerLocator = containerLocatorOverride | default('show-more-content-container') %}
+{% set showMoreInitialised = showMoreInitialised | default(false) %}
 
 <div class="hmpps-show-more govuk-!-margin-top-9">
   {{ govukButton({
     text: buttonText.enabled,
-    classes: 'show-more-tiles govuk-button--secondary'
+    classes: buttonLocator + ' govuk-button--secondary'
   }) }}
 </div>
 
 <script nonce="{{ cspNonce }}" src="/assets/jquery.min.js"></script>
-<script nonce="{{ cspNonce }}" src="/assets/js/scripts/showMoreButton.js"></script>
+{% if not showMoreInitialised %}
+  <script nonce="{{ cspNonce }}" src="/assets/js/scripts/showMoreButton.js"></script>
+{% endif %}
 <script nonce="{{ cspNonce }}">
-  showMore($('.show-more-tiles'), $('.show-more-content-container'), {{ buttonText | dump | safe }})
+  showMore($('.{{ buttonLocator }}'), $('.{{ containerLocator }}'), {{ buttonText | dump | safe }},  '{{ categoryType }}')
 </script>

@@ -10,26 +10,40 @@
 			</div>
 		{% endif %}
 
-		{% if tag.categoryMenu and tag.categoryMenu.length %}
+		{% if tag.categoryMenu and tag.categoryMenu.data.length %}
 			<h2 class="govuk-heading-l">{{ t("features:category.inThisSection") }}</h2>
-			<div>
-				{% set gridItems = tag.categoryMenu %}
+			<div class="show-more-category-menu-container">
+				{% set gridItems = tag.categoryMenu.data %}
 				{% set showContentTag = false %}
 				{% include '../partials/category/category-grid.njk' %}
 			</div>
+
+
+			{% if not tag.categoryMenu.isLastPage %}
+				{% set buttonLocatorOverride = 'show-more-category-menu' %}
+				{% set containerLocatorOverride = 'show-more-category-menu-container' %}
+				{% set categoryType = 'menu' %}
+				{% include '../partials/collection/collection-show-more.njk' %}
+
+				{% set showMoreInitialised = true %}
+			{% endif %}
 		{% endif %}
 
 		{% if tag.categoryContent and tag.categoryContent.length %}
 			<h2 class="govuk-heading-l">{{ t("features:category.content") }}</h2>
-			<div>
+			<div class="show-more-category-content-container">
 				{% set gridItems = tag.categoryContent %}
 				{% set showSeriesTag = false %}
 				{% include '../partials/category/category-grid.njk' %}
 			</div>
+
+			{% if not isLastPage %}
+				{% set buttonLocatorOverride = 'show-more-category-content' %}
+				{% set containerLocatorOverride = 'show-more-category-content-container' %}
+				{% set categoryType = 'content' %}
+				{% include '../partials/collection/collection-show-more.njk' %}
+			{% endif %}
 		{% endif %}
 
-		{% if not isLastPage %}
-			{% include '../partials/collection/collection-show-more.njk' %}
-		{% endif %}
 	</div>
 </section>

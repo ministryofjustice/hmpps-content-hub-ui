@@ -62,6 +62,8 @@ export type CategoryContent = 'series' | 'category' | 'content'
 
 export type CategoryMenuContent = 'series' | 'category'
 
+export type CategoryType = 'content' | 'menu'
+
 export interface CmsTag {
   id: string
   uuid: string
@@ -74,7 +76,7 @@ export interface CmsTag {
   topicHeaderImageUrl?: string
   topicItems?: CmsTagItem<MediaContent>[]
   categoryFeaturedContent?: CmsTagItem<CategoryContent>[]
-  categoryMenu?: CmsTagItem<CategoryMenuContent>[]
+  categoryMenu?: CmsPaginatedContent<CmsTagItem<CategoryMenuContent>>
   categoryContent?: ContentTile[]
   isLastPage: boolean
 }

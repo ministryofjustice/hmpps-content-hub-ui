@@ -1,4 +1,4 @@
-const showMore = (showMoreButton, showMoreTiles, buttonText, pageType = '',) => {
+const showMore = (showMoreButton, showMoreTiles, buttonText, categoryType = '') => {
   const updateButton = isLastPage => {
     if (isLastPage) {
       showMoreButton.remove()
@@ -16,7 +16,7 @@ const showMore = (showMoreButton, showMoreTiles, buttonText, pageType = '',) => 
   let page = 1
   showMoreButton.on('click', () => {
     page += 1
-    const nextPage = `${location.pathname}/show-more?page=${page}&pageType=${pageType}`
+    const nextPage = `${location.pathname}/show-more?page=${page}&categoryType=${categoryType}`
     disableShowMore()
 
     $.getJSON(nextPage, response => {

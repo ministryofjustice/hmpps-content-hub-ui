@@ -218,14 +218,17 @@ describe('getTagPage', () => {
         },
       ],
       categoryFeaturedContent: [],
-      categoryMenu: [
-        {
-          contentType: 'category',
-          contentUrl: '/tags/1',
-          id: '1',
-          title: 'category-menu',
-        },
-      ],
+      categoryMenu: {
+        data: [
+          {
+            contentType: 'category',
+            contentUrl: '/tags/1',
+            id: '1',
+            title: 'category-menu',
+          },
+        ],
+        isLastPage: true,
+      },
       description: 'category-detail-description',
       id: '99',
       isLastPage: true,
