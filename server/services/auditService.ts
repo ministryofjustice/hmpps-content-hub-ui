@@ -1,7 +1,6 @@
 import HmppsAuditClient, { AuditEvent } from '../data/hmppsAuditClient'
 
 export enum Page {
-  EXAMPLE_PAGE = 'EXAMPLE_PAGE',
   HOMEPAGE = 'HOMEPAGE',
   TOPICS = 'TOPICS',
   TAG = 'TAG',
@@ -35,7 +34,11 @@ export enum Page {
   STAFF_CHANGE_PRISON = 'STAFF_CHANGE_PRISON',
 }
 
-export interface PageViewEventDetails {
+export enum ErrorCode {
+  'FORBIDDEN' = '403_FORBIDDEN',
+}
+
+interface EventDetails {
   who: string
   subjectId?: string
   subjectType?: string
@@ -50,11 +53,16 @@ export default class AuditService {
     await this.hmppsAuditClient.sendMessage(event)
   }
 
-  async logPageView(page: Page, eventDetails: PageViewEventDetails) {
-    const event: AuditEvent = {
-      ...eventDetails,
-      what: `PAGE_VIEW_${page}`,
-    }
-    await this.hmppsAuditClient.sendMessage(event)
+  async logPageView(page: Page, eventDetails: EventDetails) {
+    await this.logAuditWithWhat(`PAGE_VIEW_${page}`, eventDetails)
+  }
+
+  async logError(error: ErrorCode, eventDetails: EventDetails) {
+    await this.logAuditWithWhat(`ERROR_${error}`, eventDetails)
+  }
+
+  private async logAuditWithWhat(what: string, eventDetails: EventDetails) {
+    const event: AuditEvent = { ...eventDetails, what }
+    await this.logAuditEvent(event)
   }
 }

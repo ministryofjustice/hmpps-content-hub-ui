@@ -1,5 +1,6 @@
 import { jwtDecode } from 'jwt-decode'
 import type { RequestHandler } from 'express'
+import createError from 'http-errors'
 
 import logger from '../../logger'
 
@@ -13,7 +14,7 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
 
       if (authorisedAuthorities.length && !roles.some(role => authorisedAuthorities.includes(role))) {
         logger.error('User is not authorised to access this')
-        return res.redirect('/authError')
+        return next(createError(403, 'Forbidden'))
       }
 
       return next()

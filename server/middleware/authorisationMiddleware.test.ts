@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import type { Request, Response } from 'express'
+import createError from 'http-errors'
 
 import authorisationMiddleware from './authorisationMiddleware'
 
@@ -17,7 +18,7 @@ function createToken(authorities: string[]) {
 }
 
 describe('authorisationMiddleware', () => {
-  const req: Request = {} as jest.Mocked<Request>
+  const req: Request = { session: { returnTo: '' } } as jest.Mocked<Request>
   const next = jest.fn()
 
   function createResWithToken({ authorities }: { authorities: string[] }): Response {
@@ -40,17 +41,16 @@ describe('authorisationMiddleware', () => {
 
     authorisationMiddleware()(req, res, next)
 
-    expect(next).toHaveBeenCalled()
+    expect(next).toHaveBeenCalledWith()
     expect(res.redirect).not.toHaveBeenCalled()
   })
 
-  it('should redirect when user has no authorised roles', () => {
+  it('should throw a 403 error when user has no authorised roles', () => {
     const res = createResWithToken({ authorities: [] })
 
     authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
 
-    expect(next).not.toHaveBeenCalled()
-    expect(res.redirect).toHaveBeenCalledWith('/authError')
+    expect(next).toHaveBeenCalledWith(createError(403, 'Forbidden'))
   })
 
   it('should return next when user has authorised role', () => {
@@ -58,7 +58,7 @@ describe('authorisationMiddleware', () => {
 
     authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
 
-    expect(next).toHaveBeenCalled()
+    expect(next).toHaveBeenCalledWith()
     expect(res.redirect).not.toHaveBeenCalled()
   })
 
@@ -67,7 +67,18 @@ describe('authorisationMiddleware', () => {
 
     authorisationMiddleware(['ROLE_SOME_REQUIRED_ROLE'])(req, res, next)
 
-    expect(next).toHaveBeenCalled()
+    expect(next).toHaveBeenCalledWith()
     expect(res.redirect).not.toHaveBeenCalled()
+  })
+
+  it('should redirect to /sign-in when no user token is present', () => {
+    const res = {
+      redirect: jest.fn(),
+    } as unknown as Response
+
+    authorisationMiddleware(['ROLE_SOME_REQUIRED_ROLE'])(req, res, next)
+
+    expect(next).not.toHaveBeenCalledWith()
+    expect(res.redirect).toHaveBeenCalledWith('/sign-in')
   })
 })

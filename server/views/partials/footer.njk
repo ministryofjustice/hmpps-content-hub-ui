@@ -28,38 +28,40 @@
 
 <footer class="govuk-footer govuk-!-display-none-print hmpps-footer" role="contentinfo">
   <div class="govuk-width-container">
-    <h2 class="govuk-footer__heading govuk-heading-m">Browse all topics</h2>
-    <div class="govuk-footer__navigation govuk-grid-row">
-      <div class="govuk-footer__section govuk-grid-column-one-third">
-        <ul class="govuk-footer__list">
-          {% for topic in topicItemsLeft %}
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="{{ topic.href }}">{{ topic.text }}</a>
-            </li>
-          {% endfor %}
-        </ul>
+    {% if not excludeTopics %}
+      <h2 class="govuk-footer__heading govuk-heading-m">Browse all topics</h2>
+      <div class="govuk-footer__navigation govuk-grid-row">
+        <div class="govuk-footer__section govuk-grid-column-one-third">
+          <ul class="govuk-footer__list">
+            {% for topic in topicItemsLeft %}
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="{{ topic.href }}">{{ topic.text }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="govuk-footer__section govuk-grid-column-one-third">
+          <ul class="govuk-footer__list">
+            {% for topic in topicItemsMiddle %}
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="{{ topic.href }}">{{ topic.text }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="govuk-footer__section govuk-grid-column-one-third">
+          <ul class="govuk-footer__list">
+            {% for topic in topicItemsRight %}
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="{{ topic.href }}">{{ topic.text }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
-      <div class="govuk-footer__section govuk-grid-column-one-third">
-        <ul class="govuk-footer__list">
-          {% for topic in topicItemsMiddle %}
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="{{ topic.href }}">{{ topic.text }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-      <div class="govuk-footer__section govuk-grid-column-one-third">
-        <ul class="govuk-footer__list">
-          {% for topic in topicItemsRight %}
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="{{ topic.href }}">{{ topic.text }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
 
-    <hr class="govuk-footer__section-break">
+      <hr class="govuk-footer__section-break">
+    {% endif %}
 
     <div class="govuk-footer__meta">
       <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
