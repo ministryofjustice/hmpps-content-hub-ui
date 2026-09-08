@@ -66,6 +66,8 @@ describe('cms queries', () => {
     )
     expect(params.get('include')).toBe('field_moj_thumbnail_image')
     expect(params.get('fields[file--file]')).toBe('image_style_uri,uri,url')
+    expect(params.get('page[limit]')).toBe('40')
+    expect(params.get('page[offset]')).toBe('0')
   })
 
   it('builds the series header query string', () => {
