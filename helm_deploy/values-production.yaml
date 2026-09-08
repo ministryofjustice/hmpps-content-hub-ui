@@ -2,6 +2,8 @@
 # Per environment values which override defaults in hmpps-content-hub-ui/values.yaml
 
 generic-service:
+  replicaCount: 3
+
   ingress:
     hosts:
       - content-hub.hmpps.service.justice.gov.uk
@@ -12,8 +14,9 @@ generic-service:
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     LAUNCHPAD_AUTH_URL: "https://launchpad-auth.hmpps.service.justice.gov.uk"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api.prison.service.justice.gov.uk"
+    CMS_API_URL: "https://jsonapi-cms-prisoner-content-hub-production.apps.live.cloud-platform.service.justice.gov.uk"
     ENVIRONMENT_NAME: PRODUCTION
-    AUDIT_ENABLED: "false"
+    AUDIT_ENABLED: "true"
     NPR_STREAM_URL: "https://proxy.content-hub.prisoner.service.justice.gov.uk/npr-live/stream.ogg"
 
   namespace_secrets:
