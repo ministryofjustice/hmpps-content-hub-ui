@@ -115,6 +115,10 @@
   },
   "overrides": {
     "@opentelemetry/core": "2.10.0",
-    "brace-expansion": "5.0.9"
+    "brace-expansion": "5.0.9",
+    "@xmldom/xmldom": "0.9.12",
+    "body-parser": "2.3.0",
+    "form-data": "4.0.6",
+    "qs": "6.16.0"
   }
 }
