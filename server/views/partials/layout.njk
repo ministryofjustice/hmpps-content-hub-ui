@@ -17,7 +17,7 @@
   {% endif %}
 {% endblock %}
 
-{% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
+{% block pageTitle %}{{ pageTitle | default(establishment.displayName)  + " - " + applicationName}}{% endblock %}
 
 {% block header %}
   {% include "./header.njk" %}
