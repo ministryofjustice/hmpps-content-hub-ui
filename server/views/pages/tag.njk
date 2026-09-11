@@ -1,7 +1,7 @@
 {% extends "../partials/layout.njk" %}
 {% from "../partials/breadcrumb.njk" import breadcrumb, breadcrumbNavigation %}
 
-{% set pageTitle = applicationName + " - Tag" %}
+{% set pageTitle = tag.name or "Tag" %}
 {% set mainClasses = "govuk-body" %}
 {% set feedbackHeading = t("features:feedback.headings.alternative") %}
 

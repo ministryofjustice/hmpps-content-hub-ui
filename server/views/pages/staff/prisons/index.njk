@@ -2,14 +2,14 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = applicationName + " - Change prison" %}
+{% set pageTitle = "Change prison" %}
 {% set mainClasses = "govuk-body" %}
 
 {% block content %}
 
 <form method="post" action="/staff/prisons">
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-    
+
   {{ govukRadios({
     classes: "govuk-radios--small",
     name: "establishment",
@@ -22,7 +22,7 @@
     },
     items: establishmentOptions
   }) }}
-  
+
   {{ govukButton({
     text: "Choose prison"
   }) }}
