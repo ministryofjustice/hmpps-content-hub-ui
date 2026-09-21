@@ -157,6 +157,7 @@ export default {
       active: false,
     },
     { code: 'WYI', name: 'wetherby', displayName: 'HMYOI Wetherby', youth: true, languages: ['en'], active: false },
+    { code: 'WCI', name: 'winchester', displayName: 'HMP Winchester', youth: false, languages: ['en'], active: false },
     { code: 'WHI', name: 'woodhill', displayName: 'HMP Woodhill', youth: false, languages: ['en'], active: false },
   ],
   sqs: {
