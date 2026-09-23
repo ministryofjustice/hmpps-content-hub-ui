@@ -24,6 +24,7 @@ import setupPortals from './middleware/setUpPortals'
 import routes from './routes'
 import type { Services } from './services'
 import setUpGamesResources from './middleware/setUpGamesResources'
+import { Page } from './services/auditService'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -53,6 +54,20 @@ export default function createApp(services: Services): express.Application {
   })
 
   app.use(setupPortals())
+
+  // TODO: Remove this after testing
+  app.get('/prisoner-audit-test', async () => {
+    await services.auditServiceSource.get('prisoner').logAuditEvent({
+      what: 'PRISONER_AUDIT_TEST_EVENT',
+      who: 'SYSTEM',
+    })
+    await services.auditServiceSource.get('prisoner').logPageView('PRISONER_AUDIT_TEST_PAGE' as Page, {
+      who: 'SYSTEM',
+      correlationId: 'NONESUCH-ID',
+      subjectType: 'TEST',
+    })
+  })
+
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
