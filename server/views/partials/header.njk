@@ -14,7 +14,7 @@
         {% endif %}
       </a>
 
-      {% if environmentName %}
+      {% if environmentName and (environmentName != "PRODUCTION") %}
         <div class="govuk-phase-banner">
           {{ govukTag({
             text: environmentName,
