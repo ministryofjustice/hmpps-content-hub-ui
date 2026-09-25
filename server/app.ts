@@ -1,4 +1,5 @@
 import express from 'express'
+import { telemetryMiddleware } from '@ministryofjustice/hmpps-azure-telemetry'
 
 import errorHandler from './errorHandler'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
@@ -64,6 +65,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpFooterTopics(services.cmsService))
   app.use(setUpUrgentBanner(services.cmsService))
 
+  app.use(telemetryMiddleware.addUserMetadataToTelemetry())
   app.use(routes(services))
 
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
