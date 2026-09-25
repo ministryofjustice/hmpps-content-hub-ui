@@ -18,6 +18,7 @@ import { Establishment } from '../../@types/launchpad'
 export const user: HmppsUser = {
   name: 'FIRST LAST',
   userId: 'id',
+  userUuid: undefined,
   token: 'token',
   username: 'user1',
   displayName: 'First Last',
