@@ -1,6 +1,8 @@
 <a class="hmpps-category-card" href="{{ cardItem.href or '#' }}">
   {% if cardItem.thumbnailUrl %}
     <img class="hmpps-category__thumbnail" src="{{cardItem.thumbnailUrl}}" alt="" loading="lazy">
+  {% else %}
+    <img class="hmpps-category__thumbnail" src="/assets/images/content_image_placeholder_logo.png" alt="logo" loading="lazy">
   {% endif %}
   <div class="hmpps-category-card__title">
     <h3 class="govuk-heading-m hmpps-category-card__title-text">{{ cardItem.title or cardItem.linkText or 'Untitled' }}</h3>
