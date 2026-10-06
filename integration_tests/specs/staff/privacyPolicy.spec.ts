@@ -4,8 +4,8 @@ import HomePage from '../../pages/homePage'
 import BasicPage from '../../pages/basicPage'
 import cmsApi from '../../mockApis/cmsApi'
 
-const PRIVACY_NID = 4856
-const PRIVACY_UUID = 'privacy-page-uuid-4856'
+const PRIVACY_NID = 64583
+const PRIVACY_UUID = 'privacy-page-uuid-64583'
 const PRIVACY_TITLE = 'Privacy'
 const PRIVACY_DESCRIPTION = '<p>Privacy policy content for integration testing.</p>'
 
@@ -42,7 +42,7 @@ test.describe('Staff privacy policy', () => {
 
     const privacyLink = page.getByRole('contentinfo').getByRole('link', { name: 'Privacy' })
     await expect(privacyLink).toBeVisible()
-    await expect(privacyLink).toHaveAttribute('href', '/content/4856')
+    await expect(privacyLink).toHaveAttribute('href', '/content/64583')
   })
 
   test('Footer privacy policy link opens the privacy page', async ({ page }) => {
@@ -55,7 +55,7 @@ test.describe('Staff privacy policy', () => {
 
     await page.getByRole('contentinfo').getByRole('link', { name: 'Privacy' }).click()
 
-    await expect(page).toHaveURL(/\/content\/4856/)
+    await expect(page).toHaveURL(/\/content\/64583/)
     const privacyPage = await BasicPage.verifyOnPage(page)
     await privacyPage.verifyMainContentText('Privacy policy content for integration testing.')
   })
