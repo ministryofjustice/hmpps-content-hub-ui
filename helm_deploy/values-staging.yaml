@@ -23,6 +23,3 @@ generic-service:
     kpmg-it-health-check: "195.68.59.72/29"
     groups:
       - internal
-
-generic-prometheus-alerts:
-  alertSeverity: hmpps-launchpad-nonprod
