@@ -18,7 +18,7 @@ jobs:
       scan_type: 'image' # or 'fs'
       location: '.'
       slack_include_summary: true
-      snyk_policy_path: '' # Optional path to a custom Snyk policy file
+      snyk_policy_path: '.snyk' # Optional path to a custom Snyk policy file
     secrets:
       HMPPS_SNYK_CLIENT_SECRET: ${{ secrets.HMPPS_SNYK_CLIENT_SECRET }}
       HMPPS_SNYK_CLIENT_ID: ${{ secrets.HMPPS_SNYK_CLIENT_ID }}
