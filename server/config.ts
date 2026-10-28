@@ -118,7 +118,14 @@ export default {
     { code: 'BWI', name: 'berwyn', displayName: 'HMP Berwyn', youth: false, languages: ['en', 'cy'], active: [] },
     { code: 'BLI', name: 'bristol', displayName: 'HMP Bristol', youth: false, languages: ['en'], active: [] },
     { code: 'BNI', name: 'bullingdon', displayName: 'HMP Bullingdon', youth: false, languages: ['en'], active: [] },
-    { code: 'CFI', name: 'cardiff', displayName: 'HMP Cardiff', youth: false, languages: ['en', 'cy'], active: [] },
+    {
+      code: 'CFI',
+      name: 'cardiff',
+      displayName: 'HMP Cardiff',
+      youth: false,
+      languages: ['en', 'cy'],
+      active: ['DEVELOPMENT', 'STAGING', 'PRODUCTION'],
+    },
     { code: 'CDI', name: 'chelmsford', displayName: 'HMP Chelmsford', youth: false, languages: ['en'], active: [] },
     {
       code: 'CKI',
