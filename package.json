@@ -69,7 +69,7 @@
     "redis": "6.2.1",
     "stockfish.js": "10.0.2",
     "superagent": "^10.4.1",
-    "video.js": "8.24.1"
+    "video.js": "10.2.0"
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.5",
