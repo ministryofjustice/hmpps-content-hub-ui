@@ -72,8 +72,7 @@ export const findIncluded = <TAttributes>(
   identifier: JsonApiResourceIdentifier,
 ): JsonApiResource<TAttributes> | undefined =>
   included.find(item => item.type === identifier.type && item.id === identifier.id) as
-    | JsonApiResource<TAttributes>
-    | undefined
+    JsonApiResource<TAttributes> | undefined
 
 export const resolveFileUrl = (
   file?: JsonApiResource<CmsFileAttributes>,

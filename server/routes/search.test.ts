@@ -38,7 +38,7 @@ describe('Search Routes', () => {
         .expect('Content-Type', /html/)
         .expect(200)
         .expect(res => {
-          expect(res.text).toContain('search.noResults')
+          expect(res.text).toContain('No results found for')
           expect(auditService.logPageView).toHaveBeenCalledWith(Page.SEARCH, {
             who: user.username,
             correlationId: expect.any(String),

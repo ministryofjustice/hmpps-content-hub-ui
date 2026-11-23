@@ -15,8 +15,8 @@ describe('GET 404', () => {
       .expect(404)
       .expect('Content-Type', /html/)
       .expect(res => {
-        expect(res.text).toContain('error.pageNotFound')
-        expect(res.text).toContain('error.goHome')
+        expect(res.text).toContain('Page not found')
+        expect(res.text).toContain('Go back to the <a class="govuk-link" href="/">home page</a>')
         expect(res.text).not.toContain('Something went wrong. The error has been logged. Please try again')
       })
   })
